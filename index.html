@@ -394,7 +394,7 @@
             gap: 0.8rem;
         }
 
-        .save-btn, .load-btn {
+        .save-btn, .load-btn, .clear-btn {
             background: rgba(168, 200, 236, 0.2);
             border: 2px solid #a8c8ec;
             color: #a8c8ec;
@@ -406,8 +406,19 @@
             font-weight: bold;
         }
 
+        .clear-btn {
+            background: rgba(255, 107, 107, 0.2);
+            border-color: #ff6b6b;
+            color: #ff6b6b;
+        }
+
         .save-btn:hover, .load-btn:hover {
             background: rgba(168, 200, 236, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .clear-btn:hover {
+            background: rgba(255, 107, 107, 0.4);
             transform: translateY(-2px);
         }
 
@@ -723,6 +734,7 @@
                         <div class="progression-controls">
                             <button class="save-btn" onclick="saveProgression()">💾 Save</button>
                             <button class="load-btn" onclick="loadProgression()">📁 Load</button>
+                            <button class="clear-btn" onclick="clearProgression()">🗑️ Clear All</button>
                             <input type="file" id="file-input" accept=".json" style="display: none;" onchange="handleFileLoad(event)">
                         </div>
                     </div>
@@ -1545,11 +1557,8 @@ ${details}`;
             
             // Find the top note with the smallest interval to the previous top note
             allTopNotes.forEach(topNote => {
-                // Create a temporary chord symbol for pitch calculation
-                const tempSymbol = newChordType === 'major' ? 'I' : 
-                                 newChordType === 'minor' ? 'ii' :
-                                 newChordType === 'dominant' ? 'V7' : 'Vsus';
-                const newTopNotePitch = getActualPitchInSemitones(topNote, tempSymbol, newChordType);
+                // Use the actual new chord symbol for accurate pitch calculation
+                const newTopNotePitch = getActualPitchInSemitones(topNote, newChordSymbol, newChordType);
                 
                 if (newTopNotePitch !== null) {
                     // Calculate interval (allowing for octave equivalence)
@@ -1784,6 +1793,17 @@ ${details}`;
         
         function loadProgression() {
             document.getElementById('file-input').click();
+        }
+        
+        function clearProgression() {
+            if (currentProgression.length === 0) {
+                return; // Nothing to clear
+            }
+            
+            if (confirm('Are you sure you want to clear all chords from the progression?')) {
+                currentProgression = [];
+                renderProgression();
+            }
         }
         
         function handleFileLoad(event) {
