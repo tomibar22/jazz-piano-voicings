@@ -377,10 +377,38 @@
             overflow-x: auto;
         }
 
-        .progression-area h2 {
-            text-align: center;
-            color: #d4af37;
+        .progression-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 2rem;
+        }
+
+        .progression-header h2 {
+            color: #d4af37;
+            margin: 0;
+        }
+
+        .progression-controls {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .save-btn, .load-btn {
+            background: rgba(168, 200, 236, 0.2);
+            border: 2px solid #a8c8ec;
+            color: #a8c8ec;
+            padding: 0.8rem 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .save-btn:hover, .load-btn:hover {
+            background: rgba(168, 200, 236, 0.4);
+            transform: translateY(-2px);
         }
 
         .progression-container {
@@ -690,7 +718,14 @@
                 </div>
                 
                 <div class="progression-area" id="progression-area">
-                    <h2>Your Progression</h2>
+                    <div class="progression-header">
+                        <h2>Your Progression</h2>
+                        <div class="progression-controls">
+                            <button class="save-btn" onclick="saveProgression()">💾 Save</button>
+                            <button class="load-btn" onclick="loadProgression()">📁 Load</button>
+                            <input type="file" id="file-input" accept=".json" style="display: none;" onchange="handleFileLoad(event)">
+                        </div>
+                    </div>
                     <div class="progression-container" id="progression-container">
                         <div class="empty-progression">
                             Click any Roman numeral degree to add it to your progression
@@ -1708,6 +1743,118 @@ ${details}`;
             chord.scaleName = voicingData.scaleName;
         }
 
+
+        // Save/Load Functions
+        function saveProgression() {
+            if (currentProgression.length === 0) {
+                alert('No progression to save. Add some chords first!');
+                return;
+            }
+            
+            // Create simplified progression data for export
+            const progressionData = {
+                version: "1.0",
+                created: new Date().toISOString(),
+                progression: currentProgression.map(chord => ({
+                    symbol: chord.symbol,
+                    currentTopNote: chord.currentTopNote,
+                    currentVoicingIndex: chord.currentVoicingIndex,
+                    selectedVoicingKey: chord.selectedVoicingKey,
+                    scaleName: chord.scaleName
+                }))
+            };
+            
+            // Create filename with timestamp
+            const timestamp = new Date().toISOString().slice(0, 19).replace(/[:-]/g, '');
+            const filename = `jazz-progression-${timestamp}.json`;
+            
+            // Download the file
+            const blob = new Blob([JSON.stringify(progressionData, null, 2)], {
+                type: 'application/json'
+            });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        
+        function loadProgression() {
+            document.getElementById('file-input').click();
+        }
+        
+        function handleFileLoad(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    
+                    // Validate file format
+                    if (!data.progression || !Array.isArray(data.progression)) {
+                        throw new Error('Invalid progression file format');
+                    }
+                    
+                    // Clear current progression
+                    currentProgression = [];
+                    
+                    // Reconstruct progression
+                    data.progression.forEach(chordData => {
+                        const chordType = getChordType(chordData.symbol);
+                        
+                        // Find the specific voicing that was saved
+                        const voicingsForTopNote = getVoicingsForTopNote(chordType, chordData.currentTopNote, chordData.symbol);
+                        let selectedVoicing = null;
+                        
+                        // Try to find exact voicing by key or index
+                        if (chordData.selectedVoicingKey) {
+                            selectedVoicing = voicingsForTopNote.find(v => v.key === chordData.selectedVoicingKey);
+                        }
+                        if (!selectedVoicing && chordData.currentVoicingIndex < voicingsForTopNote.length) {
+                            selectedVoicing = voicingsForTopNote[chordData.currentVoicingIndex];
+                        }
+                        if (!selectedVoicing && voicingsForTopNote.length > 0) {
+                            selectedVoicing = voicingsForTopNote[0]; // Fallback
+                        }
+                        
+                        if (selectedVoicing) {
+                            const newChord = {
+                                id: Date.now() + Math.random(), // Ensure unique ID
+                                symbol: chordData.symbol,
+                                selectedVoicing: null,
+                                selectedVoicingKey: chordData.selectedVoicingKey,
+                                currentTopNote: chordData.currentTopNote,
+                                currentVoicingIndex: chordData.currentVoicingIndex,
+                                scaleName: chordData.scaleName,
+                                voicingWithPositions: null
+                            };
+                            
+                            updateChordVoicing(newChord, selectedVoicing);
+                            currentProgression.push(newChord);
+                        }
+                    });
+                    
+                    renderProgression();
+                    
+                    // Show success message
+                    const chordCount = currentProgression.length;
+                    alert(`Successfully loaded progression with ${chordCount} chord${chordCount !== 1 ? 's' : ''}!`);
+                    
+                } catch (error) {
+                    alert('Error loading progression file: ' + error.message);
+                }
+                
+                // Clear the file input
+                event.target.value = '';
+            };
+            
+            reader.readAsText(file);
+        }
 
         // Initialize the app
         loadProgressionMode();
