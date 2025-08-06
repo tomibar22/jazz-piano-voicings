@@ -1,0 +1,1703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jazz Piano Voicings</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            color: #f4f4f4;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(45deg, #d4af37, #ff6b6b, #a8c8ec);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+
+        .mode-toggle {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+            gap: 1rem;
+        }
+
+        .mode-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #a8c8ec;
+            color: #f4f4f4;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .mode-btn.active {
+            background: #a8c8ec;
+            color: #1a1a2e;
+            box-shadow: 0 4px 20px rgba(168, 200, 236, 0.3);
+        }
+
+        .mode-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .mode-section {
+            display: none;
+        }
+
+        .mode-section.active {
+            display: block;
+        }
+
+        /* Browse Mode Styles */
+        .chord-type {
+            margin-bottom: 3rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .chord-type h2 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: #d4af37;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .voicing-table {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .scale-row {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border-left: 4px solid #a8c8ec;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .scale-row-content {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .scale-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #a8c8ec;
+            margin-bottom: 0.5rem;
+            text-transform: capitalize;
+        }
+
+        .voicing-grid {
+            display: grid;
+            gap: 1rem;
+            width: 100%;
+            overflow: hidden;
+            padding: 2px 1rem;
+        }
+
+        .voicing-cell {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            border: 2px solid #a8c8ec;
+            transition: all 0.3s ease;
+            min-height: 100px;
+            min-width: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .voicing-cell:hover {
+            border-color: #d4af37;
+            background: rgba(212, 175, 55, 0.1);
+            transform: translateY(-1px) scale(1.01);
+        }
+
+        .voicing-cell.selected {
+            border-color: #d4af37;
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .chord-notes {
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            line-height: 1.4;
+            color: #f4f4f4;
+            white-space: pre-line;
+            font-weight: bold;
+        }
+
+        .chord-notes .top-note {
+            color: #d4af37;
+            font-weight: bold;
+            text-shadow: 0 0 4px rgba(212, 175, 55, 0.3);
+        }
+
+        .empty-cell {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+
+        /* Progression Creator Styles */
+        .progression-creator {
+            display: grid;
+            grid-template-columns: minmax(320px, 350px) 1fr;
+            gap: 1.5rem;
+            height: 75vh;
+            max-width: 100%;
+            overflow: hidden;
+        }
+
+        .controls-panel {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 1rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 100%;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .control-group {
+            margin-bottom: 2rem;
+        }
+
+        .control-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .control-group select,
+        .control-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            color: #f4f4f4;
+            font-size: 1rem;
+        }
+
+        .control-group select option {
+            background: #1a1a2e;
+            color: #f4f4f4;
+        }
+
+        .chord-bank {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 0.75rem;
+            height: 100%;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chord-bank h3 {
+            color: #a8c8ec;
+            margin-bottom: 0.75rem;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        .root-options {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.25rem;
+            margin-bottom: 0.5rem;
+            flex: 1;
+            overflow: hidden;
+            align-content: start;
+            padding: 2px;
+        }
+
+        .root-option {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid #a8c8ec;
+            color: #f4f4f4;
+            padding: 0.3rem;
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 35px;
+        }
+
+        .root-option:hover {
+            background: rgba(168, 200, 236, 0.2);
+            transform: scale(1.02);
+        }
+
+        .root-option.selected {
+            background: rgba(168, 200, 236, 0.3);
+            border-color: #d4af37;
+        }
+
+        .chord-type-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .chord-type-option {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid #a8c8ec;
+            color: #f4f4f4;
+            padding: 0.6rem;
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            position: relative;
+        }
+
+        .chord-type-option:hover {
+            background: rgba(168, 200, 236, 0.2);
+            transform: scale(1.02);
+        }
+
+        .chord-type-option:hover::after {
+            content: "Double-click to add";
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: #ffd700;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            white-space: nowrap;
+            z-index: 100;
+        }
+
+        .back-to-roots {
+            background: rgba(255, 107, 107, 0.2);
+            border: 1px solid #ff6b6b;
+            color: #f4f4f4;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .back-to-roots:hover {
+            background: rgba(255, 107, 107, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .chord-type-menu h4 {
+            color: #ffd700;
+            margin-bottom: 1rem;
+        }
+
+        .root-selection h4 {
+            color: #4ecdc4;
+            margin-bottom: 1rem;
+        }
+
+        .note-headers {
+            display: grid;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            width: 100%;
+            padding: 0 1rem;
+            position: relative;
+        }
+
+        .note-header {
+            text-align: center;
+            font-weight: bold;
+            color: #d4af37;
+            font-size: 1.1rem;
+            position: relative;
+        }
+
+        .chord-type {
+            position: relative;
+        }
+
+        .progression-area {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            max-width: 100%;
+            overflow-x: auto;
+        }
+
+        .progression-area h2 {
+            text-align: center;
+            color: #d4af37;
+            margin-bottom: 2rem;
+        }
+
+        .progression-container {
+            min-height: 400px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        .chord-slot {
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid #a8c8ec;
+            border-radius: 12px;
+            padding: 1.2rem;
+            min-width: 180px;
+            max-width: 220px;
+            transition: all 0.3s ease;
+            flex-shrink: 1;
+        }
+
+        .chord-slot:hover {
+            border-color: #d4af37;
+        }
+
+        .voice-leading-connector {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+            margin: 0 0.5rem;
+            align-self: flex-start;
+            padding-top: 16.8rem;
+            justify-content: flex-start;
+        }
+
+        .voice-movement {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 4px;
+            padding: 0.4rem 0.8rem;
+            font-size: 0.9rem;
+            font-weight: bold;
+            min-width: 40px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            height: 2rem;
+            margin: 0.2rem 0;
+        }
+
+        .voice-movement.common {
+            background: rgba(76, 175, 80, 0.6);
+            border-color: #4CAF50;
+            color: white;
+        }
+
+        .voice-movement.step {
+            background: rgba(33, 150, 243, 0.6);
+            border-color: #2196F3;
+            color: white;
+        }
+
+        .voice-movement.leap {
+            background: rgba(255, 152, 0, 0.6);
+            border-color: #FF9800;
+            color: white;
+        }
+
+        .chord-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.2rem;
+        }
+
+        .chord-symbol {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #d4af37;
+        }
+
+        .remove-chord {
+            background: #ff6b6b;
+            border: none;
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .voicing-selector {
+            margin-bottom: 1rem;
+        }
+
+        .voicing-navigation {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .top-note-selector {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .top-note-label {
+            color: #d4af37;
+            font-size: 0.9rem;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .top-note-dropdown {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #d4af37;
+            border-radius: 6px;
+            background: rgba(212, 175, 55, 0.1);
+            color: #d4af37;
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+
+        .top-note-dropdown option {
+            background: #1a1a2e;
+            color: #d4af37;
+        }
+
+        .nav-arrow {
+            background: rgba(168, 200, 236, 0.2);
+            border: 2px solid #a8c8ec;
+            color: #a8c8ec;
+            padding: 0.8rem;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-arrow:hover {
+            background: rgba(168, 200, 236, 0.4);
+            transform: scale(1.1);
+        }
+
+        .nav-arrow:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .voicing-navigation-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+
+        .voicing-counter {
+            color: #f4f4f4;
+            font-size: 0.8rem;
+            min-width: 50px;
+            text-align: center;
+        }
+
+
+        .selected-voicing {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 1.2rem;
+            font-family: 'Courier New', monospace;
+            font-size: 1.4rem;
+            line-height: 1.5;
+            text-align: center;
+            white-space: pre-line;
+            font-weight: bold;
+        }
+
+        .voicing-with-positions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .voice-position {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.4rem 0.8rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+            margin: 0.2rem 0;
+            height: 2rem;
+        }
+
+        .voice-note {
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+
+        .voice-position.top-note .voice-note {
+            color: #d4af37;
+        }
+
+        .voicing-scale-name {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.8rem;
+            font-weight: normal;
+            font-family: 'Georgia', serif;
+            margin-top: 1rem;
+            font-style: italic;
+        }
+
+        .empty-progression {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 1.2rem;
+            margin-top: 3rem;
+        }
+
+        .top-note-line {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .top-note-line h3 {
+            color: #ffd700;
+            margin-bottom: 1rem;
+        }
+
+        .top-note-sequence {
+            font-family: 'Courier New', monospace;
+            font-size: 1.2rem;
+            color: #4ecdc4;
+            letter-spacing: 2px;
+        }
+
+        @media (max-width: 1200px) {
+            .progression-creator {
+                grid-template-columns: minmax(260px, 300px) 1fr;
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .progression-creator {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+            
+            .controls-panel {
+                padding: 1rem;
+            }
+            
+            .progression-area {
+                padding: 1rem;
+            }
+            
+            .chord-slot {
+                min-width: 160px;
+                max-width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Jazz Piano Voicings</h1>
+        
+        <div class="mode-toggle">
+            <button class="mode-btn active" onclick="switchMode('progression')">Create Progression</button>
+            <button class="mode-btn" onclick="switchMode('browse')">Browse Voicings</button>
+        </div>
+
+        <!-- Browse Mode -->
+        <div id="browse-mode" class="mode-section">
+            <div id="browse-content">
+                <!-- Content will be dynamically loaded -->
+            </div>
+        </div>
+
+        <!-- Progression Creator Mode -->
+        <div id="progression-mode" class="mode-section active">
+            <div class="progression-creator">
+                <div class="controls-panel">
+                    <div class="chord-bank">
+                        <h3>Roman Numeral Analysis</h3>
+                        <div class="root-selection" id="root-selection">
+                            <div class="root-options" id="root-options">
+                                <!-- Degree options will be populated -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="progression-area" id="progression-area">
+                    <h2>Your Progression</h2>
+                    <div class="progression-container" id="progression-container">
+                        <div class="empty-progression">
+                            Click any Roman numeral degree to add it to your progression
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // Complete Pentatonic Voicing Data - ALL 131+ voicings from CSV files
+        const voicingData = {
+            major: {
+                "Pentatonic": {
+                    1: ["1", "5", "9", "", "13", "3"],
+                    3: ["3", "1", "5", "", "9", "13"],
+                    5: ["5", "9", "13", "", "3", "1"],
+                    9: ["9", "13", "3", "", "1", "5"],
+                    13: ["13", "3", "1", "", "5", "9"]
+                },
+                "Pentatonic (from 5)": {
+                    3: ["3", "7", "5", "", "9", "13"],
+                    5: ["5", "9", "13", "", "3", "7"],
+                    7: ["7", "5", "9", "", "13", "3"],
+                    9: ["9", "13", "3", "", "7", "5"],
+                    13: ["13", "3", "7", "", "5", "9"]
+                },
+                "Pentatonic (from 2)": {
+                    3: ["3", "7", "♯11", "", "9", "13"],
+                    7: ["7", "♯11", "9", "", "13", "3"],
+                    9: ["9", "13", "3", "", "7", "♯11"],
+                    "♯11": ["♯11", "9", "13", "", "3", "7"],
+                    13: ["13", "3", "7", "", "♯11", "9"]
+                }
+            },
+            minor: {
+                "Pentatonic ♭3": {
+                    1: ["1", "5", "9", "", "13", "3"],
+                    5: ["5", "9", "13", "", "3", "1"],
+                    9: ["9", "13", "3", "", "1", "5"]
+                },
+                "Pentatonic (from 3)": {
+                    1: ["1", "5", "3", "", "7", "11"],
+                    3: ["3", "7", "11", "", "1", "5"],
+                    5: ["5", "3", "7", "", "11", "1"],
+                    7: ["7", "11", "1", "", "5", "3"],
+                    11: ["11", "1", "5", "", "3", "7"]
+                },
+                "Pentatonic \"minor 7\"": {
+                    1: ["1", "5", "9", "", "7", "3"],
+                    5: ["5", "9", "7", "", "3", "1"],
+                    9: ["9", "7", "3", "", "1", "5"]
+                },
+                "Pentatonic \"dorian\"": {
+                    1: ["1", "13", "3", "", "7", "5"],
+                    5: ["5", "1", "13", "", "3", "7"],
+                    13: ["13", "3", "7", "", "5", "1"]
+                },
+                "Pentatonic ♭6 (from 5)": {
+                    "♮7": ["♮7", "5", "9", "", "13", "3"],
+                    9: ["9", "13", "3", "", "♮7", "5"]
+                }
+            },
+            dominant: {
+                "Pentatonic \"dominant\"": {
+                    1: ["1", "5", "9", "", "7", "3"],
+                    3: ["3", "1", "5", "", "9", "7"],
+                    5: ["5", "9", "7", "", "3", "1"],
+                    7: ["7", "3", "1", "", "5", "9"],
+                    9: ["9", "7", "3", "", "1", "5"]
+                },
+                "Pentatonic \"dominant 1-3-5-6-7\"": {
+                    1: ["1", "13", "3", "", "7", "5"],
+                    5: ["5", "1", "13", "", "3", "7"],
+                    13: ["13", "3", "7", "", "5", "1"]
+                },
+                "Pentatonic ♭3 (from 5)": {
+                    5: ["5", "9", "13", "", "3", "7"],
+                    9: ["9", "13", "3", "", "7", "5"],
+                    13: ["13", "3", "7", "", "5", "9"]
+                },
+                "Pentatonic \"dominant\" ♭2 (♭9)": {
+                    1: ["1", "5", "♭9", "", "7", "3"],
+                    3: ["3", "1", "5", "", "♭9", "7"],
+                    5: ["5", "♭9", "7", "", "3", "1"],
+                    7: ["7", "3", "1", "", "5", "♭9"],
+                    "♭9": ["♭9", "7", "3", "", "1", "5"]
+                },
+                "Pentatonic \"dominant\" ♯2 (♯9)": {
+                    1: ["1", "5", "♯9", "", "7", "3"],
+                    5: ["5", "♯9", "7", "", "3", "1"],
+                    "♯9": ["♯9", "7", "3", "", "1", "5"]
+                },
+                "Pentatonic \"dominant\" ♭2, ♭5": {
+                    1: ["1", "♯11", "♭9", "", "7", "3"],
+                    3: ["3", "1", "♯11", "", "♭9", "7"],
+                    7: ["7", "3", "1", "", "♯11", "♭9"],
+                    "♭9": ["♭9", "7", "3", "", "1", "♯11"],
+                    "♯11": ["♯11", "♭9", "7", "", "3", "1"]
+                },
+                "Pentatonic \"dominant\" ♭2, ♯5": {
+                    1: ["1", "♭13", "♭9", "", "7", "3"],
+                    3: ["3", "1", "♭13", "", "♭9", "7"],
+                    7: ["7", "3", "1", "", "♭13", "♭9"],
+                    "♭9": ["♭9", "7", "3", "", "1", "♭13"],
+                    "♭13": ["♭13", "♭9", "7", "", "3", "1"]
+                },
+                "Pentatonic \"dominant\" ♯2, ♭5": {
+                    1: ["1", "♯11", "♯9", "", "7", "3"],
+                    "♯9": ["♯9", "7", "3", "", "1", "♯11"],
+                    "♯11": ["♯11", "♯9", "7", "", "3", "1"]
+                },
+                "Pentatonic \"dominant\" ♯2, ♯5": {
+                    1: ["1", "♭13", "♯9", "", "7", "3"],
+                    "♯9": ["♯9", "7", "3", "", "1", "♭13"],
+                    "♭13": ["♭13", "♯9", "7", "", "3", "1"]
+                },
+                "Pentatonic ♭6 (from 2)": {
+                    9: ["9", "13", "3", "", "7", "♯11"],
+                    "♯11": ["♯11", "9", "13", "", "3", "7"],
+                    13: ["13", "3", "7", "", "♯11", "9"]
+                },
+                "WT (from 2)": {
+                    3: ["3", "7", "♯11", "", "9", "♭13"],
+                    7: ["7", "♯11", "9", "", "♭13", "3"],
+                    9: ["9", "♭13", "3", "", "7", "♯11"],
+                    "♯11": ["♯11", "9", "♭13", "", "3", "7"],
+                    "♭13": ["♭13", "3", "7", "", "♯11", "9"]
+                },
+                "WT (from 3)": {
+                    1: ["1", "b13", "3", "", "7", "♯11"],
+                    3: ["3", "7", "♯11", "", "1", "♭13"],
+                    7: ["7", "♯11", "1", "", "♭13", "3"],
+                    "♯11": ["♯11", "1", "♭13", "", "3", "7"],
+                    "♭13": ["♭13", "3", "7", "", "♯11", "1"]
+                },
+                "WT (from ♭6)": {
+                    1: ["1", "♭13", "9", "", "7", "3"],
+                    3: ["3", "1", "♭13", "", "9", "7"],
+                    7: ["7", "3", "1", "", "♭13", "9"],
+                    9: ["9", "7", "3", "", "1", "♭13"],
+                    "♭13": ["♭13", "9", "7", "", "3", "1"]
+                },
+                "WT (from 7)": {
+                    1: ["1", "♯11", "9", "", "7", "3"],
+                    3: ["3", "1", "♯11", "", "9", "7"],
+                    9: ["9", "7", "3", "", "1", "♯11"],
+                    "♯11": ["♯11", "9", "7", "", "3", "1"]
+                },
+                "Pentatonic \"dominant\" (from ♭5)": {
+                    3: ["3", "7", "♯11", "", "♭9", "♭13"],
+                    7: ["7", "♯11", "♭9", "", "♭13", "3"],
+                    "♭9": ["♭9", "♭13", "3", "", "7", "♯11"],
+                    "♯11": ["♯11", "♭9", "♭13", "", "3", "7"],
+                    "♭13": ["♭13", "3", "7", "", "♯11", "♭9"]
+                },
+                "Pentatonic \"dominant\" (from ♭5) ♭2": {
+                    "♭9": ["♭9", "13", "3", "", "7", "♯11"],
+                    "♯11": ["♯11", "♭9", "13", "", "3", "7"],
+                    13: ["13", "3", "7", "", "♯11", "♭9"]
+                },
+                "Pentatonic \"dominant\" (from ♭5) ♯2, ♭5": {
+                    1: ["1", "13", "3", "", "7", "♯11"],
+                    "♯11": ["♯11", "1", "13", "", "3", "7"],
+                    13: ["13", "3", "7", "", "♯11", "1"]
+                },
+                "Pentatonic ♭3 (from ♭2)": {
+                    "♭9": ["♭9", "♭13", "♯9", "", "7", "3"],
+                    "♯9": ["♯9", "7", "3", "", "♭9", "♭13"],
+                    "♭13": ["♭13", "♯9", "7", "", "3", "♭9"]
+                }
+            },
+            sus: {
+                "Pentatonic (from 7)": {
+                    1: ["1", "5", "9", "", "7", "4"],
+                    4: ["4", "1", "5", "", "9", "7"],
+                    5: ["5", "9", "7", "", "4", "1"],
+                    7: ["7", "4", "1", "", "5", "9"],
+                    9: ["9", "7", "4", "", "1", "5"]
+                },
+                "Pentatonic \"major 7\" (from 7)": {
+                    1: ["1", "13", "9", "", "7", "4"],
+                    4: ["4", "1", "13", "", "9", "7"],
+                    13: ["13", "9", "7", "", "4", "1"]
+                },
+                "Pentatonic \"minor 7\" (from 5)": {
+                    5: ["5", "9", "13", "", "4", "7"],
+                    9: ["9", "13", "4", "", "7", "5"],
+                    13: ["13", "4", "7", "", "5", "9"]
+                },
+                "Pentatonic ♭3 (from 7)": {
+                    1: ["1", "5", "♭9", "", "7", "4"],
+                    4: ["4", "1", "5", "", "♭9", "7"],
+                    5: ["5", "♭9", "7", "", "4", "1"],
+                    7: ["7", "4", "1", "", "5", "♭9"],
+                    "♭9": ["♭9", "7", "4", "", "1", "5"]
+                },
+                "Pentatonic \"minor 7\" (from 7)": {
+                    1: ["1", "♭13", "♭9", "", "7", "4"],
+                    4: ["4", "1", "♭13", "", "♭9", "7"],
+                    7: ["7", "4", "1", "", "♭13", "♭9"],
+                    "♭9": ["♭9", "7", "4", "", "1", "♭13"],
+                    "♭13": ["♭13", "♭9", "7", "", "4", "1"]
+                },
+                "Pentatonic \"dorian\" (from 7)": {
+                    4: ["4", "7", "5", "", "♭9", "♭13"],
+                    5: ["5", "♭9", "♭13", "", "4", "7"],
+                    7: ["7", "5", "♭9", "", "♭13", "4"]
+                },
+                "Pentatonic (from ♭2)": {
+                    4: ["4", "♭9", "♭13", "", "♯9", "7"],
+                    7: ["7", "4", "♭9", "", "♭13", "♯9"],
+                    "♭9": ["♭9", "♭13", "♯9", "", "7", "4"],
+                    "♯9": ["♯9", "7", "4", "", "♭9", "♭13"],
+                    "♭13": ["♭13", "♯9", "7", "", "4", "♭9"]
+                }
+            }
+        };
+
+        // Note-to-semitone conversion system for voice leading analysis
+        const noteToSemitones = {
+            // Basic chord tones and extensions
+            '1': 0, 'b2': 1, '2': 2, 'b3': 3, '3': 4, '4': 5, 'b5': 6, '5': 7, 
+            '#5': 8, 'b6': 8, '6': 9, 'bb7': 9, 'b7': 10, '♮7': 11, '7': 11,
+            '8': 12, 'b9': 13, '9': 14, '#9': 15, '10': 16, '11': 17, '#11': 18, 'b13': 20, '13': 21,
+            
+            // Jazz notation variants
+            '♭2': 1, '♭3': 3, '♭5': 6, '♯5': 8, '♭6': 8, '♭♭7': 9, '♭7': 10,
+            '♭9': 13, '♯9': 15, '♯11': 18, '♭13': 20
+        };
+
+        function getNoteInSemitones(note, chordType) {
+            if (!note || note === '') return null;
+            
+            // Handle special cases and normalize notation
+            let normalizedNote = note.toString().trim();
+            
+            // Convert various notations to standard
+            if (normalizedNote === '♮7') normalizedNote = '7';
+            
+            // Get base semitone value
+            const semitones = noteToSemitones[normalizedNote];
+            if (semitones !== undefined) return semitones;
+            
+            // Fallback for unknown notes
+            console.warn(`Unknown note: ${note}`);
+            return null;
+        }
+
+        // Voice Leading Analysis Functions
+        function analyzeVoiceLeading(chord1, chord2) {
+            if (!chord1.selectedVoicing || !chord2.selectedVoicing) return null;
+            
+            const voicing1 = chord1.selectedVoicing.split('\n');
+            const voicing2 = chord2.selectedVoicing.split('\n');
+            
+            const chord1Type = getChordType(chord1.symbol);
+            const chord2Type = getChordType(chord2.symbol);
+            
+            const movements = [];
+            
+            // Analyze each voice position including gaps
+            for (let i = 0; i < Math.max(voicing1.length, voicing2.length); i++) {
+                const note1 = voicing1[i];
+                const note2 = voicing2[i];
+                
+                // Only analyze if both notes exist and are not empty
+                if (note1 && note2 && note1.trim() !== '' && note2.trim() !== '') {
+                    const movement = calculateVoiceMovement(note1, note2, chord1.symbol, chord1Type, chord2.symbol, chord2Type);
+                    movements.push({
+                        position: i,
+                        from: note1,
+                        to: note2,
+                        ...movement
+                    });
+                }
+            }
+            
+            return movements;
+        }
+        
+        function getActualPitchInSemitones(chordDegree, chordSymbol, chordType) {
+            // Get the root note offset for the chord symbol
+            const rootOffset = getChordRootOffset(chordSymbol);
+            let degreeOffset = getNoteInSemitones(chordDegree, chordType);
+            
+            if (rootOffset === null || degreeOffset === null) return null;
+            
+            // The chord degree already includes alterations (♭9, ♯11, etc.)
+            // But we need to apply basic chord type modifications to unaltered degrees
+            if (chordType === 'minor' && chordDegree === '3') {
+                degreeOffset = 3; // ♭3
+            } else if (chordType === 'minor' && chordDegree === '7') {
+                degreeOffset = 10; // ♭7
+            } else if ((chordType === 'dominant' || chordType === 'sus') && chordDegree === '7') {
+                degreeOffset = 10; // ♭7
+            }
+            
+            return (rootOffset + degreeOffset) % 12;
+        }
+        
+        function getChordRootOffset(chordSymbol) {
+            // Map Roman numeral to semitone offset from tonic
+            // Assuming major key context for now
+            const romanToSemitones = {
+                'I': 0, 'i': 0,
+                '♭II7': 1, '♭ii': 1,
+                'ii': 2, 'II': 2,
+                '♭III': 3, '♭iii': 3,
+                'iii': 4, 'III': 4,
+                'IV': 5, 'iv': 5,
+                'Vsus': 7, 'V7': 7, 'V': 7,
+                '♭VI': 8, '♭vi': 8,
+                'vi': 9, 'VI': 9,
+                '♭VII': 10, '♭vii': 10
+            };
+            
+            // Handle secondary dominants
+            if (chordSymbol.includes('/')) {
+                const [chordPart, targetPart] = chordSymbol.split('/');
+                const targetOffset = romanToSemitones[targetPart] || 0;
+                
+                // Dominant is 5 semitones above target
+                if (chordPart.includes('V7') || chordPart.includes('Vsus')) {
+                    return (targetOffset + 7) % 12;
+                }
+            }
+            
+            return romanToSemitones[chordSymbol] || 0;
+        }
+
+        function calculateVoiceMovement(note1, note2, chord1Symbol, chord1Type, chord2Symbol, chord2Type) {
+            const pitch1 = getActualPitchInSemitones(note1, chord1Symbol, chord1Type);
+            const pitch2 = getActualPitchInSemitones(note2, chord2Symbol, chord2Type);
+            
+            if (pitch1 === null || pitch2 === null) {
+                return { interval: null, direction: 'unknown', type: 'unknown' };
+            }
+            
+            // Calculate interval (allowing for octave equivalence)
+            let interval = pitch2 - pitch1;
+            
+            // Normalize to within one octave for analysis
+            while (interval > 6) interval -= 12;
+            while (interval < -6) interval += 12;
+            
+            const direction = interval === 0 ? 'same' : interval > 0 ? 'up' : 'down';
+            const absInterval = Math.abs(interval);
+            
+            let type, symbol;
+            if (interval === 0) {
+                type = 'common';
+                symbol = '=';
+            } else if (absInterval === 1) {
+                type = 'step';
+                symbol = direction === 'up' ? '↑½' : '↓½';
+            } else if (absInterval === 2) {
+                type = 'step';
+                symbol = direction === 'up' ? '↑1' : '↓1';
+            } else if (absInterval <= 4) {
+                type = 'leap';
+                symbol = direction === 'up' ? `↑${absInterval}` : `↓${absInterval}`;
+            } else {
+                type = 'leap';
+                symbol = direction === 'up' ? `↑${absInterval}` : `↓${absInterval}`;
+            }
+            
+            return {
+                interval,
+                direction,
+                type,
+                symbol,
+                absInterval
+            };
+        }
+        
+        function getVoiceLeadingColor(type) {
+            switch (type) {
+                case 'common': return '#4CAF50'; // Green for common tones
+                case 'step': return '#2196F3'; // Blue for smooth steps
+                case 'leap': return '#FF9800'; // Orange for leaps
+                default: return '#757575'; // Gray for unknown
+            }
+        }
+        
+        function getVoiceLeadingSummary(movements) {
+            if (!movements || movements.length === 0) return 'No voice leading data available';
+            
+            const commonTones = movements.filter(m => m.type === 'common').length;
+            const stepMotions = movements.filter(m => m.type === 'step').length;
+            const leaps = movements.filter(m => m.type === 'leap').length;
+            
+            const details = movements.map(m => 
+                `Voice ${m.position + 1}: ${m.from} → ${m.to} (${m.symbol})`
+            ).join('\n');
+            
+            return `Voice Leading Summary:
+${commonTones} common tone${commonTones !== 1 ? 's' : ''}
+${stepMotions} step motion${stepMotions !== 1 ? 's' : ''}
+${leaps} leap${leaps !== 1 ? 's' : ''}
+
+Details:
+${details}`;
+        }
+
+        let currentProgression = [];
+        let draggedChord = null;
+        let selectedRoot = null;
+
+        function switchMode(mode) {
+            const browseModeBtn = document.querySelector('.mode-btn:first-child');
+            const progressionModeBtn = document.querySelector('.mode-btn:last-child');
+            const browseMode = document.getElementById('browse-mode');
+            const progressionMode = document.getElementById('progression-mode');
+
+            if (mode === 'browse') {
+                browseModeBtn.classList.add('active');
+                progressionModeBtn.classList.remove('active');
+                browseMode.classList.add('active');
+                progressionMode.classList.remove('active');
+                loadBrowseMode();
+            } else {
+                browseModeBtn.classList.remove('active');
+                progressionModeBtn.classList.add('active');
+                browseMode.classList.remove('active');
+                progressionMode.classList.add('active');
+                loadProgressionMode();
+            }
+        }
+
+        function loadBrowseMode() {
+            const browseContent = document.getElementById('browse-content');
+            let html = '';
+
+            // Define column order for each chord type
+            const topNoteColumns = {
+                major: ['1', '3', '5', '7', '9', '♯11', '13'],
+                minor: ['1', '3', '5', '7', '♮7', '9', '11', '13'],
+                dominant: ['1', '3', '5', '7', '♭9', '9', '♯9', '♯11', '♭13', '13'],
+                sus: ['1', '4', '5', '7', '♭9', '9', '♯9', '♭13', '13']
+            };
+
+
+            Object.entries(voicingData).forEach(([chordType, scales]) => {
+                const chordTypeTitle = chordType.charAt(0).toUpperCase() + chordType.slice(1) + ' Chords';
+                const columns = topNoteColumns[chordType];
+                
+                // Get only columns that actually have voicings in this chord type
+                const usedColumns = [];
+                const allTopNotes = new Set();
+                Object.values(scales).forEach(voicings => {
+                    Object.keys(voicings).forEach(topNote => allTopNotes.add(topNote));
+                });
+                columns.forEach(col => {
+                    if (allTopNotes.has(col)) {
+                        usedColumns.push(col);
+                    }
+                });
+                
+                const gridCols = `repeat(${usedColumns.length}, 1fr)`;
+                
+                html += `
+                    <div class="chord-type">
+                        <h2>${chordTypeTitle}</h2>
+                        
+                        <div class="note-headers" style="grid-template-columns: ${gridCols};">
+                            ${usedColumns.map(note => `<div class="note-header">${note}</div>`).join('')}
+                        </div>
+                        
+                        <div class="voicing-table">
+                `;
+
+                Object.entries(scales).forEach(([scaleName, voicings]) => {
+                    const voicingCount = Object.keys(voicings).length;
+                    html += `
+                        <div class="scale-row">
+                            <div class="scale-name">${scaleName}</div>
+                            <div class="voicing-grid" style="grid-template-columns: ${gridCols};">
+                    `;
+
+                    // Create cells in the used column order
+                    usedColumns.forEach(topNote => {
+                        if (voicings[topNote]) {
+                            // Convert array format to display string with top note emphasis
+                            let voicingDisplay;
+                            const voicing = voicings[topNote];
+                            if (Array.isArray(voicing)) {
+                                const notes = voicing.map((note, index) => {
+                                    if (index === 0 && note.trim() !== '') {
+                                        return `<span class="top-note">${note}</span>`;
+                                    }
+                                    return note;
+                                });
+                                voicingDisplay = notes.join('\n');
+                            } else {
+                                // For string format, emphasize first non-empty line
+                                const lines = voicing.split('\n');
+                                const firstNoteIndex = lines.findIndex(line => line.trim() !== '');
+                                if (firstNoteIndex >= 0) {
+                                    lines[firstNoteIndex] = `<span class="top-note">${lines[firstNoteIndex]}</span>`;
+                                }
+                                voicingDisplay = lines.join('\n');
+                            }
+                            html += `
+                                <div class="voicing-cell" data-chord-type="${chordType}" data-scale="${scaleName}" data-top-note="${topNote}">
+                                    <div class="chord-notes">${voicingDisplay}</div>
+                                </div>
+                            `;
+                        } else {
+                            // Empty cell for missing voicings
+                            html += `
+                                <div class="voicing-cell empty-cell">
+                                    <div class="chord-notes">-</div>
+                                </div>
+                            `;
+                        }
+                    });
+
+                    html += `
+                            </div>
+                        </div>
+                    `;
+                });
+
+                html += `
+                        </div>
+                    </div>
+                `;
+            });
+
+            browseContent.innerHTML = html;
+        }
+
+        function loadProgressionMode() {
+            const primaryDegrees = [
+                { symbol: 'I', type: 'major', display: 'I (major)' },
+                { symbol: 'i', type: 'minor', display: 'i (minor)' },
+                { symbol: '♭II7', type: 'dominant', display: '♭II7 (dominant)' },
+                { symbol: 'ii', type: 'minor', display: 'ii (minor)' },
+                { symbol: '♭III', type: 'major', display: '♭III (major)' },
+                { symbol: 'iii', type: 'minor', display: 'iii (minor)' },
+                { symbol: 'IV', type: 'major', display: 'IV (major)' },
+                { symbol: 'iv', type: 'minor', display: 'iv (minor)' },
+                { symbol: 'Vsus', type: 'sus', display: 'Vsus (sus)' },
+                { symbol: 'V7', type: 'dominant', display: 'V7 (dominant)' },
+                { symbol: '♭VI', type: 'major', display: '♭VI (major)' },
+                { symbol: 'vi', type: 'minor', display: 'vi (minor)' },
+                { symbol: '♭VII', type: 'dominant', display: '♭VII (dominant)' }
+            ];
+
+            const secondaryHarmony = [
+                { symbol: 'Vsus/ii', type: 'sus', display: 'Vsus/ii (sus)' },
+                { symbol: 'V7/ii', type: 'dominant', display: 'V7/ii (dominant)' },
+                { symbol: 'Vsus/iii', type: 'sus', display: 'Vsus/iii (sus)' },
+                { symbol: 'V7/iii', type: 'dominant', display: 'V7/iii (dominant)' },
+                { symbol: 'Vsus/♭III', type: 'sus', display: 'Vsus/♭III (sus)' },
+                { symbol: 'V7/♭III', type: 'dominant', display: 'V7/♭III (dominant)' },
+                { symbol: 'Vsus/IV', type: 'sus', display: 'Vsus/IV (sus)' },
+                { symbol: 'V7/IV', type: 'dominant', display: 'V7/IV (dominant)' },
+                { symbol: 'Vsus/V', type: 'sus', display: 'Vsus/V (sus)' },
+                { symbol: 'V7/V', type: 'dominant', display: 'V7/V (dominant)' },
+                { symbol: 'Vsus/♭VI', type: 'sus', display: 'Vsus/♭VI (sus)' },
+                { symbol: 'V7/♭VI', type: 'dominant', display: 'V7/♭VI (dominant)' },
+                { symbol: 'Vsus/vi', type: 'sus', display: 'Vsus/vi (sus)' },
+                { symbol: 'V7/vi', type: 'dominant', display: 'V7/vi (dominant)' },
+                { symbol: 'V/', type: 'dominant', display: 'V/ (dominant)' },
+                { symbol: 'rel. ii', type: 'minor', display: 'rel. ii (minor)' }
+            ];
+
+            // Load degree options
+            const rootOptions = document.getElementById('root-options');
+            let degreeHtml = '<h4 style="grid-column: 1/-1; color: #8B7D6B; margin: 0.5rem 0; text-align: center;">Primary Degrees</h4>';
+            
+            primaryDegrees.forEach(degree => {
+                degreeHtml += `<div class="root-option" data-chord="${degree.symbol}" data-type="${degree.type}">${degree.symbol}</div>`;
+            });
+
+            degreeHtml += '<h4 style="grid-column: 1/-1; color: #8B7D6B; margin: 1rem 0 0.5rem 0; text-align: center;">Secondary Harmony</h4>';
+            
+            secondaryHarmony.forEach(degree => {
+                degreeHtml += `<div class="root-option" data-chord="${degree.symbol}" data-type="${degree.type}">${degree.symbol}</div>`;
+            });
+
+            rootOptions.innerHTML = degreeHtml;
+
+            // Add degree selection listeners - single click to add
+            document.querySelectorAll('.root-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    const chord = option.dataset.chord;
+                    if (chord) {
+                        addChordToProgression(chord);
+                    }
+                });
+            });
+        }
+
+
+        function addChordToProgression(chord) {
+            const chordType = getChordType(chord);
+            let selectedVoicing = null;
+            
+            // If there's a previous chord, find the closest top note
+            if (currentProgression.length > 0) {
+                const lastChord = currentProgression[currentProgression.length - 1];
+                selectedVoicing = getClosestVoicing(chordType, lastChord);
+            } else {
+                // First chord - use default first voicing
+                selectedVoicing = getFirstVoicing(chordType);
+            }
+            
+            const chordData = {
+                id: Date.now(),
+                symbol: chord,
+                selectedVoicing: null,
+                selectedVoicingKey: null,
+                currentTopNote: selectedVoicing ? selectedVoicing.topNote : null,
+                currentVoicingIndex: 0,
+                scaleName: selectedVoicing ? selectedVoicing.scaleName : null,
+                voicingWithPositions: null
+            };
+            
+            // Use updateChordVoicing to properly set up the voicing data
+            if (selectedVoicing) {
+                updateChordVoicing(chordData, selectedVoicing);
+            }
+            
+            currentProgression.push(chordData);
+            renderProgression();
+        }
+
+        function removeChordFromProgression(id) {
+            currentProgression = currentProgression.filter(chord => chord.id !== id);
+            renderProgression();
+        }
+
+        function renderProgression() {
+            const container = document.getElementById('progression-container');
+            
+            if (currentProgression.length === 0) {
+                container.innerHTML = '<div class="empty-progression">Click any Roman numeral degree to add it to your progression</div>';
+                return;
+            }
+
+            let html = '';
+            currentProgression.forEach((chord, index) => {
+                const chordType = getChordType(chord.symbol);
+                const allTopNotes = getAllTopNotes(chordType);
+                const currentTopNote = chord.currentTopNote;
+                const voicingsForCurrentTopNote = getVoicingsForTopNote(chordType, currentTopNote);
+                
+                // Find current top note index
+                const topNoteIndex = allTopNotes.indexOf(currentTopNote);
+                const canGoToPrevTopNote = topNoteIndex > 0;
+                const canGoToNextTopNote = topNoteIndex < allTopNotes.length - 1;
+                
+                // Find current voicing index within the top note
+                const canGoToPrevVoicing = chord.currentVoicingIndex > 0;
+                const canGoToNextVoicing = chord.currentVoicingIndex < voicingsForCurrentTopNote.length - 1;
+                
+                html += `
+                    <div class="chord-slot">
+                        <div class="chord-header">
+                            <span class="chord-symbol">${chord.symbol}</span>
+                            <button class="remove-chord" onclick="removeChordFromProgression(${chord.id})">×</button>
+                        </div>
+                        <div class="voicing-selector">
+                            <div class="voicing-navigation">
+                                <div class="top-note-selector">
+                                    <div class="top-note-label">Top Note</div>
+                                    <select class="top-note-dropdown" onchange="changeTopNoteFromDropdown(${chord.id}, this.value)">
+                                        ${allTopNotes.map(topNote => 
+                                            `<option value="${topNote}" ${topNote === currentTopNote ? 'selected' : ''}>${topNote}</option>`
+                                        ).join('')}
+                                    </select>
+                                </div>
+                                <div class="voicing-navigation-controls">
+                                    <button class="nav-arrow" onclick="changeVoicing(${chord.id}, -1)" ${!canGoToPrevVoicing ? 'disabled' : ''}>◀</button>
+                                    <div class="voicing-counter">${chord.currentVoicingIndex + 1}/${voicingsForCurrentTopNote.length}</div>
+                                    <button class="nav-arrow" onclick="changeVoicing(${chord.id}, 1)" ${!canGoToNextVoicing ? 'disabled' : ''}>▶</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="selected-voicing" id="voicing-${chord.id}">
+                            ${chord.voicingWithPositions ? 
+                                `<div class="voicing-with-positions">
+                                    ${chord.voicingWithPositions.map(voiceData => {
+                                        if (voiceData === '') return '<div style="height: 0.5rem;"></div>';
+                                        return `<div class="voice-position ${voiceData.isTopNote ? 'top-note' : ''}">
+                                            <span class="voice-note">${voiceData.note}</span>
+                                        </div>`;
+                                    }).join('')}
+                                </div>` 
+                                : (chord.selectedVoicing || 'No voicing selected')
+                            }
+                            ${chord.selectedVoicing ? `<div class="voicing-scale-name">${chord.scaleName || ''}</div>` : ''}
+                        </div>
+                    </div>
+                `;
+                
+                // Add voice leading connector if not the last chord
+                if (index < currentProgression.length - 1) {
+                    const nextChord = currentProgression[index + 1];
+                    const movements = analyzeVoiceLeading(chord, nextChord);
+                    
+                    if (movements && movements.length > 0) {
+                        const summary = getVoiceLeadingSummary(movements);
+                        
+                        // Create movement indicators that match the exact structure of chord.voicingWithPositions
+                        const movementHtml = [];
+                        
+                        // Use the same structure as the first chord's voicingWithPositions
+                        if (chord.voicingWithPositions) {
+                            chord.voicingWithPositions.forEach((voiceData, index) => {
+                                if (voiceData === '') {
+                                    // Empty gap - add spacing
+                                    movementHtml.push('<div style="height: 0.5rem;"></div>');
+                                } else {
+                                    // Find movement for this actual voice position
+                                    const movement = movements.find(m => m.position === index);
+                                    
+                                    if (movement) {
+                                        movementHtml.push(`<div class="voice-movement ${movement.type}" title="Voice ${movement.position + 1}: ${movement.from} → ${movement.to}">${movement.symbol}</div>`);
+                                    } else {
+                                        // Always show a movement indicator to maintain alignment
+                                        movementHtml.push(`<div class="voice-movement" style="opacity: 0.3; background: rgba(255,255,255,0.1);">–</div>`);
+                                    }
+                                }
+                            });
+                        } else {
+                            // Fallback: create indicators based on movements only
+                            movements.forEach(movement => {
+                                movementHtml.push(`<div class="voice-movement ${movement.type}" title="Voice ${movement.position + 1}: ${movement.from} → ${movement.to}">${movement.symbol}</div>`);
+                            });
+                        }
+                        
+                        html += `
+                            <div class="voice-leading-connector" title="${summary}">
+                                ${movementHtml.join('')}
+                            </div>
+                        `;
+                    }
+                }
+            });
+
+            container.innerHTML = html;
+        }
+
+        function getChordType(symbol) {
+            if (symbol.includes('sus')) return 'sus';
+            if (symbol.includes('7') || symbol.includes('♭VII')) return 'dominant';
+            if (symbol === 'i' || symbol === 'ii' || symbol === 'iii' || symbol === 'vi' || symbol === 'rel. ii') return 'minor';
+            return 'major';
+        }
+
+        function sortTopNotes(topNotes) {
+            return topNotes.sort((a, b) => {
+                // Remove ♭ and ♯ for sorting, just use the base number
+                const getBaseNumber = (note) => {
+                    const cleaned = note.replace(/[♭♯]/g, '');
+                    return parseFloat(cleaned) || (cleaned === '♮7' ? 7 : 999);
+                };
+                return getBaseNumber(a) - getBaseNumber(b);
+            });
+        }
+
+        function getFirstVoicing(chordType) {
+            const availableVoicings = voicingData[chordType] || {};
+            const scales = Object.keys(availableVoicings);
+            if (scales.length === 0) return null;
+
+            // Get all top notes and sort them
+            const allTopNotes = getAllTopNotes(chordType);
+            if (allTopNotes.length === 0) return null;
+
+            // Get first top note
+            const firstTopNote = allTopNotes[0];
+            
+            // Get voicings for first top note
+            const voicingsForFirstTopNote = getVoicingsForTopNote(chordType, firstTopNote);
+            if (voicingsForFirstTopNote.length === 0) return null;
+
+            // Return first voicing of first top note
+            return voicingsForFirstTopNote[0];
+        }
+        
+        function getClosestVoicing(newChordType, previousChord) {
+            // Get the previous chord's actual top note pitch
+            const previousChordType = getChordType(previousChord.symbol);
+            const previousTopNotePitch = getActualPitchInSemitones(previousChord.currentTopNote, previousChord.symbol, previousChordType);
+            
+            if (previousTopNotePitch === null) {
+                // Fallback to first voicing if we can't calculate previous pitch
+                return getFirstVoicing(newChordType);
+            }
+            
+            // Get all available top notes for the new chord
+            const allTopNotes = getAllTopNotes(newChordType);
+            if (allTopNotes.length === 0) return null;
+            
+            let closestTopNote = null;
+            let smallestInterval = Infinity;
+            
+            // Find the top note with the smallest interval to the previous top note
+            allTopNotes.forEach(topNote => {
+                // Create a temporary chord symbol for pitch calculation
+                const tempSymbol = newChordType === 'major' ? 'I' : 
+                                 newChordType === 'minor' ? 'ii' :
+                                 newChordType === 'dominant' ? 'V7' : 'Vsus';
+                const newTopNotePitch = getActualPitchInSemitones(topNote, tempSymbol, newChordType);
+                
+                if (newTopNotePitch !== null) {
+                    // Calculate interval (allowing for octave equivalence)
+                    let interval = newTopNotePitch - previousTopNotePitch;
+                    
+                    // Normalize to within one octave for analysis
+                    while (interval > 6) interval -= 12;
+                    while (interval < -6) interval += 12;
+                    
+                    const absInterval = Math.abs(interval);
+                    
+                    if (absInterval < smallestInterval) {
+                        smallestInterval = absInterval;
+                        closestTopNote = topNote;
+                    }
+                }
+            });
+            
+            if (!closestTopNote) {
+                return getFirstVoicing(newChordType);
+            }
+            
+            // Get voicings for the closest top note
+            const voicingsForClosestTopNote = getVoicingsForTopNote(newChordType, closestTopNote);
+            if (voicingsForClosestTopNote.length === 0) {
+                return getFirstVoicing(newChordType);
+            }
+            
+            // Return first voicing of the closest top note
+            return voicingsForClosestTopNote[0];
+        }
+
+        function getVoicingsForTopNote(chordType, topNote) {
+            const availableVoicings = voicingData[chordType] || {};
+            const voicings = [];
+            
+            Object.entries(availableVoicings).forEach(([scaleName, scaleVoicings]) => {
+                if (scaleVoicings[topNote]) {
+                    voicings.push({
+                        key: `${scaleName}:${topNote}`,
+                        topNote,
+                        voicing: scaleVoicings[topNote],
+                        scaleName
+                    });
+                }
+            });
+
+            return voicings;
+        }
+
+        function getAllTopNotes(chordType) {
+            const availableVoicings = voicingData[chordType] || {};
+            const topNotes = new Set();
+            
+            Object.entries(availableVoicings).forEach(([scaleName, scaleVoicings]) => {
+                Object.keys(scaleVoicings).forEach(topNote => topNotes.add(topNote));
+            });
+
+            return sortTopNotes([...topNotes]);
+        }
+
+        function getAvailableVoicings(chordType) {
+            const voicingsByTopNote = {};
+            
+            // Group voicings by top note
+            Object.entries(voicingData[chordType] || {}).forEach(([scaleName, scaleVoicings]) => {
+                Object.entries(scaleVoicings).forEach(([topNote, voicing]) => {
+                    if (!voicingsByTopNote[topNote]) {
+                        voicingsByTopNote[topNote] = [];
+                    }
+                    
+                    // Convert array format to display string - keep it horizontal for dropdown
+                    let voicingDisplay;
+                    if (Array.isArray(voicing)) {
+                        voicingDisplay = voicing.join(' ');
+                    } else {
+                        voicingDisplay = voicing.replace(/\n/g, ' ');
+                    }
+                    
+                    voicingsByTopNote[topNote].push({
+                        key: `${scaleName}:${topNote}`,
+                        label: voicingDisplay,
+                        voicing: voicing,
+                        scaleName: scaleName
+                    });
+                });
+            });
+            
+            // Sort top notes and flatten the structure for dropdown
+            const sortedTopNotes = Object.keys(voicingsByTopNote).sort((a, b) => {
+                // Custom sort to handle numbers and symbols properly
+                const aNum = parseFloat(a) || (a === '♭9' ? -0.5 : a === '♯9' ? 0.5 : a === '♯11' ? 4.5 : a === '♭13' ? 5.5 : 999);
+                const bNum = parseFloat(b) || (b === '♭9' ? -0.5 : b === '♯9' ? 0.5 : b === '♯11' ? 4.5 : b === '♭13' ? 5.5 : 999);
+                return aNum - bNum;
+            });
+            
+            const result = [];
+            sortedTopNotes.forEach(topNote => {
+                // Add separator/header for each top note group
+                result.push({
+                    key: `header-${topNote}`,
+                    label: `─── Top Note: ${topNote} ───`,
+                    isHeader: true
+                });
+                
+                // Add all voicings for this top note
+                voicingsByTopNote[topNote].forEach(voicing => {
+                    result.push(voicing);
+                });
+            });
+            
+            return result;
+        }
+
+        function changeTopNoteFromDropdown(chordId, newTopNote) {
+            const chord = currentProgression.find(c => c.id === chordId);
+            if (!chord) return;
+
+            const chordType = getChordType(chord.symbol);
+            const voicingsForNewTopNote = getVoicingsForTopNote(chordType, newTopNote);
+            
+            if (voicingsForNewTopNote.length > 0) {
+                // Set to first voicing of the new top note
+                chord.currentTopNote = newTopNote;
+                chord.currentVoicingIndex = 0;
+                updateChordVoicing(chord, voicingsForNewTopNote[0]);
+            }
+
+            renderProgression();
+        }
+
+        function changeVoicing(chordId, direction) {
+            const chord = currentProgression.find(c => c.id === chordId);
+            if (!chord) return;
+
+            const chordType = getChordType(chord.symbol);
+            const voicingsForCurrentTopNote = getVoicingsForTopNote(chordType, chord.currentTopNote);
+            const newIndex = chord.currentVoicingIndex + direction;
+
+            if (newIndex >= 0 && newIndex < voicingsForCurrentTopNote.length) {
+                chord.currentVoicingIndex = newIndex;
+                updateChordVoicing(chord, voicingsForCurrentTopNote[newIndex]);
+            }
+
+            renderProgression();
+        }
+
+        function formatVoicingWithPositions(voicing, topNote) {
+            if (!Array.isArray(voicing)) return voicing;
+            
+            const notes = [];
+            voicing.forEach((note, index) => {
+                notes.push(note);
+                if ((index + 1) % 3 === 0 && index < voicing.length - 1) {
+                    notes.push('');
+                }
+            });
+            
+            return notes.map((note, index) => {
+                if (note === '') return '';
+                const isTopNote = index === 0;
+                const positionNum = index < 3 ? index + 1 : index;
+                return {
+                    note,
+                    position: positionNum,
+                    isTopNote
+                };
+            });
+        }
+
+        function updateChordVoicing(chord, voicingData) {
+            // Store both simple and detailed voicing formats
+            if (Array.isArray(voicingData.voicing)) {
+                // Simple format for voice leading analysis
+                const notes = [];
+                voicingData.voicing.forEach((note, index) => {
+                    notes.push(note);
+                    if ((index + 1) % 3 === 0 && index < voicingData.voicing.length - 1) {
+                        notes.push('');
+                    }
+                });
+                chord.selectedVoicing = notes.join('\n');
+                
+                // Detailed format for enhanced display
+                chord.voicingWithPositions = formatVoicingWithPositions(voicingData.voicing, voicingData.topNote);
+            } else {
+                chord.selectedVoicing = voicingData.voicing;
+                chord.voicingWithPositions = null;
+            }
+            chord.selectedVoicingKey = voicingData.key;
+            chord.scaleName = voicingData.scaleName;
+        }
+
+
+        // Initialize the app
+        loadProgressionMode();
+    </script>
+</body>
+</html>
