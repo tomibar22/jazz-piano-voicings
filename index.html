@@ -1841,10 +1841,6 @@ ${details}`;
                     
                     renderProgression();
                     
-                    // Show success message
-                    const chordCount = currentProgression.length;
-                    alert(`Successfully loaded progression with ${chordCount} chord${chordCount !== 1 ? 's' : ''}!`);
-                    
                 } catch (error) {
                     alert('Error loading progression file: ' + error.message);
                 }

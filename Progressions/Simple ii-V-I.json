@@ -1,0 +1,27 @@
+{
+  "version": "1.0",
+  "created": "2025-08-06T13:49:32.158Z",
+  "progression": [
+    {
+      "symbol": "ii",
+      "currentTopNote": "5",
+      "currentVoicingIndex": 1,
+      "selectedVoicingKey": "Pentatonic \"minor 7\":5",
+      "scaleName": "Pentatonic \"minor 7\""
+    },
+    {
+      "symbol": "V7",
+      "currentTopNote": "9",
+      "currentVoicingIndex": 1,
+      "selectedVoicingKey": "Pentatonic ♭3 (from 5):9",
+      "scaleName": "Pentatonic ♭3 (from 5)"
+    },
+    {
+      "symbol": "I",
+      "currentTopNote": "5",
+      "currentVoicingIndex": 0,
+      "selectedVoicingKey": "Pentatonic:5",
+      "scaleName": "Pentatonic"
+    }
+  ]
+}
