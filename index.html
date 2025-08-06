@@ -1297,10 +1297,10 @@ ${details}`;
             // If there's a previous chord, find the closest top note
             if (currentProgression.length > 0) {
                 const lastChord = currentProgression[currentProgression.length - 1];
-                selectedVoicing = getClosestVoicing(chordType, lastChord);
+                selectedVoicing = getClosestVoicing(chordType, lastChord, chord);
             } else {
                 // First chord - use default first voicing
-                selectedVoicing = getFirstVoicing(chordType);
+                selectedVoicing = getFirstVoicing(chordType, chord);
             }
             
             const chordData = {
@@ -1339,9 +1339,9 @@ ${details}`;
             let html = '';
             currentProgression.forEach((chord, index) => {
                 const chordType = getChordType(chord.symbol);
-                const allTopNotes = getAllTopNotes(chordType);
+                const allTopNotes = getAllTopNotes(chordType, chord.symbol);
                 const currentTopNote = chord.currentTopNote;
-                const voicingsForCurrentTopNote = getVoicingsForTopNote(chordType, currentTopNote);
+                const voicingsForCurrentTopNote = getVoicingsForTopNote(chordType, currentTopNote, chord.symbol);
                 
                 // Find current top note index
                 const topNoteIndex = allTopNotes.indexOf(currentTopNote);
@@ -1458,27 +1458,40 @@ ${details}`;
             });
         }
 
-        function getFirstVoicing(chordType) {
+        function getFilteredVoicingData(chordType, chordSymbol) {
             const availableVoicings = voicingData[chordType] || {};
+            
+            // Filter out "Pentatonic ♭3" for degree ii
+            if (chordSymbol === 'ii' && availableVoicings["Pentatonic ♭3"]) {
+                const filtered = { ...availableVoicings };
+                delete filtered["Pentatonic ♭3"];
+                return filtered;
+            }
+            
+            return availableVoicings;
+        }
+
+        function getFirstVoicing(chordType, chordSymbol = null) {
+            const availableVoicings = getFilteredVoicingData(chordType, chordSymbol);
             const scales = Object.keys(availableVoicings);
             if (scales.length === 0) return null;
 
             // Get all top notes and sort them
-            const allTopNotes = getAllTopNotes(chordType);
+            const allTopNotes = getAllTopNotes(chordType, chordSymbol);
             if (allTopNotes.length === 0) return null;
 
             // Get first top note
             const firstTopNote = allTopNotes[0];
             
             // Get voicings for first top note
-            const voicingsForFirstTopNote = getVoicingsForTopNote(chordType, firstTopNote);
+            const voicingsForFirstTopNote = getVoicingsForTopNote(chordType, firstTopNote, chordSymbol);
             if (voicingsForFirstTopNote.length === 0) return null;
 
             // Return first voicing of first top note
             return voicingsForFirstTopNote[0];
         }
         
-        function getClosestVoicing(newChordType, previousChord) {
+        function getClosestVoicing(newChordType, previousChord, newChordSymbol = null) {
             // Get the previous chord's actual top note pitch
             const previousChordType = getChordType(previousChord.symbol);
             const previousTopNotePitch = getActualPitchInSemitones(previousChord.currentTopNote, previousChord.symbol, previousChordType);
@@ -1489,7 +1502,7 @@ ${details}`;
             }
             
             // Get all available top notes for the new chord
-            const allTopNotes = getAllTopNotes(newChordType);
+            const allTopNotes = getAllTopNotes(newChordType, newChordSymbol);
             if (allTopNotes.length === 0) return null;
             
             let closestTopNote = null;
@@ -1525,17 +1538,17 @@ ${details}`;
             }
             
             // Get voicings for the closest top note
-            const voicingsForClosestTopNote = getVoicingsForTopNote(newChordType, closestTopNote);
+            const voicingsForClosestTopNote = getVoicingsForTopNote(newChordType, closestTopNote, newChordSymbol);
             if (voicingsForClosestTopNote.length === 0) {
-                return getFirstVoicing(newChordType);
+                return getFirstVoicing(newChordType, newChordSymbol);
             }
             
             // Return first voicing of the closest top note
             return voicingsForClosestTopNote[0];
         }
 
-        function getVoicingsForTopNote(chordType, topNote) {
-            const availableVoicings = voicingData[chordType] || {};
+        function getVoicingsForTopNote(chordType, topNote, chordSymbol = null) {
+            const availableVoicings = getFilteredVoicingData(chordType, chordSymbol);
             const voicings = [];
             
             Object.entries(availableVoicings).forEach(([scaleName, scaleVoicings]) => {
@@ -1552,8 +1565,8 @@ ${details}`;
             return voicings;
         }
 
-        function getAllTopNotes(chordType) {
-            const availableVoicings = voicingData[chordType] || {};
+        function getAllTopNotes(chordType, chordSymbol = null) {
+            const availableVoicings = getFilteredVoicingData(chordType, chordSymbol);
             const topNotes = new Set();
             
             Object.entries(availableVoicings).forEach(([scaleName, scaleVoicings]) => {
@@ -1621,7 +1634,7 @@ ${details}`;
             if (!chord) return;
 
             const chordType = getChordType(chord.symbol);
-            const voicingsForNewTopNote = getVoicingsForTopNote(chordType, newTopNote);
+            const voicingsForNewTopNote = getVoicingsForTopNote(chordType, newTopNote, chord.symbol);
             
             if (voicingsForNewTopNote.length > 0) {
                 // Set to first voicing of the new top note
@@ -1638,7 +1651,7 @@ ${details}`;
             if (!chord) return;
 
             const chordType = getChordType(chord.symbol);
-            const voicingsForCurrentTopNote = getVoicingsForTopNote(chordType, chord.currentTopNote);
+            const voicingsForCurrentTopNote = getVoicingsForTopNote(chordType, chord.currentTopNote, chord.symbol);
             const newIndex = chord.currentVoicingIndex + direction;
 
             if (newIndex >= 0 && newIndex < voicingsForCurrentTopNote.length) {
