@@ -1382,7 +1382,14 @@ ${details}`;
             rootOptions.innerHTML = degreeHtml;
 
             // Add degree selection listeners - single click to add
-            document.querySelectorAll('.root-option').forEach(option => {
+            setupDegreeButtonListeners();
+        }
+
+        function setupDegreeButtonListeners() {
+            const rootOptions = document.querySelectorAll('.root-option');
+            
+            rootOptions.forEach(option => {
+                // Add click listener
                 option.addEventListener('click', (e) => {
                     // Prevent adding chord if it was just dragged
                     if (isDragging) {
@@ -1394,6 +1401,27 @@ ${details}`;
                     if (chord) {
                         addChordToProgression(chord);
                     }
+                });
+
+                // Add drag listeners
+                option.addEventListener('dragstart', (e) => {
+                    isDragging = true;
+                    draggedElement = option;
+                    draggedNewChord = option.dataset.chord;
+                    draggedChordId = null;
+                    
+                    e.dataTransfer.effectAllowed = 'copy';
+                });
+
+                option.addEventListener('dragend', (e) => {
+                    // Delay clearing isDragging to prevent click events
+                    setTimeout(() => {
+                        isDragging = false;
+                    }, 100);
+                    
+                    clearDropIndicators();
+                    draggedElement = null;
+                    draggedNewChord = null;
                 });
             });
         }
@@ -1568,11 +1596,11 @@ ${details}`;
                 setupChordSlotDrag(slot);
             });
             
-            // Setup drag for degree buttons
-            setupDegreeButtonDrag();
-            
-            // Setup drop zones on container
-            setupDropZones(container);
+            // Setup drop zones on container (only if not already set)
+            if (!container.hasAttribute('data-drop-setup')) {
+                setupDropZones(container);
+                container.setAttribute('data-drop-setup', 'true');
+            }
         }
 
         function setupChordSlotDrag(slot) {
@@ -1617,31 +1645,6 @@ ${details}`;
             });
         }
 
-        function setupDegreeButtonDrag() {
-            const rootOptions = document.querySelectorAll('.root-option');
-            
-            rootOptions.forEach(option => {
-                option.addEventListener('dragstart', (e) => {
-                    isDragging = true;
-                    draggedElement = option;
-                    draggedNewChord = option.dataset.chord;
-                    draggedChordId = null;
-                    
-                    e.dataTransfer.effectAllowed = 'copy';
-                });
-
-                option.addEventListener('dragend', (e) => {
-                    // Delay clearing isDragging to prevent click events
-                    setTimeout(() => {
-                        isDragging = false;
-                    }, 100);
-                    
-                    clearDropIndicators();
-                    draggedElement = null;
-                    draggedNewChord = null;
-                });
-            });
-        }
 
         function setupDropZones(container) {
             container.addEventListener('dragover', (e) => {
