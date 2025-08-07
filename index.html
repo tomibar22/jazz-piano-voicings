@@ -438,8 +438,11 @@
             padding: 1.2rem;
             min-width: 180px;
             max-width: 220px;
+            height: 420px;
             transition: all 0.3s ease;
             flex-shrink: 1;
+            display: flex;
+            flex-direction: column;
         }
 
         .chord-slot:hover {
@@ -642,6 +645,11 @@
             text-align: center;
             white-space: pre-line;
             font-weight: bold;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 200px;
         }
 
         .voicing-with-positions {
@@ -677,6 +685,11 @@
             font-family: 'Georgia', serif;
             margin-top: 1rem;
             font-style: italic;
+            height: 2.5rem;
+            overflow: hidden;
+            line-height: 1.2;
+            display: flex;
+            align-items: flex-end;
         }
 
         .empty-progression {
@@ -730,6 +743,7 @@
             .chord-slot {
                 min-width: 160px;
                 max-width: 200px;
+                height: 380px;
             }
         }
     </style>
