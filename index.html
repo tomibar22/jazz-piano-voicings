@@ -2118,10 +2118,8 @@ ${details}`;
                 return; // Nothing to clear
             }
             
-            if (confirm('Are you sure you want to clear all chords from the progression?')) {
-                currentProgression = [];
-                renderProgression();
-            }
+            currentProgression = [];
+            renderProgression();
         }
         
         function handleFileLoad(event) {
