@@ -1383,7 +1383,13 @@ ${details}`;
 
             // Add degree selection listeners - single click to add
             document.querySelectorAll('.root-option').forEach(option => {
-                option.addEventListener('click', () => {
+                option.addEventListener('click', (e) => {
+                    // Prevent adding chord if it was just dragged
+                    if (isDragging) {
+                        e.preventDefault();
+                        return;
+                    }
+                    
                     const chord = option.dataset.chord;
                     if (chord) {
                         addChordToProgression(chord);
@@ -1551,6 +1557,7 @@ ${details}`;
         let draggedElement = null;
         let draggedChordId = null;
         let draggedNewChord = null;
+        let isDragging = false;
 
         function setupDragAndDrop() {
             const container = document.getElementById('progression-container');
@@ -1570,6 +1577,7 @@ ${details}`;
 
         function setupChordSlotDrag(slot) {
             slot.addEventListener('dragstart', (e) => {
+                isDragging = true;
                 draggedElement = slot;
                 draggedChordId = parseInt(slot.dataset.chordId);
                 draggedNewChord = null;
@@ -1579,6 +1587,10 @@ ${details}`;
             });
 
             slot.addEventListener('dragend', (e) => {
+                setTimeout(() => {
+                    isDragging = false;
+                }, 100);
+                
                 slot.classList.remove('dragging');
                 clearDropIndicators();
                 draggedElement = null;
@@ -1610,6 +1622,7 @@ ${details}`;
             
             rootOptions.forEach(option => {
                 option.addEventListener('dragstart', (e) => {
+                    isDragging = true;
                     draggedElement = option;
                     draggedNewChord = option.dataset.chord;
                     draggedChordId = null;
@@ -1618,6 +1631,11 @@ ${details}`;
                 });
 
                 option.addEventListener('dragend', (e) => {
+                    // Delay clearing isDragging to prevent click events
+                    setTimeout(() => {
+                        isDragging = false;
+                    }, 100);
+                    
                     clearDropIndicators();
                     draggedElement = null;
                     draggedNewChord = null;
@@ -1635,7 +1653,9 @@ ${details}`;
 
             container.addEventListener('drop', (e) => {
                 e.preventDefault();
-                if (draggedNewChord) {
+                e.stopPropagation();
+                
+                if (draggedNewChord && isDragging) {
                     // Calculate drop position
                     const dropIndex = getDropIndex(e.clientX);
                     addChordAtPosition(draggedNewChord, dropIndex);
