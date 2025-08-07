@@ -446,6 +446,42 @@
             border-color: #d4af37;
         }
 
+        .chord-slot.dragging {
+            opacity: 0.5;
+            transform: scale(0.95);
+        }
+
+        .chord-slot.drag-over {
+            border-color: #ffd700;
+            background: rgba(255, 215, 0, 0.1);
+        }
+
+        .drag-handle {
+            color: #8B7D6B;
+            cursor: grab;
+            font-weight: bold;
+            margin-right: 8px;
+            user-select: none;
+        }
+
+        .drag-handle:active {
+            cursor: grabbing;
+        }
+
+        .drop-zone {
+            width: 4px;
+            height: 100%;
+            background: #ffd700;
+            border-radius: 2px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            margin: 0 8px;
+        }
+
+        .drop-zone.active {
+            opacity: 1;
+        }
+
         .voice-leading-connector {
             display: flex;
             flex-direction: column;
@@ -1334,13 +1370,13 @@ ${details}`;
             let degreeHtml = '<h4 style="grid-column: 1/-1; color: #8B7D6B; margin: 0.5rem 0; text-align: center;">Primary Degrees</h4>';
             
             primaryDegrees.forEach(degree => {
-                degreeHtml += `<div class="root-option" data-chord="${degree.symbol}" data-type="${degree.type}">${degree.symbol}</div>`;
+                degreeHtml += `<div class="root-option" data-chord="${degree.symbol}" data-type="${degree.type}" draggable="true">${degree.symbol}</div>`;
             });
 
             degreeHtml += '<h4 style="grid-column: 1/-1; color: #8B7D6B; margin: 1rem 0 0.5rem 0; text-align: center;">Secondary Harmony</h4>';
             
             secondaryHarmony.forEach(degree => {
-                degreeHtml += `<div class="root-option" data-chord="${degree.symbol}" data-type="${degree.type}">${degree.symbol}</div>`;
+                degreeHtml += `<div class="root-option" data-chord="${degree.symbol}" data-type="${degree.type}" draggable="true">${degree.symbol}</div>`;
             });
 
             rootOptions.innerHTML = degreeHtml;
@@ -1420,8 +1456,9 @@ ${details}`;
                 const canGoToNextVoicing = chord.currentVoicingIndex < voicingsForCurrentTopNote.length - 1;
                 
                 html += `
-                    <div class="chord-slot">
+                    <div class="chord-slot" data-chord-id="${chord.id}" draggable="true">
                         <div class="chord-header">
+                            <span class="drag-handle">≡</span>
                             <span class="chord-symbol">${chord.symbol}</span>
                             <button class="remove-chord" onclick="removeChordFromProgression(${chord.id})">×</button>
                         </div>
@@ -1505,6 +1542,226 @@ ${details}`;
             });
 
             container.innerHTML = html;
+            
+            // Add drag event listeners to chord slots
+            setupDragAndDrop();
+        }
+
+        // Drag and drop functionality
+        let draggedElement = null;
+        let draggedChordId = null;
+        let draggedNewChord = null;
+
+        function setupDragAndDrop() {
+            const container = document.getElementById('progression-container');
+            const chordSlots = container.querySelectorAll('.chord-slot');
+            
+            // Setup drag for existing chord slots
+            chordSlots.forEach(slot => {
+                setupChordSlotDrag(slot);
+            });
+            
+            // Setup drag for degree buttons
+            setupDegreeButtonDrag();
+            
+            // Setup drop zones on container
+            setupDropZones(container);
+        }
+
+        function setupChordSlotDrag(slot) {
+            slot.addEventListener('dragstart', (e) => {
+                draggedElement = slot;
+                draggedChordId = parseInt(slot.dataset.chordId);
+                draggedNewChord = null;
+                
+                slot.classList.add('dragging');
+                e.dataTransfer.effectAllowed = 'move';
+            });
+
+            slot.addEventListener('dragend', (e) => {
+                slot.classList.remove('dragging');
+                clearDropIndicators();
+                draggedElement = null;
+                draggedChordId = null;
+            });
+
+            slot.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                if (draggedElement && draggedElement !== slot) {
+                    e.dataTransfer.dropEffect = 'move';
+                    showDropIndicator(slot);
+                }
+            });
+
+            slot.addEventListener('dragleave', (e) => {
+                slot.classList.remove('drag-over');
+            });
+
+            slot.addEventListener('drop', (e) => {
+                e.preventDefault();
+                if (draggedElement && draggedElement !== slot) {
+                    handleChordDrop(slot);
+                }
+            });
+        }
+
+        function setupDegreeButtonDrag() {
+            const rootOptions = document.querySelectorAll('.root-option');
+            
+            rootOptions.forEach(option => {
+                option.addEventListener('dragstart', (e) => {
+                    draggedElement = option;
+                    draggedNewChord = option.dataset.chord;
+                    draggedChordId = null;
+                    
+                    e.dataTransfer.effectAllowed = 'copy';
+                });
+
+                option.addEventListener('dragend', (e) => {
+                    clearDropIndicators();
+                    draggedElement = null;
+                    draggedNewChord = null;
+                });
+            });
+        }
+
+        function setupDropZones(container) {
+            container.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                if (draggedElement) {
+                    e.dataTransfer.dropEffect = draggedNewChord ? 'copy' : 'move';
+                }
+            });
+
+            container.addEventListener('drop', (e) => {
+                e.preventDefault();
+                if (draggedNewChord) {
+                    // Calculate drop position
+                    const dropIndex = getDropIndex(e.clientX);
+                    addChordAtPosition(draggedNewChord, dropIndex);
+                }
+            });
+        }
+
+        function handleChordDrop(targetSlot) {
+            if (draggedChordId) {
+                const targetChordId = parseInt(targetSlot.dataset.chordId);
+                reorderChords(draggedChordId, targetChordId);
+            }
+        }
+
+        function reorderChords(draggedId, targetId) {
+            const draggedIndex = currentProgression.findIndex(c => c.id === draggedId);
+            const targetIndex = currentProgression.findIndex(c => c.id === targetId);
+            
+            if (draggedIndex === -1 || targetIndex === -1) return;
+            
+            // Remove the dragged chord
+            const [draggedChord] = currentProgression.splice(draggedIndex, 1);
+            
+            // Insert it at the target position
+            currentProgression.splice(targetIndex, 0, draggedChord);
+            
+            // Re-analyze voice leading for the entire progression
+            reanalyzeProgression();
+            
+            renderProgression();
+        }
+
+        function getDropIndex(clientX) {
+            const container = document.getElementById('progression-container');
+            const slots = container.querySelectorAll('.chord-slot');
+            
+            if (slots.length === 0) return 0;
+            
+            let dropIndex = slots.length;
+            
+            for (let i = 0; i < slots.length; i++) {
+                const rect = slots[i].getBoundingClientRect();
+                const slotMiddle = rect.left + rect.width / 2;
+                
+                if (clientX < slotMiddle) {
+                    dropIndex = i;
+                    break;
+                }
+            }
+            
+            return dropIndex;
+        }
+
+        function addChordAtPosition(chord, position) {
+            const chordType = getChordType(chord);
+            let selectedVoicing = null;
+            
+            // Find voice leading context for the new position
+            let prevChord = null;
+            let nextChord = null;
+            
+            if (position > 0) {
+                prevChord = currentProgression[position - 1];
+            }
+            if (position < currentProgression.length) {
+                nextChord = currentProgression[position];
+            }
+            
+            // Choose voicing based on context
+            if (prevChord) {
+                selectedVoicing = getClosestVoicing(chordType, prevChord, chord);
+            } else if (nextChord) {
+                selectedVoicing = getClosestVoicing(chordType, nextChord, chord);
+            } else {
+                selectedVoicing = getFirstVoicing(chordType, chord);
+            }
+            
+            const chordData = {
+                id: Date.now(),
+                symbol: chord,
+                selectedVoicing: null,
+                selectedVoicingKey: null,
+                currentTopNote: selectedVoicing ? selectedVoicing.topNote : null,
+                currentVoicingIndex: 0,
+                scaleName: selectedVoicing ? selectedVoicing.scaleName : null,
+                voicing: selectedVoicing ? selectedVoicing.voicing : null
+            };
+            
+            if (selectedVoicing) {
+                updateChordVoicing(chordData, selectedVoicing);
+            }
+            
+            // Insert at specified position
+            currentProgression.splice(position, 0, chordData);
+            
+            // Re-analyze voice leading for affected chords
+            reanalyzeProgression();
+            
+            renderProgression();
+        }
+
+        function reanalyzeProgression() {
+            // Re-analyze voice leading for all chord transitions
+            for (let i = 1; i < currentProgression.length; i++) {
+                const prevChord = currentProgression[i - 1];
+                const currentChord = currentProgression[i];
+                const chordType = getChordType(currentChord.symbol);
+                
+                // Find closest voicing based on previous chord
+                const closestVoicing = getClosestVoicing(chordType, prevChord, currentChord.symbol);
+                if (closestVoicing) {
+                    updateChordVoicing(currentChord, closestVoicing);
+                }
+            }
+        }
+
+        function showDropIndicator(slot) {
+            clearDropIndicators();
+            slot.classList.add('drag-over');
+        }
+
+        function clearDropIndicators() {
+            const slots = document.querySelectorAll('.chord-slot');
+            slots.forEach(slot => {
+                slot.classList.remove('drag-over');
+            });
         }
 
         function getChordType(symbol) {
