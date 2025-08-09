@@ -1837,15 +1837,15 @@ ${details}`;
             progressionsLibraryMode.classList.remove('active');
 
             if (mode === 'browse') {
-                modeButtons[1].classList.add('active');
+                document.querySelector('.mode-btn[onclick="switchMode(\'browse\')"]').classList.add('active');
                 browseMode.classList.add('active');
                 loadBrowseMode();
             } else if (mode === 'progressions-library') {
-                modeButtons[2].classList.add('active');
+                document.querySelector('.mode-btn[onclick="switchMode(\'progressions-library\')"]').classList.add('active');
                 progressionsLibraryMode.classList.add('active');
                 loadProgressionsLibraryMode();
             } else {
-                modeButtons[0].classList.add('active');
+                document.querySelector('.mode-btn[onclick="switchMode(\'progression\')"]').classList.add('active');
                 progressionMode.classList.add('active');
                 loadProgressionMode();
             }
