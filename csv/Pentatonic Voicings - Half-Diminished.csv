@@ -1,0 +1,93 @@
+"Pentatonic Voicings
+Half-Diminished Chords",,,,,,,
+"
+                 Top note →
+
+
+Scale
+↓
+",1,3,5,7,9,11,count
+"Pentatonic
+♭3
+(from 3)","1
+5
+3
+
+7
+11","3
+7
+11
+
+1
+5","5
+3
+7
+
+11
+1","7
+11
+1
+
+5
+3",-,"11
+1
+5
+
+3
+7",5
+"Pentatonic
+""Super-Locrian""","1
+5
+9
+
+7
+3",-,"5
+9
+7
+
+3
+1",-,"9
+7
+3
+
+1
+5",-,3
+"Pentatonic
+""minor-major 7""
+(from 3)",-,-,-,"7
+11
+9
+
+5
+3",-,"11
+9
+5
+
+3
+7",2
+"Pentatonic
+""diminished steps""","1
+11
+9
+
+5
+3",-,-,-,-,"11
+9
+5
+
+3
+1",2
+"Pentatonic
+♭6
+(from 7)",-,-,-,-,"9
+7
+11
+
+1
+5","11
+1
+5
+
+9
+7",2
+total voicings:,3,1,2,2,2,4,14

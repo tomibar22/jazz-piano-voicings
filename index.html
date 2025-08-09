@@ -531,7 +531,7 @@
 
         .chord-header {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
             margin-bottom: 1.2rem;
         }
@@ -746,6 +746,473 @@
                 height: 540px;
             }
         }
+
+        /* Progressions Library Styles */
+        .progressions-library {
+            padding: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .progression-selector {
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .progression-selector label {
+            font-weight: bold;
+            color: #8B7D6B;
+        }
+
+        .progression-selector select {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            color: #E8E3D3;
+            font-size: 1rem;
+            min-width: 150px;
+        }
+
+        .library-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .top-note-line-nav {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            height: fit-content;
+            position: sticky;
+            top: 1rem;
+        }
+
+        .top-note-line-nav h3 {
+            color: #d4af37;
+            margin: 0 0 1rem 0;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+
+        .nav-controls {
+            margin-bottom: 1rem;
+        }
+
+        .search-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 6px;
+            padding: 0.6rem 1rem;
+            color: #E8E3D3;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #d4af37;
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .search-input::placeholder {
+            color: #8B7D6B;
+        }
+
+        .sort-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .sort-label {
+            font-size: 0.8rem;
+            color: #F5F5DC;
+            opacity: 0.8;
+        }
+
+        .sort-switch {
+            display: flex;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            padding: 2px;
+            position: relative;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .sort-switch input[type="radio"] {
+            display: none;
+        }
+
+        .sort-switch label {
+            flex: 1;
+            padding: 0.4rem 0.8rem;
+            font-size: 0.7rem;
+            color: #F5F5DC;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 18px;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
+            opacity: 0.7;
+        }
+
+        .sort-switch input[type="radio"]:checked + label {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.8), rgba(212, 175, 55, 0.6));
+            color: #1a1a1a;
+            font-weight: 600;
+            opacity: 1;
+            box-shadow: 0 2px 4px rgba(212, 175, 55, 0.3);
+        }
+
+        .sort-switch label:hover {
+            opacity: 1;
+        }
+
+        .nav-btn {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 6px;
+            padding: 0.6rem 1rem;
+            color: #E8E3D3;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            border-color: #d4af37;
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .nav-btn.active {
+            background: rgba(212, 175, 55, 0.2);
+            border-color: #d4af37;
+            color: #d4af37;
+            font-weight: bold;
+        }
+
+        .top-note-line-list {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 6px;
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .top-note-line-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 1rem;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .top-note-line-item:last-child {
+            border-bottom: none;
+        }
+
+        .top-note-line-item:hover {
+            background: rgba(212, 175, 55, 0.1);
+            border-color: #d4af37;
+        }
+
+        .top-note-line-item.active {
+            background: rgba(212, 175, 55, 0.15);
+            border-color: #d4af37;
+        }
+
+        .top-note-line-name {
+            font-weight: bold;
+            color: #d4af37;
+            font-family: 'Courier New', monospace;
+        }
+
+        .top-note-line-count {
+            font-size: 0.8rem;
+            color: #A0A0A0;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.2rem 0.5rem;
+            border-radius: 12px;
+        }
+
+        .top-note-line-browser {
+            min-height: 500px;
+        }
+
+        .top-note-line-browser h3 {
+            color: #d4af37;
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+        }
+
+        @media (max-width: 1024px) {
+            .library-layout {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .top-note-line-nav {
+                position: static;
+            }
+            
+            .top-note-line-list {
+                max-height: 200px;
+            }
+        }
+
+        .top-note-line-group {
+            margin-bottom: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .top-note-line-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .top-note-line-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #d4af37;
+        }
+
+        .top-note-line-description {
+            color: #A0A0A0;
+            font-size: 0.9rem;
+        }
+
+        .progression-variations {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 1rem;
+        }
+
+        .progression-variation {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 8px;
+            padding: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .progression-variation:hover {
+            border-color: #d4af37;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
+        }
+
+        .variation-header {
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .variation-scales {
+            font-size: 0.85rem;
+            color: #A0A0A0;
+        }
+
+        .library-progression-display {
+            display: flex;
+            align-items: stretch;
+            gap: 1rem;
+        }
+
+        .library-chord {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chord-header {
+            background: rgba(212, 175, 55, 0.15);
+            padding: 0.5rem 1rem;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .chord-symbol {
+            font-weight: bold;
+            color: #d4af37;
+            font-size: 1.1rem;
+        }
+
+        .voicing-display {
+            padding: 1rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .voicing-content {
+            font-family: 'Courier New', monospace;
+            font-size: 2.2rem;
+            font-weight: bold;
+            line-height: 1.4;
+            color: #F5F5DC;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1.2rem;
+            border-radius: 4px;
+            white-space: pre-line;
+            text-align: center;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .scale-indicator {
+            font-size: 0.7rem;
+            color: #8B7D6B;
+            text-align: center;
+            margin-top: 0.5rem;
+            opacity: 0.7;
+        }
+
+        .voice-leading-connector {
+            width: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            position: relative;
+            flex-shrink: 0;
+            margin-top: 0;
+        }
+
+        .voice-leading-connector.library {
+            margin-top: -10rem;
+        }
+
+        .voice-leading-connector.library .connector-indicators {
+            gap: 1rem;
+        }
+
+        .connector-lines {
+            position: relative;
+            width: 100%;
+            height: 140px;
+            background: rgba(45, 45, 60, 0.3);
+            border-radius: 4px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .connector-indicators {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            padding: 0.3rem;
+            background: rgba(45, 45, 60, 0.3);
+            border-radius: 4px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            min-height: fit-content;
+        }
+
+        .voice-line {
+            position: absolute;
+            left: 10px;
+            right: 10px;
+            height: 3px;
+            border-radius: 2px;
+            box-shadow: 0 0 4px rgba(0,0,0,0.3);
+        }
+
+        .voice-line.common-tone {
+            background: #22c55e;
+        }
+
+        .voice-line.step-motion {
+            background: #3b82f6;
+        }
+
+        .voice-line.leap-motion {
+            background: #f59e0b;
+        }
+
+        .movement-summary {
+            margin-top: 0.75rem;
+            padding: 0.5rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+            border: 1px solid rgba(212, 175, 55, 0.1);
+        }
+
+        .movement-counts {
+            display: flex;
+            gap: 0.3rem;
+            justify-content: center;
+        }
+
+        .count {
+            padding: 0.3rem 0.5rem;
+            border-radius: 3px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .count.common-tone {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+
+        .count.step-motion {
+            background: rgba(59, 130, 246, 0.2);
+            color: #3b82f6;
+        }
+
+        .count.total-semitones {
+            background: rgba(139, 92, 246, 0.2);
+            color: #8b5cf6;
+        }
+
+        .count.leap-motion {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+        }
+
+        @media (max-width: 768px) {
+            .progression-variations {
+                grid-template-columns: 1fr;
+            }
+            
+            .library-progression-display {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .chord-separator {
+                transform: rotate(90deg);
+                font-size: 1.2rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -755,12 +1222,54 @@
         <div class="mode-toggle">
             <button class="mode-btn active" onclick="switchMode('progression')">Create Progression</button>
             <button class="mode-btn" onclick="switchMode('browse')">Browse Voicings</button>
+            <button class="mode-btn" onclick="switchMode('progressions-library')">Progressions Library</button>
         </div>
 
         <!-- Browse Mode -->
         <div id="browse-mode" class="mode-section">
             <div id="browse-content">
                 <!-- Content will be dynamically loaded -->
+            </div>
+        </div>
+
+        <!-- Progressions Library Mode -->
+        <div id="progressions-library-mode" class="mode-section">
+            <div class="progressions-library">
+                <h2>Progressions Library</h2>
+                <div class="progression-selector">
+                    <label for="progression-type">Progression Type:</label>
+                    <select id="progression-type" onchange="loadProgressionType()">
+                        <option value="V7-I">V7 - I</option>
+                    </select>
+                </div>
+                
+                <div class="library-layout">
+                    <div class="top-note-line-nav">
+                        <h3>Top-Note-Lines</h3>
+                        <div class="nav-controls">
+                            <input type="text" id="search-input" class="search-input" placeholder="Search top-note-lines..." oninput="filterTopNoteLines()">
+                            <div class="sort-controls">
+                                <span class="sort-label">Sort by:</span>
+                                <div class="sort-switch">
+                                    <input type="radio" id="sort-closeness" name="sort-method" value="closeness" checked onchange="refreshNavigation()">
+                                    <label for="sort-closeness">Interval Closeness</label>
+                                    <input type="radio" id="sort-count" name="sort-method" value="count" onchange="refreshNavigation()">
+                                    <label for="sort-count">Progression Count</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="top-note-line-list" class="top-note-line-list">
+                            <!-- Navigation will be dynamically loaded -->
+                        </div>
+                    </div>
+                    
+                    <div class="top-note-line-browser">
+                        <h3 id="current-filter-title">All Top-Note-Lines</h3>
+                        <div id="progression-library-content">
+                            <!-- Content will be dynamically loaded -->
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -801,231 +1310,316 @@
     <script>
         // Complete Pentatonic Voicing Data - ALL 131+ voicings from CSV files
         const voicingData = {
-            major: {
-                "Pentatonic": {
-                    1: ["1", "5", "9", "", "13", "3"],
-                    3: ["3", "1", "5", "", "9", "13"],
-                    5: ["5", "9", "13", "", "3", "1"],
-                    9: ["9", "13", "3", "", "1", "5"],
-                    13: ["13", "3", "1", "", "5", "9"]
-                },
-                "Pentatonic (from 5)": {
-                    3: ["3", "7", "5", "", "9", "13"],
-                    5: ["5", "9", "13", "", "3", "7"],
-                    7: ["7", "5", "9", "", "13", "3"],
-                    9: ["9", "13", "3", "", "7", "5"],
-                    13: ["13", "3", "7", "", "5", "9"]
-                },
-                "Pentatonic (from 2)": {
-                    3: ["3", "7", "♯11", "", "9", "13"],
-                    7: ["7", "♯11", "9", "", "13", "3"],
-                    9: ["9", "13", "3", "", "7", "♯11"],
-                    "♯11": ["♯11", "9", "13", "", "3", "7"],
-                    13: ["13", "3", "7", "", "♯11", "9"]
-                }
-            },
-            minor: {
-                "Pentatonic ♭3": {
-                    1: ["1", "5", "9", "", "13", "3"],
-                    5: ["5", "9", "13", "", "3", "1"],
-                    9: ["9", "13", "3", "", "1", "5"]
-                },
-                "Pentatonic (from 3)": {
-                    1: ["1", "5", "3", "", "7", "11"],
-                    3: ["3", "7", "11", "", "1", "5"],
-                    5: ["5", "3", "7", "", "11", "1"],
-                    7: ["7", "11", "1", "", "5", "3"],
-                    11: ["11", "1", "5", "", "3", "7"]
-                },
-                "Pentatonic \"minor 7\"": {
-                    1: ["1", "5", "9", "", "7", "3"],
-                    5: ["5", "9", "7", "", "3", "1"],
-                    9: ["9", "7", "3", "", "1", "5"]
-                },
-                "Pentatonic \"major 7\" (from 3)": {
-                    7: ["7", "11", "9", "", "5", "3"],
-                    11: ["11", "9", "5", "", "3", "7"]
-                },
-                "Pentatonic \"major 7 1-3-5-6-7\" (from 3)": {
-                    1: ["1", "5", "9", "", "7", "3"],
-                    5: ["5", "9", "7", "", "3", "1"],
-                    9: ["9", "7", "3", "", "1", "5"]
-                },
-                "Pentatonic \"dorian\"": {
-                    1: ["1", "13", "3", "", "7", "5"],
-                    5: ["5", "1", "13", "", "3", "7"],
-                    13: ["13", "3", "7", "", "5", "1"]
-                },
-                "Pentatonic ♭6 (from 5)": {
-                    "♮7": ["♮7", "5", "9", "", "13", "3"],
-                    9: ["9", "13", "3", "", "♮7", "5"]
-                }
-            },
-            dominant: {
-                "Pentatonic \"dominant\"": {
-                    1: ["1", "5", "9", "", "7", "3"],
-                    3: ["3", "1", "5", "", "9", "7"],
-                    5: ["5", "9", "7", "", "3", "1"],
-                    7: ["7", "3", "1", "", "5", "9"],
-                    9: ["9", "7", "3", "", "1", "5"]
-                },
-                "Pentatonic \"dominant 1-3-5-6-7\"": {
-                    1: ["1", "13", "3", "", "7", "5"],
-                    5: ["5", "1", "13", "", "3", "7"],
-                    13: ["13", "3", "7", "", "5", "1"]
-                },
-                "Pentatonic ♭3 (from 5)": {
-                    5: ["5", "9", "13", "", "3", "7"],
-                    9: ["9", "13", "3", "", "7", "5"],
-                    13: ["13", "3", "7", "", "5", "9"]
-                },
-                "Pentatonic \"dominant\" ♭2 (♭9)": {
-                    1: ["1", "5", "♭9", "", "7", "3"],
-                    3: ["3", "1", "5", "", "♭9", "7"],
-                    5: ["5", "♭9", "7", "", "3", "1"],
-                    7: ["7", "3", "1", "", "5", "♭9"],
-                    "♭9": ["♭9", "7", "3", "", "1", "5"]
-                },
-                "Pentatonic \"dominant\" ♯2 (♯9)": {
-                    1: ["1", "5", "♯9", "", "7", "3"],
-                    5: ["5", "♯9", "7", "", "3", "1"],
-                    "♯9": ["♯9", "7", "3", "", "1", "5"]
-                },
-                "Pentatonic \"dominant\" ♭2 (from 6)": {
-                    5: ["5", "♭9", "13", "", "3", "7"],
-                    "♭9": ["♭9", "13", "3", "", "7", "5"],
-                    13: ["13", "3", "7", "", "5", "♭9"]
-                },
-                "Pentatonic \"dominant\" ♭2 (from ♭3)": {
-                    5: ["5", "♯9", "7", "", "3", "♭9"],
-                    "♭9": ["♭9", "5", "♯9", "", "7", "3"],
-                    "♯9": ["♯9", "7", "♭9", "", "♭9", "5"]
-                },
-                "Pentatonic \"dominant\" ♭2, ♭5": {
-                    1: ["1", "♯11", "♭9", "", "7", "3"],
-                    3: ["3", "1", "♯11", "", "♭9", "7"],
-                    7: ["7", "3", "1", "", "♯11", "♭9"],
-                    "♭9": ["♭9", "7", "3", "", "1", "♯11"],
-                    "♯11": ["♯11", "♭9", "7", "", "3", "1"]
-                },
-                "Pentatonic \"dominant\" ♭2, ♯5": {
-                    1: ["1", "♭13", "♭9", "", "7", "3"],
-                    3: ["3", "1", "♭13", "", "♭9", "7"],
-                    7: ["7", "3", "1", "", "♭13", "♭9"],
-                    "♭9": ["♭9", "7", "3", "", "1", "♭13"],
-                    "♭13": ["♭13", "♭9", "7", "", "3", "1"]
-                },
-                "Pentatonic \"dominant\" ♯2, ♭5": {
-                    1: ["1", "♯11", "♯9", "", "7", "3"],
-                    "♯9": ["♯9", "7", "3", "", "1", "♯11"],
-                    "♯11": ["♯11", "♯9", "7", "", "3", "1"]
-                },
-                "Pentatonic \"dominant\" ♯2, ♯5": {
-                    1: ["1", "♭13", "♯9", "", "7", "3"],
-                    "♯9": ["♯9", "7", "3", "", "1", "♭13"],
-                    "♭13": ["♭13", "♯9", "7", "", "3", "1"]
-                },
-                "Pentatonic ♭6 (from 2)": {
-                    9: ["9", "13", "3", "", "7", "♯11"],
-                    "♯11": ["♯11", "9", "13", "", "3", "7"],
-                    13: ["13", "3", "7", "", "♯11", "9"]
-                },
-                "WT (from 2)": {
-                    3: ["3", "7", "♯11", "", "9", "♭13"],
-                    7: ["7", "♯11", "9", "", "♭13", "3"],
-                    9: ["9", "♭13", "3", "", "7", "♯11"],
-                    "♯11": ["♯11", "9", "♭13", "", "3", "7"],
-                    "♭13": ["♭13", "3", "7", "", "♯11", "9"]
-                },
-                "WT (from 3)": {
-                    1: ["1", "♭13", "3", "", "7", "♯11"],
-                    3: ["3", "7", "♯11", "", "1", "♭13"],
-                    7: ["7", "♯11", "1", "", "♭13", "3"],
-                    "♯11": ["♯11", "1", "♭13", "", "3", "7"],
-                    "♭13": ["♭13", "3", "7", "", "♯11", "1"]
-                },
-                "WT (from ♭6)": {
-                    1: ["1", "♭13", "9", "", "7", "3"],
-                    3: ["3", "1", "♭13", "", "9", "7"],
-                    7: ["7", "3", "1", "", "♭13", "9"],
-                    9: ["9", "7", "3", "", "1", "♭13"],
-                    "♭13": ["♭13", "9", "7", "", "3", "1"]
-                },
-                "WT (from 7)": {
-                    1: ["1", "♯11", "9", "", "7", "3"],
-                    3: ["3", "1", "♯11", "", "9", "7"],
-                    9: ["9", "7", "3", "", "1", "♯11"],
-                    "♯11": ["♯11", "9", "7", "", "3", "1"]
-                },
-                "Pentatonic \"dominant\" (from ♭5)": {
-                    3: ["3", "7", "♯11", "", "♭9", "♭13"],
-                    7: ["7", "♯11", "♭9", "", "♭13", "3"],
-                    "♭9": ["♭9", "♭13", "3", "", "7", "♯11"],
-                    "♯11": ["♯11", "♭9", "♭13", "", "3", "7"],
-                    "♭13": ["♭13", "3", "7", "", "♯11", "♭9"]
-                },
-                "Pentatonic \"dominant\" (from ♭5) ♭2": {
-                    "♭9": ["♭9", "13", "3", "", "7", "♯11"],
-                    "♯11": ["♯11", "♭9", "13", "", "3", "7"],
-                    13: ["13", "3", "7", "", "♯11", "♭9"]
-                },
-                "Pentatonic \"dominant\" (from ♭5) ♯2, ♭5": {
-                    1: ["1", "13", "3", "", "7", "♯11"],
-                    "♯11": ["♯11", "1", "13", "", "3", "7"],
-                    13: ["13", "3", "7", "", "♯11", "1"]
-                },
-                "Pentatonic ♭3 (from ♭2)": {
-                    "♭9": ["♭9", "♭13", "♯9", "", "7", "3"],
-                    "♯9": ["♯9", "7", "3", "", "♭9", "♭13"],
-                    "♭13": ["♭13", "♯9", "7", "", "3", "♭9"]
-                }
-            },
-            sus: {
-                "Pentatonic (from 7)": {
-                    1: ["1", "5", "9", "", "7", "4"],
-                    4: ["4", "1", "5", "", "9", "7"],
-                    5: ["5", "9", "7", "", "4", "1"],
-                    7: ["7", "4", "1", "", "5", "9"],
-                    9: ["9", "7", "4", "", "1", "5"]
-                },
-                "Pentatonic \"major 7\" (from 7)": {
-                    1: ["1", "13", "9", "", "7", "4"],
-                    4: ["4", "1", "13", "", "9", "7"],
-                    13: ["13", "9", "7", "", "4", "1"]
-                },
-                "Pentatonic \"minor 7\" (from 5)": {
-                    5: ["5", "9", "13", "", "4", "7"],
-                    9: ["9", "13", "4", "", "7", "5"],
-                    13: ["13", "4", "7", "", "5", "9"]
-                },
-                "Pentatonic ♭3 (from 7)": {
-                    1: ["1", "5", "♭9", "", "7", "4"],
-                    4: ["4", "1", "5", "", "♭9", "7"],
-                    5: ["5", "♭9", "7", "", "4", "1"],
-                    7: ["7", "4", "1", "", "5", "♭9"],
-                    "♭9": ["♭9", "7", "4", "", "1", "5"]
-                },
-                "Pentatonic \"minor 7\" (from 7)": {
-                    1: ["1", "♭13", "♭9", "", "7", "4"],
-                    4: ["4", "1", "♭13", "", "♭9", "7"],
-                    7: ["7", "4", "1", "", "♭13", "♭9"],
-                    "♭9": ["♭9", "7", "4", "", "1", "♭13"],
-                    "♭13": ["♭13", "♭9", "7", "", "4", "1"]
-                },
-                "Pentatonic \"dorian\" (from 7)": {
-                    4: ["4", "7", "5", "", "♭9", "♭13"],
-                    5: ["5", "♭9", "♭13", "", "4", "7"],
-                    7: ["7", "5", "♭9", "", "♭13", "4"]
-                },
-                "Pentatonic (from ♭2)": {
-                    4: ["4", "♭9", "♭13", "", "♯9", "7"],
-                    7: ["7", "4", "♭9", "", "♭13", "♯9"],
-                    "♭9": ["♭9", "♭13", "♯9", "", "7", "4"],
-                    "♯9": ["♯9", "7", "4", "", "♭9", "♭13"],
-                    "♭13": ["♭13", "♯9", "7", "", "4", "♭9"]
-                }
-            }
-        };
+  major: {
+    "Pentatonic": {
+      1: ["1", "5", "9", "", "13", "3"],
+      3: ["3", "1", "5", "", "9", "13"],
+      5: ["5", "9", "13", "", "3", "1"],
+      9: ["9", "13", "3", "", "1", "5"],
+      13: ["13", "3", "1", "", "5", "9"]
+    },
+    "Pentatonic (from 5)": {
+      3: ["3", "7", "5", "", "9", "13"],
+      5: ["5", "9", "13", "", "3", "7"],
+      7: ["7", "5", "9", "", "13", "3"],
+      9: ["9", "13", "3", "", "7", "5"],
+      13: ["13", "3", "7", "", "5", "9"]
+    },
+    "Pentatonic (from 2)": {
+      3: ["3", "7", "♯11", "", "9", "13"],
+      7: ["7", "♯11", "9", "", "13", "3"],
+      9: ["9", "13", "3", "", "7", "♯11"],
+      "♯11": ["♯11", "9", "13", "", "3", "7"],
+      13: ["13", "3", "7", "", "♯11", "9"]
+    }
+  },
+
+  minor: {
+    "Pentatonic ♭3": {
+      1: ["1", "5", "9", "", "13", "3"],
+      5: ["5", "9", "13", "", "3", "1"],
+      9: ["9", "13", "3", "", "1", "5"]
+    },
+    "Pentatonic (from 3)": {
+      1: ["1", "5", "3", "", "7", "11"],
+      3: ["3", "7", "11", "", "1", "5"],
+      5: ["5", "3", "7", "", "11", "1"],
+      7: ["7", "11", "1", "", "5", "3"],
+      11: ["11", "1", "5", "", "3", "7"]
+    },
+    "Pentatonic \"minor 7\"": {
+      1: ["1", "5", "9", "", "7", "3"],
+      5: ["5", "9", "7", "", "3", "1"],
+      9: ["9", "7", "3", "", "1", "5"]
+    },
+    "Pentatonic \"major 7\" (from 3)": {
+      7: ["7", "11", "9", "", "5", "3"],
+      11: ["11", "9", "5", "", "3", "7"]
+    },
+    "Pentatonic \"major 7 1-3-5-6-7\" (from 3)": {
+      1: ["1", "5", "9", "", "7", "3"],
+      5: ["5", "9", "7", "", "3", "1"],
+      9: ["9", "7", "3", "", "1", "5"]
+    },
+    "Pentatonic \"dorian\"": {
+      1: ["1", "13", "3", "", "7", "5"],
+      5: ["5", "1", "13", "", "3", "7"],
+      13: ["13", "3", "7", "", "5", "1"]
+    },
+    "Pentatonic ♭6 (from 5)": {
+      "♮7": ["♮7", "5", "9", "", "13", "3"],
+      9: ["9", "13", "3", "", "♮7", "5"]
+    },
+    "Pentatonic \"minor-major 7\"": {
+      5: ["5", "9", "♮7", "", "3", "1"],
+      9: ["9", "♮7", "3", "", "1", "5"]
+    }
+  },
+
+  dominant: {
+    "Pentatonic \"dominant\"": {
+      1: ["1", "5", "9", "", "7", "3"],
+      3: ["3", "1", "5", "", "9", "7"],
+      5: ["5", "9", "7", "", "3", "1"],
+      7: ["7", "3", "1", "", "5", "9"],
+      9: ["9", "7", "3", "", "1", "5"]
+    },
+    "Pentatonic \"dominant 1-3-5-6-7\"": {
+      1: ["1", "13", "3", "", "7", "5"],
+      5: ["5", "1", "13", "", "3", "7"],
+      13: ["13", "3", "7", "", "5", "1"]
+    },
+    "Pentatonic ♭3 (from 5)": {
+      5: ["5", "9", "13", "", "3", "7"],
+      9: ["9", "13", "3", "", "7", "5"],
+      13: ["13", "3", "7", "", "5", "9"]
+    },
+    "Pentatonic \"dominant\" ♭2 (♭9)": {
+      1: ["1", "5", "♭9", "", "7", "3"],
+      3: ["3", "1", "5", "", "♭9", "7"],
+      5: ["5", "♭9", "7", "", "3", "1"],
+      7: ["7", "3", "1", "", "5", "♭9"],
+      "♭9": ["♭9", "7", "3", "", "1", "5"]
+    },
+    "Pentatonic \"dominant\" ♯2 (♯9)": {
+      1: ["1", "5", "♯9", "", "7", "3"],
+      5: ["5", "♯9", "7", "", "3", "1"],
+      "♯9": ["♯9", "7", "3", "", "1", "5"]
+    },
+    "Pentatonic \"dominant\" ♭2 (from 6)": {
+      5: ["5", "♭9", "13", "", "3", "7"],
+      "♭9": ["♭9", "13", "3", "", "7", "5"],
+      13: ["13", "3", "7", "", "5", "♭9"]
+    },
+    "Pentatonic \"dominant\" ♭2 (from ♭3)": {
+      5: ["5", "♯9", "7", "", "3", "♭9"],
+      "♭9": ["♭9", "5", "♯9", "", "7", "3"],
+      "♯9": ["♯9", "7", "♭9", "", "♭9", "5"]
+    },
+    "Pentatonic \"dominant\" ♭2, ♭5": {
+      1: ["1", "♯11", "♭9", "", "7", "3"],
+      3: ["3", "1", "♯11", "", "♭9", "7"],
+      7: ["7", "3", "1", "", "♯11", "♭9"],
+      "♭9": ["♭9", "7", "3", "", "1", "♯11"],
+      "♯11": ["♯11", "♭9", "7", "", "3", "1"]
+    },
+    "Pentatonic \"dominant\" ♭2, ♯5": {
+      1: ["1", "♭13", "♭9", "", "7", "3"],
+      3: ["3", "1", "♭13", "", "♭9", "7"],
+      7: ["7", "3", "1", "", "♭13", "♭9"],
+      "♭9": ["♭9", "7", "3", "", "1", "♭13"],
+      "♭13": ["♭13", "♭9", "7", "", "3", "1"]
+    },
+    "Pentatonic \"dominant\" ♯2, ♭5": {
+      1: ["1", "♯11", "♯9", "", "7", "3"],
+      "♯9": ["♯9", "7", "3", "", "1", "♯11"],
+      "♯11": ["♯11", "♯9", "7", "", "3", "1"]
+    },
+    "Pentatonic \"dominant\" ♯2, ♯5": {
+      1: ["1", "♭13", "♯9", "", "7", "3"],
+      "♯9": ["♯9", "7", "3", "", "1", "♭13"],
+      "♭13": ["♭13", "♯9", "7", "", "3", "1"]
+    },
+    "Pentatonic ♭6 (from 2)": {
+      9: ["9", "13", "3", "", "7", "♯11"],
+      "♯11": ["♯11", "9", "13", "", "3", "7"],
+      13: ["13", "3", "7", "", "♯11", "9"]
+    },
+    "Pentatonic \"minor-major 7\" (from 5)": {
+      9: ["9", "13", "♯11", "", "7", "5"],
+      13: ["13", "♯11", "7", "", "5", "9"]
+    },
+    "Pentatonic \"diminished steps\"": {
+      3: ["3", "13", "♯11", "", "7", "5"],
+      13: ["13", "9", "7", "", "5", "3"]
+    },
+    "WT (from 2)": {
+      3: ["3", "7", "♯11", "", "9", "♭13"],
+      7: ["7", "♯11", "9", "", "♭13", "3"],
+      9: ["9", "♭13", "3", "", "7", "♯11"],
+      "♯11": ["♯11", "9", "♭13", "", "3", "7"],
+      "♭13": ["♭13", "3", "7", "", "♯11", "9"]
+    },
+    "WT (from 3)": {
+      1: ["1", "♭13", "3", "", "7", "♯11"],
+      3: ["3", "7", "♯11", "", "1", "♭13"],
+      7: ["7", "♯11", "1", "", "♭13", "3"],
+      "♯11": ["♯11", "1", "♭13", "", "3", "7"],
+      "♭13": ["♭13", "3", "7", "", "♯11", "1"]
+    },
+    "WT (from ♭6)": {
+      1: ["1", "♭13", "9", "", "7", "3"],
+      3: ["3", "1", "♭13", "", "9", "7"],
+      7: ["7", "3", "1", "", "♭13", "9"],
+      9: ["9", "7", "3", "", "1", "♭13"],
+      "♭13": ["♭13", "9", "7", "", "3", "1"]
+    },
+    "WT (from 7)": {
+      1: ["1", "♯11", "9", "", "7", "3"],
+      3: ["3", "1", "♯11", "", "9", "7"],
+      9: ["9", "7", "3", "", "1", "♯11"],
+      "♯11": ["♯11", "9", "7", "", "3", "1"]
+    },
+    "Pentatonic \"dominant\" (from ♭5)": {
+      3: ["3", "7", "♯11", "", "♭9", "♭13"],
+      7: ["7", "♯11", "♭9", "", "♭13", "3"],
+      "♭9": ["♭9", "♭13", "3", "", "7", "♯11"],
+      "♯11": ["♯11", "♭9", "♭13", "", "3", "7"],
+      "♭13": ["♭13", "3", "7", "", "♯11", "♭9"]
+    },
+    "Pentatonic \"dominant\" ♭2 (from ♭5)": {
+      "♭9": ["♭9", "13", "3", "", "7", "♯11"],
+      "♯11": ["♯11", "♭9", "13", "", "3", "7"],
+      13: ["13", "3", "7", "", "♯11", "♭9"]
+    },
+    "Pentatonic \"dominant\" (from ♭5) ♯2, ♭5": {
+      1: ["1", "13", "3", "", "7", "♯11"],
+      "♯11": ["♯11", "1", "13", "", "3", "7"],
+      13: ["13", "3", "7", "", "♯11", "1"]
+    },
+    "Pentatonic ♭3 (from ♭2)": {
+      "♭9": ["♭9", "♭13", "♯9", "", "7", "3"],
+      "♯9": ["♯9", "7", "3", "", "♭9", "♭13"],
+      "♭13": ["♭13", "♯9", "7", "", "3", "♭9"]
+    }
+  },
+
+  sus: {
+    "Pentatonic (from 7)": {
+      1: ["1", "5", "9", "", "7", "4"],
+      4: ["4", "1", "5", "", "9", "7"],
+      5: ["5", "9", "7", "", "4", "1"],
+      7: ["7", "4", "1", "", "5", "9"],
+      9: ["9", "7", "4", "", "1", "5"]
+    },
+    "Pentatonic \"major 7\" (from 7)": {
+      1: ["1", "13", "9", "", "7", "4"],
+      4: ["4", "1", "13", "", "9", "7"],
+      13: ["13", "9", "7", "", "4", "1"]
+    },
+    "Pentatonic \"minor 7\" (from 5)": {
+      5: ["5", "9", "13", "", "4", "7"],
+      9: ["9", "13", "4", "", "7", "5"],
+      13: ["13", "4", "7", "", "5", "9"]
+    },
+    "Pentatonic ♭3 (from 7)": {
+      1: ["1", "5", "♭9", "", "7", "4"],
+      4: ["4", "1", "5", "", "♭9", "7"],
+      5: ["5", "♭9", "7", "", "4", "1"],
+      7: ["7", "4", "1", "", "5", "♭9"],
+      "♭9": ["♭9", "7", "4", "", "1", "5"]
+    },
+    "Pentatonic \"minor 7\" (from 7)": {
+      1: ["1", "♭13", "♭9", "", "7", "4"],
+      4: ["4", "1", "♭13", "", "♭9", "7"],
+      7: ["7", "4", "1", "", "♭13", "♭9"],
+      "♭9": ["♭9", "7", "4", "", "1", "♭13"],
+      "♭13": ["♭13", "♭9", "7", "", "4", "1"]
+    },
+    "Pentatonic \"dorian\" (from 7)": {
+      4: ["4", "7", "5", "", "♭9", "♭13"],
+      5: ["5", "♭9", "♭13", "", "4", "7"],
+      7: ["7", "5", "♭9", "", "♭13", "4"]
+    },
+    "Pentatonic (from ♭2)": {
+      4: ["4", "♭9", "♭13", "", "♯9", "7"],
+      7: ["7", "4", "♭9", "", "♭13", "♯9"],
+      "♭9": ["♭9", "♭13", "♯9", "", "7", "4"],
+      "♯9": ["♯9", "7", "4", "", "♭9", "♭13"],
+      "♭13": ["♭13", "♯9", "7", "", "4", "♭9"]
+    }
+  },
+
+  "half-diminished": {
+    "Pentatonic ♭3 (from 3)": {
+      1: ["1", "5", "3", "", "7", "11"],
+      3: ["3", "7", "11", "", "1", "5"],
+      5: ["5", "3", "7", "", "11", "1"],
+      7: ["7", "11", "1", "", "5", "3"],
+      11: ["11", "1", "5", "", "3", "7"]
+    },
+    "Pentatonic \"Super-Locrian\"": {
+      1: ["1", "5", "9", "", "7", "3"],
+      5: ["5", "9", "7", "", "3", "1"],
+      9: ["9", "7", "3", "", "1", "5"]
+    },
+    "Pentatonic \"minor-major 7\" (from 3)": {
+      7: ["7", "11", "9", "", "5", "3"],
+      11: ["11", "9", "5", "", "3", "7"]
+    },
+    "Pentatonic \"diminished steps\"": {
+      1: ["1", "11", "9", "", "5", "3"],
+      11: ["11", "9", "5", "", "3", "1"]
+    },
+    "Pentatonic ♭6 (from 7)": {
+      9: ["9", "7", "11", "", "1", "5"],
+      11: ["11", "1", "5", "", "9", "7"]
+    }
+  },
+
+  diminished: {
+    "Pentatonic \"dim-maj7\"": {
+      5: ["5", "9", "maj7", "", "3", "1"],
+      9: ["9", "maj7", "3", "", "1", "5"]
+    },
+    "Pentatonic \"dim-maj7\" (from 3)": {
+      7: ["7", "11", "9", "", "5", "3"],
+      11: ["11", "9", "5", "", "3", "7"]
+    },
+    "Pentatonic \"dim-maj7\" (from 5)": {
+      1: ["1", "13", "11", "", "7", "5"],
+      13: ["13", "11", "7", "", "5", "1"]
+    },
+    "Pentatonic \"dim-maj7\" (from 7)": {
+      3: ["3", "maj7", "13", "", "1", "7"],
+      "maj7": ["maj7", "13", "1", "", "7", "3"]
+    },
+    "Pentatonic \"Dominant\" ♭2 (from 2)": {
+      1: ["1", "5", "9", "", "7", "3"],
+      5: ["5", "9", "7", "", "3", "1"],
+      9: ["9", "7", "3", "", "1", "5"]
+    },
+    "Pentatonic \"Dominant\" ♯2 (from 2)": {
+      1: ["1", "5", "9", "", "7", "3"],
+      9: ["9", "7", "11", "", "1", "5"]
+    },
+    "Pentatonic \"Dominant\" ♭2 (from 4)": {
+      3: ["3", "7", "11", "", "1", "5"],
+      7: ["7", "11", "1", "", "5", "3"],
+      11: ["11", "1", "5", "", "7", "3"]
+    },
+    "Pentatonic \"Dominant\" ♭2 (from 6)": {
+      1: ["1", "13", "3", "", "7", "5"],
+      5: ["5", "1", "13", "", "3", "7"],
+      13: ["13", "3", "7", "", "5", "1"]
+    },
+    "Pentatonic \"Dominant\" ♭2 (from maj7)": {
+      3: ["3", "maj7", "5", "", "1", "7"],
+      7: ["7", "3", "maj7", "", "5", "1"],
+      "maj7": ["maj7", "5", "1", "", "7", "3"]
+    }
+  }
+};
 
         // Note-to-semitone conversion system for voice leading analysis
         const noteToSemitones = {
@@ -1161,18 +1755,19 @@
             if (interval === 0) {
                 type = 'common';
                 symbol = '=';
-            } else if (absInterval === 1) {
+            } else if (absInterval <= 2) {
+                // 1-2 semitones = ½-1 semitone steps (blue)
                 type = 'step';
-                symbol = direction === 'up' ? '↑½' : '↓½';
-            } else if (absInterval === 2) {
-                type = 'step';
-                symbol = direction === 'up' ? '↑1' : '↓1';
-            } else if (absInterval <= 4) {
-                type = 'leap';
-                symbol = direction === 'up' ? `↑${absInterval}` : `↓${absInterval}`;
+                if (absInterval === 1) {
+                    symbol = direction === 'up' ? '↑½' : '↓½';
+                } else {
+                    symbol = direction === 'up' ? '↑1' : '↓1';
+                }
             } else {
+                // >2 semitones = >1 semitone leaps (orange)
                 type = 'leap';
-                symbol = direction === 'up' ? `↑${absInterval}` : `↓${absInterval}`;
+                const semitoneCount = absInterval % 2 === 0 ? absInterval / 2 : `${Math.floor(absInterval / 2)}½`;
+                symbol = direction === 'up' ? `↑${semitoneCount}` : `↓${semitoneCount}`;
             }
             
             return {
@@ -1180,6 +1775,7 @@
                 direction,
                 type,
                 symbol,
+                semitones: absInterval,  // Keep semitones field for consistency
                 absInterval
             };
         }
@@ -1200,11 +1796,22 @@
             const stepMotions = movements.filter(m => m.type === 'step').length;
             const leaps = movements.filter(m => m.type === 'leap').length;
             
+            // Calculate total semitones
+            const totalSemitones = movements.reduce((sum, m) => {
+                return sum + (m.semitones || m.absInterval || 0);
+            }, 0);
+            
             const details = movements.map(m => 
                 `Voice ${m.position + 1}: ${m.from} → ${m.to} (${m.symbol})`
             ).join('\n');
             
-            return `Voice Leading Summary:
+            // Create compact summary: "4S 2L" format
+            const summaryParts = [];
+            if (totalSemitones > 0) summaryParts.push(`${totalSemitones}S`);
+            if (leaps > 0) summaryParts.push(`${leaps}L`);
+            const compactSummary = summaryParts.length > 0 ? summaryParts.join(' ') : '0S';
+            
+            return `Voice Leading Summary: ${compactSummary}
 ${commonTones} common tone${commonTones !== 1 ? 's' : ''}
 ${stepMotions} step motion${stepMotions !== 1 ? 's' : ''}
 ${leaps} leap${leaps !== 1 ? 's' : ''}
@@ -1218,21 +1825,27 @@ ${details}`;
         let selectedRoot = null;
 
         function switchMode(mode) {
-            const browseModeBtn = document.querySelector('.mode-btn:first-child');
-            const progressionModeBtn = document.querySelector('.mode-btn:last-child');
+            const modeButtons = document.querySelectorAll('.mode-btn');
             const browseMode = document.getElementById('browse-mode');
             const progressionMode = document.getElementById('progression-mode');
+            const progressionsLibraryMode = document.getElementById('progressions-library-mode');
+
+            // Remove active class from all buttons and modes
+            modeButtons.forEach(btn => btn.classList.remove('active'));
+            browseMode.classList.remove('active');
+            progressionMode.classList.remove('active');
+            progressionsLibraryMode.classList.remove('active');
 
             if (mode === 'browse') {
-                browseModeBtn.classList.add('active');
-                progressionModeBtn.classList.remove('active');
+                modeButtons[1].classList.add('active');
                 browseMode.classList.add('active');
-                progressionMode.classList.remove('active');
                 loadBrowseMode();
+            } else if (mode === 'progressions-library') {
+                modeButtons[2].classList.add('active');
+                progressionsLibraryMode.classList.add('active');
+                loadProgressionsLibraryMode();
             } else {
-                browseModeBtn.classList.remove('active');
-                progressionModeBtn.classList.add('active');
-                browseMode.classList.remove('active');
+                modeButtons[0].classList.add('active');
                 progressionMode.classList.add('active');
                 loadProgressionMode();
             }
@@ -1247,7 +1860,9 @@ ${details}`;
                 major: ['1', '3', '5', '7', '9', '♯11', '13'],
                 minor: ['1', '3', '5', '7', '♮7', '9', '11', '13'],
                 dominant: ['1', '3', '5', '7', '♭9', '9', '♯9', '♯11', '♭13', '13'],
-                sus: ['1', '4', '5', '7', '♭9', '9', '♯9', '♭13', '13']
+                sus: ['1', '4', '5', '7', '♭9', '9', '♯9', '♭13', '13'],
+                'half-diminished': ['1', '3', '5', '7', '9', '11'],
+                'diminished': ['1', '3', '5', '7', 'maj7', '9', '11', '13']
             };
 
 
@@ -1347,6 +1962,7 @@ ${details}`;
                 { symbol: 'i', type: 'minor', display: 'i (minor)' },
                 { symbol: '♭II7', type: 'dominant', display: '♭II7 (dominant)' },
                 { symbol: 'ii', type: 'minor', display: 'ii (minor)' },
+                { symbol: 'iiø', type: 'half-diminished', display: 'iiø (half-diminished)' },
                 { symbol: '♭III', type: 'major', display: '♭III (major)' },
                 { symbol: 'iii', type: 'minor', display: 'iii (minor)' },
                 { symbol: 'IV', type: 'major', display: 'IV (major)' },
@@ -1355,12 +1971,14 @@ ${details}`;
                 { symbol: 'V7', type: 'dominant', display: 'V7 (dominant)' },
                 { symbol: '♭VI', type: 'major', display: '♭VI (major)' },
                 { symbol: 'vi', type: 'minor', display: 'vi (minor)' },
-                { symbol: '♭VII', type: 'dominant', display: '♭VII (dominant)' }
+                { symbol: '♭VII', type: 'dominant', display: '♭VII (dominant)' },
+                { symbol: 'viiº7', type: 'diminished', display: 'viiº7 (diminished)' }
             ];
 
             const secondaryHarmony = [
                 { symbol: 'Vsus/ii', type: 'sus', display: 'Vsus/ii (sus)' },
                 { symbol: 'V7/ii', type: 'dominant', display: 'V7/ii (dominant)' },
+                { symbol: 'iiø/', type: 'half-diminished', display: 'iiø/ (half-diminished)' },
                 { symbol: 'Vsus/iii', type: 'sus', display: 'Vsus/iii (sus)' },
                 { symbol: 'V7/iii', type: 'dominant', display: 'V7/iii (dominant)' },
                 { symbol: 'Vsus/♭III', type: 'sus', display: 'Vsus/♭III (sus)' },
@@ -1375,6 +1993,7 @@ ${details}`;
                 { symbol: 'V7/vi', type: 'dominant', display: 'V7/vi (dominant)' },
                 { symbol: 'V/', type: 'dominant', display: 'V/ (dominant)' },
                 { symbol: '♭II7/', type: 'dominant', display: '♭II7/ (dominant)' },
+                { symbol: 'viiº7/', type: 'diminished', display: 'viiº7/ (diminished)' },
                 { symbol: 'rel. ii', type: 'minor', display: 'rel. ii (minor)' }
             ];
 
@@ -1801,6 +2420,8 @@ ${details}`;
         }
 
         function getChordType(symbol) {
+            if (symbol.includes('ø')) return 'half-diminished';
+            if (symbol.includes('º')) return 'diminished';
             if (symbol.includes('sus')) return 'sus';
             if (symbol.includes('7') || symbol.includes('♭VII')) return 'dominant';
             if (symbol === 'i' || symbol === 'ii' || symbol === 'iii' || symbol === 'vi' || symbol === 'rel. ii') return 'minor';
@@ -2186,6 +2807,889 @@ ${details}`;
             };
             
             reader.readAsText(file);
+        }
+
+        // Progressions Library Functions
+        function loadProgressionsLibraryMode() {
+            loadProgressionType();
+        }
+
+        function loadProgressionType() {
+            const progressionType = document.getElementById('progression-type').value;
+            const content = document.getElementById('progression-library-content');
+            
+            if (progressionType === 'V7-I') {
+                content.innerHTML = generateV7IProgressions();
+            }
+        }
+
+        // Global variable to store all progressions data
+        let allProgressionsData = {};
+
+        function generateV7IProgressions() {
+            // Get all V7 (dominant) and I (major) voicing combinations
+            const v7Voicings = getAllVoicingCombinations('dominant');
+            const iVoicings = getAllVoicingCombinations('major');
+            
+            
+            // Group progressions by top-note-line with direction (relative to tonal center)
+            const progressionsByTopNoteLine = {};
+            
+            v7Voicings.forEach(v7 => {
+                iVoicings.forEach(i => {
+                    // Calculate top-note-line relative to tonal center
+                    const iTonalNote = getTonicRelativeNote(i.topNote, 'I');
+                    const v7TonalNote = getTonicRelativeNote(v7.topNote, 'V7', i.topNote);
+                    
+                    // Skip if we can't map the notes
+                    if (!v7TonalNote || !iTonalNote) return;
+                    
+                    // Skip harmonically invalid combinations
+                    // ♯1 relative to tonic doesn't exist in proper V7-I progressions
+                    if (v7TonalNote === '♯1' || iTonalNote === '♯1') {
+                        return;
+                    }
+                    
+                    // Calculate both upward and downward movements
+                    const movements = calculateAllTopNoteMovements(v7TonalNote, iTonalNote);
+                    
+                    movements.forEach(movement => {
+                        // Check if this voicing pair actually moves in the expected direction
+                        const actualTopNoteMovement = calculateActualTopNoteMovement(v7.topNote, i.topNote);
+                        const expectedUp = movement.direction === '↗';
+                        const actualUp = actualTopNoteMovement > 0;
+                        
+                        
+                        // Only add this voicing pair if it matches the expected direction
+                        // Be more strict about direction matching
+                        const isValidDirection = (expectedUp && actualUp) || 
+                                               (!expectedUp && !actualUp);
+                        
+                        if (isValidDirection) {
+                            const topNoteLineWithDirection = `${v7TonalNote}-${iTonalNote} ${movement.direction}`;
+                            
+                            if (!progressionsByTopNoteLine[topNoteLineWithDirection]) {
+                                progressionsByTopNoteLine[topNoteLineWithDirection] = [];
+                            }
+                            
+                            progressionsByTopNoteLine[topNoteLineWithDirection].push({
+                                v7: v7,
+                                i: i,
+                                movement: movement
+                            });
+                        }
+                    });
+                });
+            });
+            
+            // Store data globally for filtering
+            allProgressionsData = progressionsByTopNoteLine;
+            
+            
+            // Generate navigation list
+            generateTopNoteLineNavigation(progressionsByTopNoteLine);
+            
+            // Return empty string - user must filter first
+            return '<div class="empty-state">Select a top-note-line from the left panel to view progressions.</div>';
+        }
+
+        function getTopNoteLineDisplayLabel(topNoteLineWithDirection) {
+            const [movement, direction] = topNoteLineWithDirection.split(' ');
+            let [start, end] = movement.split('-');
+            
+            // Apply enharmonic corrections for better voice leading logic
+            if (start === '♭6' && end === '6') {
+                start = '♯5'; // ♭6-6 becomes ♯5-6
+            } else if (start === '♯6' && end === '6') {
+                start = '♭7'; // ♯6-6 becomes ♭7-6
+            }
+            
+            // Check if it's a common tone
+            if (start === end && direction === '→') {
+                return `${start}-${end}`;
+            }
+            
+            // For 1 semitone movements, use ♯/♭ notation
+            const semitoneMap = {
+                '1': 0, '♭2': 1, '2': 2, '♯2': 3, '♭3': 3, '3': 4,
+                '4': 5, '♯4': 6, '♭5': 6, '5': 7, '♯5': 8, '♭6': 8,
+                '6': 9, '♯6': 10, '♭7': 10, '7': 11, '♯7': 11, '♯1': 12
+            };
+            
+            const startSemitone = semitoneMap[start] ?? 0;
+            const endSemitone = semitoneMap[end] ?? 0;
+            const semitoneDistance = Math.abs(endSemitone - startSemitone);
+            
+            // Temporarily disabled 1-semitone conversion to debug
+            // if (semitoneDistance === 1) {
+            //     // For 1 semitone movements, use ♯/♭ notation
+            //     if (direction === '↗') {
+            //         // Going up: use ♯ on start note
+            //         const sharpStart = start === '1' ? '♯1' : start === '2' ? '♯2' : start === '4' ? '♯4' : start === '5' ? '♯5' : start === '6' ? '♯6' : start;
+            //         return `${sharpStart}-${end} ${direction}`;
+            //     } else if (direction === '↘') {
+            //         // Going down: use ♭ on end note  
+            //         const flatEnd = end === '2' ? '♭2' : end === '3' ? '♭3' : end === '5' ? '♭5' : end === '6' ? '♭6' : end === '7' ? '♭7' : end;
+            //         return `${start}-${flatEnd} ${direction}`;
+            //     }
+            // }
+            
+            // For non-common tones, show the movement pattern with "-"
+            return `${start}-${end} ${direction}`;
+        }
+
+        function getSortMethod() {
+            const checkedRadio = document.querySelector('input[name="sort-method"]:checked');
+            return checkedRadio ? checkedRadio.value : 'closeness';
+        }
+
+        function refreshNavigation() {
+            if (allProgressionsData && Object.keys(allProgressionsData).length > 0) {
+                generateTopNoteLineNavigation(allProgressionsData);
+            }
+        }
+
+        function generateTopNoteLineNavigation(progressionsByTopNoteLine) {
+            const navList = document.getElementById('top-note-line-list');
+            const sortMethod = getSortMethod();
+            
+            // Sort top-note-lines based on selected method
+            const sortedTopNoteLines = Object.keys(progressionsByTopNoteLine).sort((a, b) => {
+                if (sortMethod === 'count') {
+                    // Sort by number of progressions (descending)
+                    const aCount = progressionsByTopNoteLine[a].length;
+                    const bCount = progressionsByTopNoteLine[b].length;
+                    return bCount - aCount;
+                } else {
+                    // Sort by interval closeness (current method)
+                // Parse top-note-line with direction (e.g., "7-1 ↘" or "2-3 ↗")
+                const [aMovement, aDirection] = a.split(' ');
+                const [bMovement, bDirection] = b.split(' ');
+                const [aStart, aEnd] = aMovement.split('-');
+                const [bStart, bEnd] = bMovement.split('-');
+                
+                // Calculate interval size using semitones for accurate measurement
+                const semitoneMap = {
+                    '1': 0, '♭2': 1, '2': 2, '♯2': 3, '♭3': 3, '3': 4,
+                    '4': 5, '♯4': 6, '♭5': 6, '5': 7, '♯5': 8, '♭6': 8,
+                    '6': 9, '♯6': 10, '♭7': 10, '7': 11, '♮7': 11, '♯1': 12
+                };
+                
+                const aStartSemitone = semitoneMap[aStart] ?? 0;
+                const aEndSemitone = semitoneMap[aEnd] ?? 0;
+                const bStartSemitone = semitoneMap[bStart] ?? 0;
+                const bEndSemitone = semitoneMap[bEnd] ?? 0;
+                
+                // Calculate interval distance - common tones get priority score
+                let aInterval, bInterval;
+                
+                // Check if these are true common tones (same note to same note AND → direction)
+                const isACommonTone = aStart === aEnd && aDirection === '→';
+                const isBCommonTone = bStart === bEnd && bDirection === '→';
+                
+                // Assign interval values - common tones get -1 to sort first
+                if (isACommonTone) {
+                    aInterval = -1;
+                } else {
+                    // For upward direction (↗), use the upward distance
+                    if (aDirection === '↗') {
+                        const directInterval = aEndSemitone - aStartSemitone;
+                        aInterval = directInterval >= 0 ? directInterval : directInterval + 12;
+                    } 
+                    // For downward direction (↘), use the downward distance
+                    else if (aDirection === '↘') {
+                        const directInterval = aEndSemitone - aStartSemitone;
+                        aInterval = directInterval <= 0 ? Math.abs(directInterval) : 12 - directInterval;
+                    }
+                    // For common tone (→), interval is 0
+                    else {
+                        aInterval = 0;
+                    }
+                }
+                
+                // Same calculation for b
+                if (isBCommonTone) {
+                    bInterval = -1;
+                } else {
+                    if (bDirection === '↗') {
+                        const directInterval = bEndSemitone - bStartSemitone;
+                        bInterval = directInterval >= 0 ? directInterval : directInterval + 12;
+                    } 
+                    else if (bDirection === '↘') {
+                        const directInterval = bEndSemitone - bStartSemitone;
+                        bInterval = directInterval <= 0 ? Math.abs(directInterval) : 12 - directInterval;
+                    }
+                    else {
+                        bInterval = 0;
+                    }
+                }
+                
+                // First sort by interval size (smaller intervals first)
+                if (aInterval !== bInterval) {
+                    return aInterval - bInterval;
+                }
+                
+                // Then sort alphabetically by the movement part (without direction and accidentals)
+                if (aMovement !== bMovement) {
+                    // Remove accidentals for comparison (♭, ♯, ♮)
+                    const normalizeForSort = (movement) => {
+                        return movement.replace(/[♭♯♮]/g, '');
+                    };
+                    const aNormalized = normalizeForSort(aMovement);
+                    const bNormalized = normalizeForSort(bMovement);
+                    
+                    if (aNormalized !== bNormalized) {
+                        return aNormalized.localeCompare(bNormalized);
+                    }
+                    
+                    // If base movement is same, sort by actual movement (with accidentals)
+                    return aMovement.localeCompare(bMovement);
+                }
+                
+                // Finally sort by direction (↗ before ↘ before →)
+                const directionOrder = { '↗': 1, '→': 2, '↘': 3 };
+                return (directionOrder[aDirection] || 4) - (directionOrder[bDirection] || 4);
+                }
+            });
+            
+            let navHTML = '';
+            sortedTopNoteLines.forEach(topNoteLineWithDirection => {
+                const progressions = progressionsByTopNoteLine[topNoteLineWithDirection];
+                const count = progressions.length;
+                
+                // Extract the movement info for display
+                const sampleProgression = progressions[0];
+                const movement = sampleProgression.movement;
+                
+                // Create a cleaner display label
+                const displayLabel = getTopNoteLineDisplayLabel(topNoteLineWithDirection);
+                
+                navHTML += `
+                    <div class="top-note-line-item" onclick="filterByTopNoteLine('${topNoteLineWithDirection}')">
+                        <span class="top-note-line-name">${displayLabel}</span>
+                        <span class="top-note-line-count">${count}</span>
+                    </div>
+                `;
+            });
+            
+            navList.innerHTML = navHTML;
+        }
+
+        function generateProgressionsHTML(progressionsByTopNoteLine, selectedTopNoteLine = null) {
+            // Sort top-note-lines by interval closeness, then alphabetically (same as navigation)
+            const sortedTopNoteLines = Object.keys(progressionsByTopNoteLine).sort((a, b) => {
+                // Parse top-note-line with direction (e.g., "7-1 ↘" or "2-3 ↗")
+                const [aMovement, aDirection] = a.split(' ');
+                const [bMovement, bDirection] = b.split(' ');
+                const [aStart, aEnd] = aMovement.split('-');
+                const [bStart, bEnd] = bMovement.split('-');
+                
+                // Calculate interval size using semitones for accurate measurement
+                const semitoneMap = {
+                    '1': 0, '♭2': 1, '2': 2, '♯2': 3, '♭3': 3, '3': 4,
+                    '4': 5, '♯4': 6, '♭5': 6, '5': 7, '♯5': 8, '♭6': 8,
+                    '6': 9, '♯6': 10, '♭7': 10, '7': 11, '♮7': 11, '♯1': 12
+                };
+                
+                const aStartSemitone = semitoneMap[aStart] ?? 0;
+                const aEndSemitone = semitoneMap[aEnd] ?? 0;
+                const bStartSemitone = semitoneMap[bStart] ?? 0;
+                const bEndSemitone = semitoneMap[bEnd] ?? 0;
+                
+                // Calculate interval distance - common tones get priority score
+                let aInterval, bInterval;
+                
+                // Check if these are true common tones (same note to same note AND → direction)
+                const isACommonTone = aStart === aEnd && aDirection === '→';
+                const isBCommonTone = bStart === bEnd && bDirection === '→';
+                
+                // Assign interval values - common tones get -1 to sort first
+                if (isACommonTone) {
+                    aInterval = -1;
+                } else {
+                    // For upward direction (↗), use the upward distance
+                    if (aDirection === '↗') {
+                        const directInterval = aEndSemitone - aStartSemitone;
+                        aInterval = directInterval >= 0 ? directInterval : directInterval + 12;
+                    } 
+                    // For downward direction (↘), use the downward distance
+                    else if (aDirection === '↘') {
+                        const directInterval = aEndSemitone - aStartSemitone;
+                        aInterval = directInterval <= 0 ? Math.abs(directInterval) : 12 - directInterval;
+                    }
+                    // For common tone (→), interval is 0
+                    else {
+                        aInterval = 0;
+                    }
+                }
+                
+                // Same calculation for b
+                if (isBCommonTone) {
+                    bInterval = -1;
+                } else {
+                    if (bDirection === '↗') {
+                        const directInterval = bEndSemitone - bStartSemitone;
+                        bInterval = directInterval >= 0 ? directInterval : directInterval + 12;
+                    } 
+                    else if (bDirection === '↘') {
+                        const directInterval = bEndSemitone - bStartSemitone;
+                        bInterval = directInterval <= 0 ? Math.abs(directInterval) : 12 - directInterval;
+                    }
+                    else {
+                        bInterval = 0;
+                    }
+                }
+                
+                // First sort by interval size (smaller intervals first)
+                if (aInterval !== bInterval) {
+                    return aInterval - bInterval;
+                }
+                
+                // Then sort alphabetically by the movement part (without direction and accidentals)
+                if (aMovement !== bMovement) {
+                    // Remove accidentals for comparison (♭, ♯, ♮)
+                    const normalizeForSort = (movement) => {
+                        return movement.replace(/[♭♯♮]/g, '');
+                    };
+                    const aNormalized = normalizeForSort(aMovement);
+                    const bNormalized = normalizeForSort(bMovement);
+                    
+                    if (aNormalized !== bNormalized) {
+                        return aNormalized.localeCompare(bNormalized);
+                    }
+                    
+                    // If base movement is same, sort by actual movement (with accidentals)
+                    return aMovement.localeCompare(bMovement);
+                }
+                
+                // Finally sort by direction (↗ before ↘ before →)
+                const directionOrder = { '↗': 1, '→': 2, '↘': 3 };
+                return (directionOrder[aDirection] || 4) - (directionOrder[bDirection] || 4);
+            });
+            
+            let html = '';
+            const linesToShow = selectedTopNoteLine ? [selectedTopNoteLine] : sortedTopNoteLines;
+            
+            linesToShow.forEach(topNoteLineWithDirection => {
+                const progressions = progressionsByTopNoteLine[topNoteLineWithDirection];
+                if (progressions) {
+                    html += generateTopNoteLineSection(topNoteLineWithDirection, progressions);
+                }
+            });
+            
+            return html;
+        }
+
+        function filterByTopNoteLine(topNoteLine) {
+            // Update navigation active state
+            document.querySelectorAll('.top-note-line-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Set active item
+            event.target.closest('.top-note-line-item').classList.add('active');
+            
+            // Update title with clean display label
+            const displayLabel = getTopNoteLineDisplayLabel(topNoteLine);
+            document.getElementById('current-filter-title').textContent = `Top-Note-Line: ${displayLabel}`;
+            
+            // Filter and display progressions
+            const filteredData = { [topNoteLine]: allProgressionsData[topNoteLine] };
+            const html = generateProgressionsHTML(filteredData, topNoteLine);
+            document.getElementById('progression-library-content').innerHTML = html;
+        }
+
+        function normalizeSearchTerm(term) {
+            // Normalize common symbol variations for flexible search
+            return term
+                .replace(/b/g, '♭')      // b -> ♭
+                .replace(/#/g, '♯')      // # -> ♯
+                .replace(/n/g, '♮');     // n -> ♮
+        }
+
+        function filterTopNoteLines() {
+            const searchInput = document.getElementById('search-input');
+            const rawSearchTerm = searchInput.value.toLowerCase().trim();
+            const searchTerm = normalizeSearchTerm(rawSearchTerm);
+            const navItems = document.querySelectorAll('.top-note-line-item');
+            
+            navItems.forEach(item => {
+                const displayText = item.textContent.toLowerCase();
+                
+                let shouldShow = false;
+                
+                if (rawSearchTerm === '') {
+                    shouldShow = true;
+                } else {
+                    // Check if display text contains the search term
+                    shouldShow = displayText.includes(searchTerm);
+                }
+                
+                item.style.display = shouldShow ? 'block' : 'none';
+            });
+        }
+
+
+        function getAllVoicingCombinations(chordType) {
+            const combinations = [];
+            const chordTypeData = voicingData[chordType] || {};
+            
+            Object.entries(chordTypeData).forEach(([scaleName, scaleVoicings]) => {
+                Object.entries(scaleVoicings).forEach(([topNote, voicing]) => {
+                    combinations.push({
+                        scaleName,
+                        topNote,
+                        voicing,
+                        chordType
+                    });
+                });
+            });
+            
+            return combinations;
+        }
+
+        function getTonicRelativeNote(topNote, chordFunction, resolvesToNote = null) {
+            // Convert chord-relative top note to tonic-relative scale degree
+            const chordTonicMapping = {
+                'V7': {
+                    '1': '5', '3': '7', '5': '2', '7': '4', 
+                    '♭9': '♭6', '9': '6', '♯9': '♯6', 
+                    '♯11': '♭2', '♭13': '♭3', '13': '3'
+                },
+                'I': {
+                    '1': '1', '♭2': '♭2', '2': '2', '♯2': '♯2', '3': '3', '5': '5', '7': '7',
+                    '9': '2', '♯11': '♯4', '13': '6'
+                }
+            };
+            
+            let result = chordTonicMapping[chordFunction][topNote];
+            
+            // Special case: V7 ♭13 maps to ♯2 only when resolving to I 3, otherwise ♭3
+            if (chordFunction === 'V7' && topNote === '♭13' && resolvesToNote) {
+                const iTonicNote = chordTonicMapping['I'][resolvesToNote];
+                result = (iTonicNote === '3') ? '♯2' : '♭3';
+            }
+            
+            return result || null;
+        }
+
+        function getScaleNumber(note) {
+            const noteValues = {
+                '1': 1, '♭2': 1.5, '2': 2, '♯2': 2.5, '♭3': 3, '3': 3.5,
+                '4': 4, '♯4': 4.5, '♭5': 4.5, '5': 5, '♯5': 5.5, '♭6': 6,
+                '6': 6.5, '♯6': 6.5, '♭7': 7, '7': 7.5, '♯7': 7.5
+            };
+            return noteValues[note] || 8;
+        }
+
+        function calculateActualTopNoteMovement(v7TopNote, iTopNote) {
+            // Calculate the actual semitone movement between voicing top notes
+            // But we need to consider the harmonic context: V7 vs I chord
+            const semitoneMap = {
+                '1': 0, '♭2': 1, '2': 2, '♯2': 3, '♭3': 3, '3': 4,
+                '4': 5, '♯4': 6, '♭5': 6, '5': 7, '♯5': 8, '♭6': 8,
+                '6': 9, '♯6': 10, '♭7': 10, '7': 11, '♯7': 11,
+                '♭9': 1, '9': 2, '♯9': 3, '♯11': 6, '♭13': 8, '13': 9
+            };
+            
+            // Get semitone values relative to their chord context
+            const v7Semitone = semitoneMap[v7TopNote] ?? 0;
+            const iSemitone = semitoneMap[iTopNote] ?? 0;
+            
+            // For V7-I progressions, we need to account for the chord root movement (V7 is 7 semitones above I)
+            // V7 notes are effectively 7 semitones higher in the harmonic context
+            const v7AdjustedSemitone = (v7Semitone + 7) % 12;
+            
+            // Calculate direct interval (allowing negative for downward movement)
+            let interval = iSemitone - v7AdjustedSemitone;
+            
+            // Normalize to within one octave for analysis
+            while (interval > 6) interval -= 12;
+            while (interval < -6) interval += 12;
+            
+            return interval;
+        }
+
+        function calculateAllTopNoteMovements(fromNote, toNote) {
+            // Convert scale degrees to semitones (C major scale reference)
+            const semitoneMap = {
+                '1': 0, '♭2': 1, '2': 2, '♯2': 3, '♭3': 3, '3': 4,
+                '4': 5, '♯4': 6, '♭5': 6, '5': 7, '♯5': 8, '♭6': 8,
+                '6': 9, '♯6': 10, '♭7': 10, '7': 11, '♯7': 11
+            };
+            
+            const fromSemitone = semitoneMap[fromNote];
+            const toSemitone = semitoneMap[toNote];
+            
+            if (fromSemitone === undefined || toSemitone === undefined) {
+                return [{ interval: 0, direction: '→', type: 'common tone', description: 'Unknown movement', semitones: 0 }];
+            }
+            
+            // Calculate direct interval
+            const directInterval = toSemitone - fromSemitone;
+            
+            // Handle common tone
+            if (directInterval === 0) {
+                return [{
+                    interval: 0,
+                    direction: '→',
+                    type: 'common tone',
+                    description: 'Common tone',
+                    semitones: 0
+                }];
+            }
+            
+            // Calculate both upward and downward possibilities
+            const upwardInterval = directInterval >= 0 ? directInterval : directInterval + 12;
+            const downwardInterval = directInterval <= 0 ? directInterval : directInterval - 12;
+            
+            const movements = [];
+            
+            // Add upward movement
+            if (upwardInterval > 0 && upwardInterval <= 12) {
+                const type = upwardInterval <= 2 ? 'step' : 'leap';
+                movements.push({
+                    interval: upwardInterval,
+                    direction: '↗',
+                    type: type,
+                    description: `${upwardInterval} semitone${upwardInterval > 1 ? 's' : ''} up`,
+                    semitones: upwardInterval
+                });
+            }
+            
+            // Add downward movement
+            if (downwardInterval < 0 && Math.abs(downwardInterval) <= 12) {
+                const semitones = Math.abs(downwardInterval);
+                const type = semitones <= 2 ? 'step' : 'leap';
+                movements.push({
+                    interval: downwardInterval,
+                    direction: '↘',
+                    type: type,
+                    description: `${semitones} semitone${semitones > 1 ? 's' : ''} down`,
+                    semitones: semitones
+                });
+            }
+            
+            return movements;
+        }
+
+        function generateTopNoteLineSection(topNoteLineWithDirection, progressions) {
+            // Extract movement info from the first progression
+            const sampleProgression = progressions[0];
+            const movement = sampleProgression.movement;
+            
+            // Use the same clean display label as in navigation
+            const displayLabel = getTopNoteLineDisplayLabel(topNoteLineWithDirection);
+            
+            let html = `
+                <div class="top-note-line-group">
+                    <div class="top-note-line-header">
+                        <div class="top-note-line-title">${displayLabel}</div>
+                    </div>
+                    <div class="progression-variations">
+            `;
+            
+            // Sort progressions by total semitone amount (ascending)
+            const sortedProgressions = progressions.sort((a, b) => {
+                // Calculate total semitones for progression A
+                const aAnalysis = analyzeVoiceLeadingDirect(a.v7.voicing, a.i.voicing);
+                let aTotalSemitones = 0;
+                aAnalysis.forEach(movement => {
+                    const semitones = movement.semitones || movement.interval || Math.abs(movement.semitoneDistance || 0);
+                    aTotalSemitones += Math.abs(semitones);
+                });
+                
+                // Calculate total semitones for progression B  
+                const bAnalysis = analyzeVoiceLeadingDirect(b.v7.voicing, b.i.voicing);
+                let bTotalSemitones = 0;
+                bAnalysis.forEach(movement => {
+                    const semitones = movement.semitones || movement.interval || Math.abs(movement.semitoneDistance || 0);
+                    bTotalSemitones += Math.abs(semitones);
+                });
+                
+                return aTotalSemitones - bTotalSemitones;
+            });
+            
+            sortedProgressions.forEach(progression => {
+                html += generateProgressionVariation(progression);
+            });
+            
+            html += `
+                    </div>
+                </div>
+            `;
+            
+            return html;
+        }
+
+        function getMovementDescription(startNote, endNote) {
+            const startNum = getScaleNumber(startNote);
+            const endNum = getScaleNumber(endNote);
+            const interval = endNum - startNum;
+            
+            if (interval === 0) return 'Common tone';
+            if (Math.abs(interval) <= 1) return 'Step motion';
+            if (interval > 0) return `Up ${Math.abs(interval)} scale degrees`;
+            return `Down ${Math.abs(interval)} scale degrees`;
+        }
+
+        function formatVoicingForDisplay(voicing) {
+            if (!Array.isArray(voicing)) return voicing;
+            
+            // Display notes vertically - each note on its own line
+            // This represents the actual piano hand position from top to bottom
+            return voicing.map(note => note || '').join('\n');
+        }
+
+        function generateVoiceLeadingLines(analysis) {
+            if (!analysis || !analysis.movements) return '';
+            
+            return analysis.movements.map((movement, index) => {
+                const colorClass = movement.type === 'common' ? 'common-tone' : 
+                                  movement.type === 'step' ? 'step-motion' : 'leap-motion';
+                return `<div class="voice-line ${colorClass}" style="top: ${index * 20 + 10}px;"></div>`;
+            }).join('');
+        }
+
+        function generateMovementSummary(analysis) {
+            if (!analysis || !analysis.movements) return '';
+            
+            const commonTones = analysis.movements.filter(m => m.type === 'common').length;
+            const steps = analysis.movements.filter(m => m.type === 'step').length;
+            const leaps = analysis.movements.filter(m => m.type === 'leap').length;
+            
+            // Calculate total semitones
+            const totalSemitones = analysis.movements.reduce((sum, m) => {
+                return sum + (m.semitones || m.absInterval || 0);
+            }, 0);
+            
+            return `
+                <div class="movement-counts">
+                    ${totalSemitones > 0 ? `<span class="count total-semitones">${totalSemitones}S</span>` : ''}
+                    ${leaps > 0 ? `<span class="count leap-motion">${leaps}L</span>` : ''}
+                </div>
+            `;
+        }
+
+        function analyzeVoiceLeadingDirect(voicing1, voicing2, expectedMovement = null) {
+            const movements = [];
+            
+            // Analyze each voice position including gaps
+            for (let i = 0; i < Math.max(voicing1.length, voicing2.length); i++) {
+                const note1 = voicing1[i];
+                const note2 = voicing2[i];
+                
+                // Only analyze if both notes exist and are not empty
+                if (note1 && note2 && note1.trim() !== '' && note2.trim() !== '') {
+                    const movement = calculateVoiceMovementWithDirection(note1, note2, expectedMovement);
+                    movements.push({
+                        position: i,
+                        from: note1,
+                        to: note2,
+                        ...movement
+                    });
+                }
+            }
+            
+            return movements;
+        }
+
+        function calculateVoiceMovementWithDirection(note1, note2, expectedMovement) {
+            // Get basic movement first
+            const baseMovement = calculateVoiceMovement(note1, note2, 'V7', 'dominant', 'I', 'major');
+            
+            // If no expected movement provided, or it's a common tone, return as-is
+            if (!expectedMovement || note1 === note2 || baseMovement.interval === 0) {
+                return baseMovement;
+            }
+            
+            // Special cases for classic voice-leading resolutions
+            // Leading tone resolution (V7 7th → I 3rd)
+            if (note1 === '7' && note2 === '3') {
+                return {
+                    interval: -1,
+                    direction: 'down',
+                    type: 'step',
+                    symbol: '↓½',
+                    semitones: 1,
+                    absInterval: 1
+                };
+            }
+            
+            // ♭13 resolution (V7 ♭13 → I 9)
+            if (note1 === '♭13' && note2 === '9') {
+                return {
+                    interval: -1,
+                    direction: 'down',
+                    type: 'step',
+                    symbol: '↓½',
+                    semitones: 1,
+                    absInterval: 1
+                };
+            }
+            
+            // Apply directional context for interval display
+            const expectedUp = expectedMovement.direction === '↗';
+            const expectedDown = expectedMovement.direction === '↘';
+            const actualInterval = baseMovement.interval;
+            const actualUp = actualInterval > 0;
+            const actualDown = actualInterval < 0;
+            
+            
+            // If the actual movement direction contradicts the expected direction,
+            // apply octave correction for better harmonic representation
+            if (((expectedUp && actualDown) || (expectedDown && actualUp))) {
+                
+                // Apply octave displacement correction
+                // If expected upward but actual downward: add 12 to make it upward
+                // If expected downward but actual upward: subtract 12 to make it downward
+                const correctedInterval = expectedUp ? 
+                    (actualInterval + 12) : (actualInterval - 12);
+                
+                const correctedAbs = Math.abs(correctedInterval);
+                const correctedDirection = correctedInterval === 0 ? 'same' : correctedInterval > 0 ? 'up' : 'down';
+                
+                
+                let correctedType, correctedSymbol;
+                if (correctedInterval === 0) {
+                    correctedType = 'common';
+                    correctedSymbol = '=';
+                } else if (correctedAbs <= 2) {
+                    correctedType = 'step';
+                    if (correctedAbs === 1) {
+                        correctedSymbol = correctedDirection === 'up' ? '↑½' : '↓½';
+                    } else {
+                        correctedSymbol = correctedDirection === 'up' ? '↑1' : '↓1';
+                    }
+                } else {
+                    correctedType = 'leap';
+                    const semitoneCount = correctedAbs % 2 === 0 ? correctedAbs / 2 : `${Math.floor(correctedAbs / 2)}½`;
+                    correctedSymbol = correctedDirection === 'up' ? `↑${semitoneCount}` : `↓${semitoneCount}`;
+                }
+                
+                return {
+                    interval: correctedInterval,
+                    direction: correctedDirection,
+                    type: correctedType,
+                    symbol: correctedSymbol,
+                    semitones: correctedAbs,
+                    absInterval: correctedAbs
+                };
+            }
+            
+            // Otherwise return the original calculation
+            return baseMovement;
+        }
+
+        function generateLibraryVoiceLeadingConnector(fromChord, toChord, expectedMovement) {
+            // Analyze voice leading directly with the voicing arrays, considering expected direction
+            const movements = analyzeVoiceLeadingDirect(fromChord.voicing, toChord.voicing, expectedMovement);
+            
+            if (!movements || movements.length === 0) {
+                return '<div class="empty-connector">No voice leading data</div>';
+            }
+            
+            const summary = getVoiceLeadingSummary(movements);
+            const movementHtml = [];
+            
+            // Create movement indicators based on the first chord's voicing structure
+            if (fromChord.voicing) {
+                fromChord.voicing.forEach((note, index) => {
+                    if (!note || note.trim() === '') {
+                        // Empty gap - add spacing, no movement indicator needed
+                        movementHtml.push('<div style="height: 0.5rem;"></div>');
+                    } else {
+                        // Check if the corresponding position in the second chord is also a gap
+                        const toNote = toChord.voicing[index];
+                        if (!toNote || toNote.trim() === '') {
+                            // Voice disappears - still add spacing
+                            movementHtml.push('<div style="height: 0.5rem;"></div>');
+                        } else {
+                            // Find movement for this voice position
+                            const movement = movements.find(m => m.position === index);
+                            
+                            if (movement) {
+                                movementHtml.push(`<div class="voice-movement ${movement.type}" title="Voice ${movement.position + 1}: ${movement.from} → ${movement.to}">${movement.symbol}</div>`);
+                            } else {
+                                // If we have notes in both positions but no movement found, something's wrong
+                                // Show a faded indicator but this shouldn't happen
+                                movementHtml.push(`<div class="voice-movement" style="opacity: 0.3; background: rgba(255,255,255,0.1);">?</div>`);
+                            }
+                        }
+                    }
+                });
+            } else {
+                // Fallback: create indicators based on movements only
+                movements.forEach(movement => {
+                    movementHtml.push(`<div class="voice-movement ${movement.type}" title="Voice ${movement.position + 1}: ${movement.from} → ${movement.to}">${movement.symbol}</div>`);
+                });
+            }
+            
+            return `
+                <div class="connector-indicators" title="${summary}">
+                    ${movementHtml.join('')}
+                </div>
+                <div class="movement-summary">
+                    ${generateMovementSummary({movements: movements})}
+                </div>
+            `;
+        }
+
+        function formatVoicingForAnalysis(voicing) {
+            if (!Array.isArray(voicing)) return voicing;
+            
+            // Convert array to newline-separated string format that analyzeVoiceLeading expects
+            const notes = [];
+            voicing.forEach((note, index) => {
+                notes.push(note);
+                // Add gaps after every 3 notes (similar to updateChordVoicing)
+                if ((index + 1) % 3 === 0 && index < voicing.length - 1) {
+                    notes.push('');
+                }
+            });
+            return notes.join('\n');
+        }
+
+        function generateProgressionVariation(progression) {
+            // Format voicings for display
+            const v7VoicingFormatted = formatVoicingForDisplay(progression.v7.voicing);
+            const iVoicingFormatted = formatVoicingForDisplay(progression.i.voicing);
+            
+            // Get voice leading analysis
+            const voiceLeadingAnalysis = analyzeVoiceLeading(progression.v7.voicing, progression.i.voicing);
+            
+            return `
+                <div class="progression-variation">
+                    <div class="library-progression-display">
+                        <div class="library-chord">
+                            <div class="chord-header">
+                                <span class="chord-symbol">V7</span>
+                            </div>
+                            <div class="voicing-display">
+                                <div class="voicing-content">${v7VoicingFormatted}</div>
+                                <div class="scale-indicator">${progression.v7.scaleName}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="voice-leading-connector library">
+                            ${generateLibraryVoiceLeadingConnector(progression.v7, progression.i, progression.movement)}
+                        </div>
+                        
+                        <div class="library-chord">
+                            <div class="chord-header">
+                                <span class="chord-symbol">I</span>
+                            </div>
+                            <div class="voicing-display">
+                                <div class="voicing-content">${iVoicingFormatted}</div>
+                                <div class="scale-indicator">${progression.i.scaleName}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
         }
 
         // Initialize the app
