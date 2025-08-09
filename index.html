@@ -1220,9 +1220,9 @@
         <h1>Jazz Piano Voicings</h1>
         
         <div class="mode-toggle">
-            <button class="mode-btn active" onclick="switchMode('progression')">Create Progression</button>
-            <button class="mode-btn" onclick="switchMode('browse')">Browse Voicings</button>
             <button class="mode-btn" onclick="switchMode('progressions-library')">Progressions Library</button>
+            <button class="mode-btn" onclick="switchMode('browse')">Browse Voicings</button>
+            <button class="mode-btn" onclick="switchMode('progression')">Create Progression</button>
         </div>
 
         <!-- Browse Mode -->
@@ -3531,6 +3531,18 @@ ${details}`;
                 };
             }
             
+            // ♯9 resolution (V7 ♯9 → I 13)
+            if (note1 === '♯9' && note2 === '13') {
+                return {
+                    interval: -1,
+                    direction: 'down',
+                    type: 'step',
+                    symbol: '↓½',
+                    semitones: 1,
+                    absInterval: 1
+                };
+            }
+            
             // Apply directional context for interval display
             const expectedUp = expectedMovement.direction === '↗';
             const expectedDown = expectedMovement.direction === '↘';
@@ -3693,7 +3705,7 @@ ${details}`;
         }
 
         // Initialize the app
-        loadProgressionMode();
+        switchMode('progressions-library');
     </script>
 </body>
 </html>
