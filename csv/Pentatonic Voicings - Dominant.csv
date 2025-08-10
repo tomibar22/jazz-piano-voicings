@@ -71,6 +71,43 @@ Scale
 5
 9",3
 "Pentatonic
+""phrygian steps""
+(from 6)","1
+13
+9
+
+7
+3","3
+1
+13
+
+9
+7",-,-,-,-,-,-,-,"13
+9
+7
+
+3
+1",3
+"Pentatonic
+""phrygian steps""
+♭4
+(from 6)","1
+13
+♭9
+
+7
+3","3
+1
+13
+
+♭9
+7",-,-,-,-,-,-,-,"13
+♭9
+7
+
+3
+1",3
+"Pentatonic
 ""dominant""
 ♭2 (♭9)","1
 5
@@ -278,7 +315,7 @@ Scale
 5
 9",2
 "Pentatonic
-""diminished steps""",,"3
+""diminished steps""",-,"3
 13
 ♯11
 
@@ -477,4 +514,4 @@ b13
 3
 ♭9
 ",-,3
-tatol voicings:,13,10,7,8,8,7,5,9,7,8,78
+tatol voicings:,14,12,7,8,8,7,5,9,7,10,84
