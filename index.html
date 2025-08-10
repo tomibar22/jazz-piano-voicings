@@ -1020,6 +1020,32 @@
             box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
         }
 
+        .progression-actions {
+            display: flex;
+            justify-content: center;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .save-progression-btn {
+            background: linear-gradient(135deg, #d4af37, #ff6b6b);
+            border: none;
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(212, 175, 55, 0.3);
+        }
+
+        .save-progression-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(212, 175, 55, 0.4);
+        }
+
         .variation-header {
             margin-bottom: 1rem;
             text-align: center;
@@ -2730,6 +2756,50 @@ ${details}`;
             URL.revokeObjectURL(url);
         }
         
+        function saveProgressionFromLibrary(progressionId, buttonElement) {
+            const progressionData = JSON.parse(buttonElement.getAttribute('data-progression'));
+            
+            // Create the same format as the existing save function
+            const exportData = {
+                version: "1.0",
+                created: new Date().toISOString(),
+                progression: []
+            };
+            
+            // Convert the progression library format to the standard save format
+            const chordOrder = ['i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii'];
+            
+            chordOrder.forEach(chordKey => {
+                if (progressionData[chordKey]) {
+                    const chord = progressionData[chordKey];
+                    exportData.progression.push({
+                        symbol: chordKey,
+                        currentTopNote: chord.topNote,
+                        currentVoicingIndex: chord.voicingIndex,
+                        selectedVoicingKey: chord.voicingKey,
+                        scaleName: chord.scaleName
+                    });
+                }
+            });
+            
+            // Create filename
+            const timestamp = new Date().toISOString().slice(0, 19).replace(/[:-]/g, '');
+            const filename = `jazz-progression-${timestamp}.json`;
+            
+            // Download the file
+            const blob = new Blob([JSON.stringify(exportData, null, 2)], {
+                type: 'application/json'
+            });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        
         function loadProgression() {
             document.getElementById('file-input').click();
         }
@@ -2741,6 +2811,53 @@ ${details}`;
             
             currentProgression = [];
             renderProgression();
+        }
+
+        function saveProgressionFromLibrary(progressionId, buttonElement) {
+            // Get progression data from the button's data attribute
+            const progression = JSON.parse(buttonElement.dataset.progression);
+            
+            // Prompt for progression name
+            const name = prompt('Enter a name for this progression:', 'V7-I Progression');
+            if (!name) return;
+            
+            // Convert library progression format to the standard format used by Create Progression mode
+            const progressionData = {
+                version: "1.0",
+                created: new Date().toISOString(),
+                progression: [
+                    {
+                        symbol: 'V7',
+                        currentTopNote: progression.v7.topNote,
+                        currentVoicingIndex: 0, // Default index
+                        selectedVoicingKey: `${progression.v7.scaleName}:${progression.v7.topNote}`,
+                        scaleName: progression.v7.scaleName
+                    },
+                    {
+                        symbol: 'I',
+                        currentTopNote: progression.i.topNote,
+                        currentVoicingIndex: 0, // Default index
+                        selectedVoicingKey: `${progression.i.scaleName}:${progression.i.topNote}`,
+                        scaleName: progression.i.scaleName
+                    }
+                ]
+            };
+            
+            // Create file content
+            const fileContent = JSON.stringify(progressionData, null, 2);
+            
+            // Create and download file
+            const blob = new Blob([fileContent], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${name}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            alert(`Progression "${name}" saved successfully!`);
         }
         
         function handleFileLoad(event) {
@@ -3673,6 +3790,9 @@ ${details}`;
             // Get voice leading analysis
             const voiceLeadingAnalysis = analyzeVoiceLeading(progression.v7.voicing, progression.i.voicing);
             
+            // Create unique ID for this progression variation
+            const progressionId = `v7-${progression.v7.scaleName.replace(/[^a-zA-Z0-9]/g, '')}-${progression.v7.topNote}-i-${progression.i.scaleName.replace(/[^a-zA-Z0-9]/g, '')}-${progression.i.topNote}`;
+            
             return `
                 <div class="progression-variation">
                     <div class="library-progression-display">
@@ -3699,6 +3819,11 @@ ${details}`;
                                 <div class="scale-indicator">${progression.i.scaleName}</div>
                             </div>
                         </div>
+                    </div>
+                    <div class="progression-actions">
+                        <button class="save-progression-btn" onclick="saveProgressionFromLibrary('${progressionId}', this)" data-progression='${JSON.stringify(progression)}'>
+                            Save Progression
+                        </button>
                     </div>
                 </div>
             `;
