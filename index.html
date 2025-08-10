@@ -2774,21 +2774,30 @@ ${details}`;
                 progression: []
             };
             
-            // Convert the progression library format to the standard save format
-            const chordOrder = ['i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii'];
+            // Convert the progression library format (V7→I) to the standard save format
+            // Add V7 chord
+            if (progressionData.v7) {
+                const v7Chord = progressionData.v7;
+                exportData.progression.push({
+                    symbol: "V7",
+                    currentTopNote: v7Chord.topNote.toString(),
+                    currentVoicingIndex: v7Chord.voicingIndex || 0,
+                    selectedVoicingKey: `${v7Chord.scaleName}:${v7Chord.topNote}`,
+                    scaleName: v7Chord.scaleName
+                });
+            }
             
-            chordOrder.forEach(chordKey => {
-                if (progressionData[chordKey]) {
-                    const chord = progressionData[chordKey];
-                    exportData.progression.push({
-                        symbol: chordKey,
-                        currentTopNote: chord.topNote,
-                        currentVoicingIndex: chord.voicingIndex,
-                        selectedVoicingKey: chord.voicingKey,
-                        scaleName: chord.scaleName
-                    });
-                }
-            });
+            // Add I chord
+            if (progressionData.i) {
+                const iChord = progressionData.i;
+                exportData.progression.push({
+                    symbol: "I",
+                    currentTopNote: iChord.topNote.toString(),
+                    currentVoicingIndex: iChord.voicingIndex || 0,
+                    selectedVoicingKey: `${iChord.scaleName}:${iChord.topNote}`,
+                    scaleName: iChord.scaleName
+                });
+            }
             
             // Create filename
             const timestamp = new Date().toISOString().slice(0, 19).replace(/[:-]/g, '');
