@@ -1161,7 +1161,7 @@
         }
 
         .voice-leading-connector.library {
-            margin-top: -8rem;
+            margin-top: -9rem;
             z-index: 1;
             max-height: 8rem;
             overflow: visible;
@@ -1697,7 +1697,7 @@
             let normalizedNote = note.toString().trim();
             
             // Convert various notations to standard
-            if (normalizedNote === '♮7') normalizedNote = '7';
+            // Note: Keep ♮7 separate from 7 for proper minor chord analysis
             
             // Get base semitone value
             const semitones = noteToSemitones[normalizedNote];
@@ -3013,6 +3013,7 @@ ${details}`;
             const v7Voicings = getAllVoicingCombinations('dominant');
             const iVoicings = getAllVoicingCombinations('minor');
             
+            console.log('V7i Generation Started - V7 voicings:', v7Voicings.length, 'Minor voicings:', iVoicings.length);
             
             // Group progressions by top-note-line with direction (relative to tonal center)
             const progressionsByTopNoteLine = {};
@@ -3023,8 +3024,35 @@ ${details}`;
                     const iTonalNote = getTonicRelativeNote(i.topNote, 'i');
                     const v7TonalNote = getTonicRelativeNote(v7.topNote, 'V7', i.topNote);
                     
+                    // Debug logging for specific cases we're tracking
+                    if (v7.topNote === '♭13' && i.topNote === '3') {
+                        console.log('♭3-♭3 DEBUG:', {
+                            v7TopNote: v7.topNote, 
+                            v7TonalNote: v7TonalNote,
+                            iTopNote: i.topNote,
+                            iTonalNote: iTonalNote,
+                            v7Scale: v7.scaleName,
+                            iScale: i.scaleName
+                        });
+                    }
+                    if (v7.topNote === '♯9' && i.topNote === '7') {
+                        console.log('♭7-♭7 DEBUG:', {
+                            v7TopNote: v7.topNote, 
+                            v7TonalNote: v7TonalNote,
+                            iTopNote: i.topNote,
+                            iTonalNote: iTonalNote,
+                            v7Scale: v7.scaleName,
+                            iScale: i.scaleName
+                        });
+                    }
+                    
                     // Skip if we can't map the notes
-                    if (!v7TonalNote || !iTonalNote) return;
+                    if (!v7TonalNote || !iTonalNote) {
+                        if ((v7.topNote === '♭13' && i.topNote === '3') || (v7.topNote === '♯9' && i.topNote === '7')) {
+                            console.log('SKIPPING - null mapping:', {v7TonalNote, iTonalNote});
+                        }
+                        return;
+                    }
                     
                     // Skip harmonically invalid combinations
                     // ♯1 relative to tonic doesn't exist in proper V7-i progressions
@@ -3041,6 +3069,18 @@ ${details}`;
                         const expectedUp = movement.direction === '↗';
                         const actualUp = actualTopNoteMovement > 0;
                         
+                        // Debug logging for our target progressions
+                        if ((v7TonalNote === '♭3' && iTonalNote === '♭3') || (v7TonalNote === '♭7' && iTonalNote === '♭7')) {
+                            console.log(`${v7TonalNote}-${iTonalNote} MOVEMENT DEBUG:`, {
+                                movement: movement,
+                                actualTopNoteMovement: actualTopNoteMovement,
+                                expectedUp: expectedUp,
+                                actualUp: actualUp,
+                                v7TopNote: v7.topNote,
+                                iTopNote: i.topNote,
+                                isValidDirection: (expectedUp && actualUp) || (!expectedUp && !actualUp)
+                            });
+                        }
                         
                         // Only add this voicing pair if it matches the expected direction
                         // Be more strict about direction matching
@@ -3059,6 +3099,8 @@ ${details}`;
                                 i: i,
                                 movement: movement
                             });
+                        } else if ((v7TonalNote === '♭3' && iTonalNote === '♭3') || (v7TonalNote === '♭7' && iTonalNote === '♭7')) {
+                            console.log(`${v7TonalNote}-${iTonalNote} BLOCKED by direction validation`);
                         }
                     });
                 });
@@ -3067,6 +3109,11 @@ ${details}`;
             // Store data globally for filtering
             allProgressionsData = progressionsByTopNoteLine;
             
+            // Debug summary
+            const allTopNoteLines = Object.keys(progressionsByTopNoteLine);
+            console.log('Generated top-note-lines:', allTopNoteLines);
+            console.log('Looking for ♭3-♭3:', allTopNoteLines.filter(line => line.includes('♭3-♭3')));
+            console.log('Looking for ♭7-♭7:', allTopNoteLines.filter(line => line.includes('♭7-♭7')));
             
             // Generate navigation list
             generateTopNoteLineNavigation(progressionsByTopNoteLine);
@@ -3152,9 +3199,9 @@ ${details}`;
                 
                 // Calculate interval size using semitones for accurate measurement
                 const semitoneMap = {
-                    '1': 0, '♭2': 1, '2': 2, '♯2': 3, '♭3': 3, '3': 4,
+                    '1': 0, '♭2': 1, '2': 2, '♯2': 3, '♭3': 3, '3': 4, '♮3': 4,
                     '4': 5, '♯4': 6, '♭5': 6, '5': 7, '♯5': 8, '♭6': 8,
-                    '6': 9, '♯6': 10, '♭7': 10, '7': 11, '♮7': 11, '♯1': 12
+                    '6': 9, '♮6': 9, '♯6': 10, '♭7': 10, '7': 11, '♮7': 11, '♯1': 12
                 };
                 
                 const aStartSemitone = semitoneMap[aStart] ?? 0;
@@ -3268,9 +3315,9 @@ ${details}`;
                 
                 // Calculate interval size using semitones for accurate measurement
                 const semitoneMap = {
-                    '1': 0, '♭2': 1, '2': 2, '♯2': 3, '♭3': 3, '3': 4,
+                    '1': 0, '♭2': 1, '2': 2, '♯2': 3, '♭3': 3, '3': 4, '♮3': 4,
                     '4': 5, '♯4': 6, '♭5': 6, '5': 7, '♯5': 8, '♭6': 8,
-                    '6': 9, '♯6': 10, '♭7': 10, '7': 11, '♮7': 11, '♯1': 12
+                    '6': 9, '♮6': 9, '♯6': 10, '♭7': 10, '7': 11, '♮7': 11, '♯1': 12
                 };
                 
                 const aStartSemitone = semitoneMap[aStart] ?? 0;
@@ -3454,9 +3501,9 @@ ${details}`;
                     '9': '2', '♯11': '♯4', '13': '6'
                 },
                 'i': {
-                    '1': '1', '♭2': '♭2', '2': '2', '♭3': '♭3', '3': '♮3', '4': '4', '5': '5', 
-                    '♭6': '♭6', '6': '♮6', '♭7': '♭7', '7': '♮7',
-                    '9': '2', '♯11': '♯4', '♭13': '♭6'
+                    '1': '1', '♭2': '♭2', '2': '2', '♭3': '♭3', '3': '♭3', '4': '4', '5': '5', 
+                    '♭6': '♭6', '6': '♮6', '♭7': '♭7', '7': '♭7', '♮7': '♮7',
+                    '9': '2', '11': '4', '♯11': '♯4', '13': '♮6', '♭13': '♭6'
                 }
             };
             
@@ -3464,7 +3511,8 @@ ${details}`;
             
             // Special case: V7 ♭13 maps to ♯2 only when resolving to I 3, otherwise ♭3
             if (chordFunction === 'V7' && topNote === '♭13' && resolvesToNote) {
-                const iTonicNote = chordTonicMapping['I'][resolvesToNote];
+                const targetChordFunction = isMinorContext ? 'i' : 'I';
+                const iTonicNote = chordTonicMapping[targetChordFunction][resolvesToNote];
                 result = (iTonicNote === '3') ? '♯2' : '♭3';
             }
             
@@ -3481,25 +3529,28 @@ ${details}`;
         }
 
         function calculateActualTopNoteMovement(v7TopNote, iTopNote) {
-            // Calculate the actual semitone movement between voicing top notes
-            // But we need to consider the harmonic context: V7 vs I chord
+            // Calculate the actual semitone movement between tonal mappings, not raw chord tones
+            const progressionType = document.getElementById('progression-type')?.value || 'V7-I';
+            const isMinor = progressionType === 'V7-i';
+            
+            // Get the tonal mappings for both notes
+            const v7TonalNote = getTonicRelativeNote(v7TopNote, 'V7', iTopNote);
+            const iTonalNote = getTonicRelativeNote(iTopNote, isMinor ? 'i' : 'I');
+            
+            if (!v7TonalNote || !iTonalNote) return 0;
+            
+            // Now compare the tonal mappings using semitones
             const semitoneMap = {
-                '1': 0, '♭2': 1, '2': 2, '♯2': 3, '♭3': 3, '3': 4,
+                '1': 0, '♭2': 1, '2': 2, '♯2': 3, '♭3': 3, '3': 4, '♮3': 4,
                 '4': 5, '♯4': 6, '♭5': 6, '5': 7, '♯5': 8, '♭6': 8,
-                '6': 9, '♯6': 10, '♭7': 10, '7': 11, '♯7': 11,
-                '♭9': 1, '9': 2, '♯9': 3, '♯11': 6, '♭13': 8, '13': 9
+                '6': 9, '♮6': 9, '♯6': 10, '♭7': 10, '7': 11, '♮7': 11
             };
             
-            // Get semitone values relative to their chord context
-            const v7Semitone = semitoneMap[v7TopNote] ?? 0;
-            const iSemitone = semitoneMap[iTopNote] ?? 0;
+            const v7TonalSemitone = semitoneMap[v7TonalNote] ?? 0;
+            const iTonalSemitone = semitoneMap[iTonalNote] ?? 0;
             
-            // For V7-I progressions, we need to account for the chord root movement (V7 is 7 semitones above I)
-            // V7 notes are effectively 7 semitones higher in the harmonic context
-            const v7AdjustedSemitone = (v7Semitone + 7) % 12;
-            
-            // Calculate direct interval (allowing negative for downward movement)
-            let interval = iSemitone - v7AdjustedSemitone;
+            // Calculate direct interval between tonal mappings
+            let interval = iTonalSemitone - v7TonalSemitone;
             
             // Normalize to within one octave for analysis
             while (interval > 6) interval -= 12;
@@ -3511,9 +3562,9 @@ ${details}`;
         function calculateAllTopNoteMovements(fromNote, toNote) {
             // Convert scale degrees to semitones (C major scale reference)
             const semitoneMap = {
-                '1': 0, '♭2': 1, '2': 2, '♯2': 3, '♭3': 3, '3': 4,
+                '1': 0, '♭2': 1, '2': 2, '♯2': 3, '♭3': 3, '3': 4, '♮3': 4,
                 '4': 5, '♯4': 6, '♭5': 6, '5': 7, '♯5': 8, '♭6': 8,
-                '6': 9, '♯6': 10, '♭7': 10, '7': 11, '♯7': 11
+                '6': 9, '♮6': 9, '♯6': 10, '♭7': 10, '7': 11, '♮7': 11
             };
             
             const fromSemitone = semitoneMap[fromNote];
@@ -3696,8 +3747,14 @@ ${details}`;
         }
 
         function calculateVoiceMovementWithDirection(note1, note2, expectedMovement) {
+            // Determine chord type based on current progression type
+            const progressionType = document.getElementById('progression-type')?.value || 'V7-I';
+            const isMinor = progressionType === 'V7-i';
+            const targetChordSymbol = isMinor ? 'i' : 'I';
+            const targetChordType = isMinor ? 'minor' : 'major';
+            
             // Get basic movement first
-            const baseMovement = calculateVoiceMovement(note1, note2, 'V7', 'dominant', 'I', 'major');
+            const baseMovement = calculateVoiceMovement(note1, note2, 'V7', 'dominant', targetChordSymbol, targetChordType);
             
             // If no expected movement provided, or it's a common tone, return as-is
             if (!expectedMovement || note1 === note2 || baseMovement.interval === 0) {
