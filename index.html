@@ -1295,7 +1295,8 @@
                 <div class="progression-selector">
                     <label for="progression-type">Progression Type:</label>
                     <select id="progression-type" onchange="loadProgressionType()">
-                        <option value="V7-I">V7 - I</option>
+                        <option value="V7-I">V7 - I (major)</option>
+                        <option value="V7-i">V7 - i (minor)</option>
                     </select>
                 </div>
                 
@@ -2809,11 +2810,14 @@ ${details}`;
                 });
             }
             
-            // Add I chord
+            // Add I/i chord (determine type based on current progression type)
             if (progressionData.i) {
                 const iChord = progressionData.i;
+                const progressionType = document.getElementById('progression-type').value;
+                const symbol = progressionType === 'V7-i' ? 'i' : 'I';
+                
                 exportData.progression.push({
-                    symbol: "I",
+                    symbol: symbol,
                     currentTopNote: iChord.topNote.toString(),
                     currentVoicingIndex: iChord.voicingIndex || 0,
                     selectedVoicingKey: `${iChord.scaleName}:${iChord.topNote}`,
@@ -2929,6 +2933,8 @@ ${details}`;
             
             if (progressionType === 'V7-I') {
                 content.innerHTML = generateV7IProgressions();
+            } else if (progressionType === 'V7-i') {
+                content.innerHTML = generateV7iProgressions();
             }
         }
 
@@ -2955,6 +2961,73 @@ ${details}`;
                     
                     // Skip harmonically invalid combinations
                     // ♯1 relative to tonic doesn't exist in proper V7-I progressions
+                    if (v7TonalNote === '♯1' || iTonalNote === '♯1') {
+                        return;
+                    }
+                    
+                    // Calculate both upward and downward movements
+                    const movements = calculateAllTopNoteMovements(v7TonalNote, iTonalNote);
+                    
+                    movements.forEach(movement => {
+                        // Check if this voicing pair actually moves in the expected direction
+                        const actualTopNoteMovement = calculateActualTopNoteMovement(v7.topNote, i.topNote);
+                        const expectedUp = movement.direction === '↗';
+                        const actualUp = actualTopNoteMovement > 0;
+                        
+                        
+                        // Only add this voicing pair if it matches the expected direction
+                        // Be more strict about direction matching
+                        const isValidDirection = (expectedUp && actualUp) || 
+                                               (!expectedUp && !actualUp);
+                        
+                        if (isValidDirection) {
+                            const topNoteLineWithDirection = `${v7TonalNote}-${iTonalNote} ${movement.direction}`;
+                            
+                            if (!progressionsByTopNoteLine[topNoteLineWithDirection]) {
+                                progressionsByTopNoteLine[topNoteLineWithDirection] = [];
+                            }
+                            
+                            progressionsByTopNoteLine[topNoteLineWithDirection].push({
+                                v7: v7,
+                                i: i,
+                                movement: movement
+                            });
+                        }
+                    });
+                });
+            });
+            
+            // Store data globally for filtering
+            allProgressionsData = progressionsByTopNoteLine;
+            
+            
+            // Generate navigation list
+            generateTopNoteLineNavigation(progressionsByTopNoteLine);
+            
+            // Return empty string - user must filter first
+            return '<div class="empty-state">Select a top-note-line from the left panel to view progressions.</div>';
+        }
+
+        function generateV7iProgressions() {
+            // Get all V7 (dominant) and i (minor) voicing combinations
+            const v7Voicings = getAllVoicingCombinations('dominant');
+            const iVoicings = getAllVoicingCombinations('minor');
+            
+            
+            // Group progressions by top-note-line with direction (relative to tonal center)
+            const progressionsByTopNoteLine = {};
+            
+            v7Voicings.forEach(v7 => {
+                iVoicings.forEach(i => {
+                    // Calculate top-note-line relative to tonal center
+                    const iTonalNote = getTonicRelativeNote(i.topNote, 'i');
+                    const v7TonalNote = getTonicRelativeNote(v7.topNote, 'V7', i.topNote);
+                    
+                    // Skip if we can't map the notes
+                    if (!v7TonalNote || !iTonalNote) return;
+                    
+                    // Skip harmonically invalid combinations
+                    // ♯1 relative to tonic doesn't exist in proper V7-i progressions
                     if (v7TonalNote === '♯1' || iTonalNote === '♯1') {
                         return;
                     }
@@ -3362,8 +3435,16 @@ ${details}`;
 
         function getTonicRelativeNote(topNote, chordFunction, resolvesToNote = null) {
             // Convert chord-relative top note to tonic-relative scale degree
+            // Determine if we're in minor context
+            const progressionType = document.getElementById('progression-type')?.value || 'V7-I';
+            const isMinorContext = progressionType === 'V7-i';
+            
             const chordTonicMapping = {
-                'V7': {
+                'V7': isMinorContext ? {
+                    '1': '5', '3': '♮7', '5': '2', '7': '4', 
+                    '♭9': '♭6', '9': '♮6', '♯9': '♭7', 
+                    '♯11': '♭2', '♭13': '♭3', '13': '♮3'
+                } : {
                     '1': '5', '3': '7', '5': '2', '7': '4', 
                     '♭9': '♭6', '9': '6', '♯9': '♯6', 
                     '♯11': '♭2', '♭13': '♭3', '13': '3'
@@ -3371,6 +3452,11 @@ ${details}`;
                 'I': {
                     '1': '1', '♭2': '♭2', '2': '2', '♯2': '♯2', '3': '3', '5': '5', '7': '7',
                     '9': '2', '♯11': '♯4', '13': '6'
+                },
+                'i': {
+                    '1': '1', '♭2': '♭2', '2': '2', '♭3': '♭3', '3': '♮3', '4': '4', '5': '5', 
+                    '♭6': '♭6', '6': '♮6', '♭7': '♭7', '7': '♮7',
+                    '9': '2', '♯11': '♯4', '♭13': '♭6'
                 }
             };
             
@@ -3523,7 +3609,10 @@ ${details}`;
             });
             
             sortedProgressions.forEach(progression => {
-                html += generateProgressionVariation(progression);
+                // Determine chord type based on current progression type
+                const progressionType = document.getElementById('progression-type').value;
+                const chordType = progressionType === 'V7-i' ? 'minor' : 'major';
+                html += generateProgressionVariation(progression, chordType);
             });
             
             html += `
@@ -3774,7 +3863,7 @@ ${details}`;
             return notes.join('\n');
         }
 
-        function generateProgressionVariation(progression) {
+        function generateProgressionVariation(progression, chordType = 'major') {
             // Format voicings for display
             const v7VoicingFormatted = formatVoicingForDisplay(progression.v7.voicing);
             const iVoicingFormatted = formatVoicingForDisplay(progression.i.voicing);
@@ -3804,7 +3893,7 @@ ${details}`;
                         
                         <div class="library-chord">
                             <div class="chord-header">
-                                <span class="chord-symbol">I</span>
+                                <span class="chord-symbol">${chordType === 'major' ? 'I' : 'i'}</span>
                             </div>
                             <div class="voicing-display">
                                 <div class="voicing-content">${iVoicingFormatted}</div>
