@@ -1269,6 +1269,146 @@
                 font-size: 1.2rem;
             }
         }
+
+        /* Progression Library (JSON Files) Styles */
+        .progression-files {
+            padding: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .loading-message {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1rem;
+            padding: 2rem;
+        }
+
+        .progression-files-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .progression-file-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .progression-file-item:hover {
+            transform: translateY(-2px);
+            border-color: rgba(212, 175, 55, 0.4);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .progression-file-header {
+            background: rgba(212, 175, 55, 0.15);
+            padding: 1rem;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .progression-file-name {
+            font-weight: bold;
+            color: #d4af37;
+            font-size: 0.9rem;
+        }
+
+        .progression-file-content {
+            padding: 1rem;
+        }
+
+        .progression-file-chords {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .chord-info {
+            flex: 1;
+            text-align: center;
+        }
+
+        .chord-symbol {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #d4af37;
+            margin-bottom: 0.5rem;
+        }
+
+        .chord-details {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .scale-name {
+            margin-bottom: 0.25rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .top-note {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .voice-leading-arrow {
+            font-size: 1.5rem;
+            color: #d4af37;
+            font-weight: bold;
+        }
+
+        .voice-leading-analysis {
+            text-align: center;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+            padding: 0.5rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 6px;
+        }
+
+        .progression-file-actions {
+            padding: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .load-progression-btn {
+            background: linear-gradient(135deg, #d4af37, #f4d03f);
+            color: #1a1a1a;
+            border: none;
+            padding: 0.6rem 1.5rem;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .load-progression-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(212, 175, 55, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .progression-files-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .progression-file-chords {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .voice-leading-arrow {
+                transform: rotate(90deg);
+            }
+        }
     </style>
 </head>
 <body>
@@ -1277,6 +1417,7 @@
         
         <div class="mode-toggle">
             <button class="mode-btn" onclick="switchMode('progressions-library')">Progression Library (Raw)</button>
+            <button class="mode-btn" onclick="switchMode('progression-library')">Progression Library</button>
             <button class="mode-btn" onclick="switchMode('browse')">Browse Voicings</button>
             <button class="mode-btn" onclick="switchMode('progression')">Create Progression</button>
         </div>
@@ -1326,6 +1467,17 @@
                             <!-- Content will be dynamically loaded -->
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progression Library Mode -->
+        <div id="progression-library-mode" class="mode-section">
+            <div class="progression-library">
+                <h2>Progression Library</h2>
+                <div class="progression-files">
+                    <div class="loading-message">Loading progressions from files...</div>
+                    <div id="progression-files-content"></div>
                 </div>
             </div>
         </div>
@@ -1896,12 +2048,14 @@ ${details}`;
             const browseMode = document.getElementById('browse-mode');
             const progressionMode = document.getElementById('progression-mode');
             const progressionsLibraryMode = document.getElementById('progressions-library-mode');
+            const progressionLibraryMode = document.getElementById('progression-library-mode');
 
             // Remove active class from all buttons and modes
             modeButtons.forEach(btn => btn.classList.remove('active'));
             browseMode.classList.remove('active');
             progressionMode.classList.remove('active');
             progressionsLibraryMode.classList.remove('active');
+            progressionLibraryMode.classList.remove('active');
 
             if (mode === 'browse') {
                 document.querySelector('.mode-btn[onclick="switchMode(\'browse\')"]').classList.add('active');
@@ -1911,6 +2065,10 @@ ${details}`;
                 document.querySelector('.mode-btn[onclick="switchMode(\'progressions-library\')"]').classList.add('active');
                 progressionsLibraryMode.classList.add('active');
                 loadProgressionsLibraryMode();
+            } else if (mode === 'progression-library') {
+                document.querySelector('.mode-btn[onclick="switchMode(\'progression-library\')"]').classList.add('active');
+                progressionLibraryMode.classList.add('active');
+                loadProgressionLibraryMode();
             } else {
                 document.querySelector('.mode-btn[onclick="switchMode(\'progression\')"]').classList.add('active');
                 progressionMode.classList.add('active');
@@ -3975,6 +4133,243 @@ ${details}`;
                     </div>
                 </div>
             `;
+        }
+
+        // Progression Library Functions (JSON Files)
+        const progressionFiles = [
+            'V7-I (major)/2-2 Bluesy.json',
+            'V7-I (major)/2-2 everything falls to place.json',
+            'V7-I (major)/2-2 opening.json',
+            'V7-I (major)/2-2 simply solid.json',
+            'V7-I (major)/2-2 spicy to bright.json',
+            'V7-I (major)/2-2 static relief .json',
+            'V7-I (major)/3-3 classic decisive .json',
+            'V7-I (major)/3-3 classic.json',
+            'V7-I (major)/3-3 rich.json',
+            'V7-I (major)/3-3 simplifying complexity .json',
+            'V7-I (major)/3-3 soft landing.json',
+            'V7-I (major)/3-3 spicy classic with a twist.json',
+            'V7-I (major)/3-3 spicy classic.json',
+            'V7-I (major)/3-3 upper dreams.json',
+            'V7-I (major)/3-3 wonder.json',
+            'V7-I (major)/5-5 augmented above.json',
+            'V7-I (major)/5-5 augmented below.json',
+            'V7-I (major)/5-5 augmented multi-downward.json',
+            'V7-I (major)/5-5 classic.json',
+            'V7-I (major)/5-5 clean 1-way motion.json',
+            'V7-I (major)/5-5 clean cool narrow.json',
+            'V7-I (major)/5-5 cool narrow.json',
+            'V7-I (major)/5-5 decisive augmented from above.json',
+            'V7-I (major)/5-5 decisive augmented from below.json',
+            'V7-I (major)/5-5 decisive classic.json',
+            'V7-I (major)/5-5 decisive inner minor.json',
+            'V7-I (major)/5-5 decisive inner tritone.json',
+            'V7-I (major)/5-5 decisive pinch.json',
+            'V7-I (major)/5-5 decisive rich.json',
+            'V7-I (major)/5-5 decisive worries throw away.json',
+            'V7-I (major)/5-5 inner minor resolution.json',
+            'V7-I (major)/5-5 inner tritone resolution.json',
+            'V7-I (major)/5-5 narrow.json',
+            'V7-I (major)/5-5 rich and cool.json',
+            'V7-I (major)/5-5 simply clean.json',
+            'V7-I (major)/5-5 simply cool.json',
+            'V7-I (major)/5-5 small pinch.json',
+            'V7-I (major)/5-5 spicy classic.json',
+            'V7-I (major)/5-5 spicy decisive classic.json',
+            'V7-I (major)/5-5 worries throw away.json',
+            'V7-I (major)/6-6 augmented from above.json',
+            'V7-I (major)/6-6 augmented from below.json',
+            'V7-I (major)/6-6 augmented neat.json',
+            'V7-I (major)/6-6 neat.json',
+            'V7-I (major)/6-6 whole tone neat.json',
+            'V7-I (major)/7-7 augmented above bright.json',
+            'V7-I (major)/7-7 augmented from above.json',
+            'V7-I (major)/7-7 augmented from below.json',
+            'V7-I (major)/7-7 classic bright.json',
+            'V7-I (major)/7-7 classic.json',
+            'V7-I (major)/7-7 diminished leap.json',
+            'V7-I (major)/7-7 easy step.json',
+            'V7-I (major)/7-7 exploding lower tritone.json',
+            'V7-I (major)/7-7 inner tritone bright.json',
+            'V7-I (major)/7-7 inner tritone resolution .json',
+            'V7-I (major)/7-7 spicy bright.json',
+            'V7-I (major)/7-7 spicy classic bright.json',
+            'V7-I (major)/7-7 spicy classic.json',
+            'V7-I (major)/7-7 spicy static.json',
+            'V7-I (major)/7-7 tritone exploding to bright.json',
+            'V7-I (major)/7-7 whole tone bright.json',
+            'V7-I (major)/7-7 whole tone upwards bright.json',
+            'V7-I (major)/7-7 whole tone upwards.json',
+            'V7-I (major)/7-7 worries throw away.json',
+            'V7-I (major)/7-7 worries to bright.json'
+        ];
+
+        function loadProgressionLibraryMode() {
+            const content = document.getElementById('progression-files-content');
+            const loadingMessage = document.querySelector('.loading-message');
+            
+            loadingMessage.style.display = 'block';
+            content.innerHTML = '';
+            
+            let loadedCount = 0;
+            let progressions = [];
+            
+            progressionFiles.forEach((filePath, index) => {
+                fetch(`Progressions/${filePath}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`Failed to load ${filePath}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        const fileName = filePath.split('/').pop().replace('.json', '');
+                        progressions.push({
+                            fileName,
+                            filePath,
+                            data,
+                            index
+                        });
+                        loadedCount++;
+                        
+                        if (loadedCount === progressionFiles.length) {
+                            displayLoadedProgressions(progressions);
+                            loadingMessage.style.display = 'none';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error loading progression:', error);
+                        loadedCount++;
+                        
+                        if (loadedCount === progressionFiles.length) {
+                            displayLoadedProgressions(progressions);
+                            loadingMessage.style.display = 'none';
+                        }
+                    });
+            });
+        }
+
+        function displayLoadedProgressions(progressions) {
+            const content = document.getElementById('progression-files-content');
+            
+            // Sort progressions by filename
+            progressions.sort((a, b) => a.fileName.localeCompare(b.fileName));
+            
+            let html = '<div class="progression-files-grid">';
+            
+            progressions.forEach(prog => {
+                const { fileName, data } = prog;
+                if (!data.progression || data.progression.length !== 2) return;
+                
+                const v7Chord = data.progression[0];
+                const iChord = data.progression[1];
+                
+                // Get voice leading analysis
+                const voiceLeading = calculateVoiceLeadingFromFile(v7Chord, iChord);
+                
+                html += `
+                    <div class="progression-file-item">
+                        <div class="progression-file-header">
+                            <div class="progression-file-name">${fileName}</div>
+                        </div>
+                        <div class="progression-file-content">
+                            <div class="progression-file-chords">
+                                <div class="chord-info">
+                                    <div class="chord-symbol">V7</div>
+                                    <div class="chord-details">
+                                        <div class="scale-name">${v7Chord.scaleName}</div>
+                                        <div class="top-note">Top: ${v7Chord.currentTopNote}</div>
+                                    </div>
+                                </div>
+                                <div class="voice-leading-arrow">→</div>
+                                <div class="chord-info">
+                                    <div class="chord-symbol">I</div>
+                                    <div class="chord-details">
+                                        <div class="scale-name">${iChord.scaleName}</div>
+                                        <div class="top-note">Top: ${iChord.currentTopNote}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="voice-leading-analysis">
+                                ${voiceLeading}
+                            </div>
+                        </div>
+                        <div class="progression-file-actions">
+                            <button class="load-progression-btn" onclick="loadProgressionFromFile('${fileName}', this)" data-progression='${JSON.stringify(data)}'>
+                                Load Progression
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            content.innerHTML = html;
+        }
+
+        function calculateVoiceLeadingFromFile(v7Chord, iChord) {
+            // Get voicings from voicing data
+            const v7Voicing = voicingData.dominant[v7Chord.scaleName]?.[v7Chord.currentTopNote];
+            const iVoicing = voicingData.major[iChord.scaleName]?.[iChord.currentTopNote];
+            
+            if (!v7Voicing || !iVoicing) {
+                return 'Voice leading data unavailable';
+            }
+            
+            // Calculate voice leading (simplified version)
+            const movements = [];
+            let totalSemitones = 0;
+            let leaps = 0;
+            
+            for (let i = 0; i < 6; i++) {
+                const fromNote = v7Voicing[i];
+                const toNote = iVoicing[i];
+                
+                if (fromNote && toNote && fromNote !== '' && toNote !== '') {
+                    const fromSemitone = getNoteSemitone(fromNote);
+                    const toSemitone = getNoteSemitone(toNote);
+                    
+                    if (fromSemitone !== null && toSemitone !== null) {
+                        let interval = Math.abs(toSemitone - fromSemitone);
+                        if (interval > 6) interval = 12 - interval; // Use closest direction
+                        
+                        totalSemitones += interval;
+                        if (interval > 2) leaps++;
+                    }
+                }
+            }
+            
+            const summaryParts = [];
+            if (totalSemitones > 0) summaryParts.push(`${totalSemitones}S`);
+            if (leaps > 0) summaryParts.push(`${leaps}L`);
+            
+            return summaryParts.length > 0 ? summaryParts.join(' ') : '0S';
+        }
+
+        function loadProgressionFromFile(fileName, buttonElement) {
+            const progressionData = JSON.parse(buttonElement.getAttribute('data-progression'));
+            
+            // Switch to Create Progression mode and load the progression
+            switchMode('progression');
+            
+            // Clear existing progression
+            currentProgression = [];
+            
+            // Add chords from the loaded progression
+            progressionData.progression.forEach(chordData => {
+                const chord = {
+                    id: Date.now() + Math.random(),
+                    symbol: chordData.symbol,
+                    currentTopNote: chordData.currentTopNote,
+                    selectedVoicingKey: chordData.selectedVoicingKey,
+                    scaleName: chordData.scaleName
+                };
+                currentProgression.push(chord);
+            });
+            
+            // Update the display
+            updateProgressionDisplay();
+            updateChordDisplay();
         }
 
         // Initialize the app
