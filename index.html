@@ -769,7 +769,7 @@
             }
         }
 
-        /* Progressions Library Styles */
+        /* Progression Library (Raw) Styles */
         .progressions-library {
             padding: 1.5rem;
             max-width: 1200px;
@@ -1276,7 +1276,7 @@
         <h1>Jazz Piano Voicings</h1>
         
         <div class="mode-toggle">
-            <button class="mode-btn" onclick="switchMode('progressions-library')">Progressions Library</button>
+            <button class="mode-btn" onclick="switchMode('progressions-library')">Progression Library (Raw)</button>
             <button class="mode-btn" onclick="switchMode('browse')">Browse Voicings</button>
             <button class="mode-btn" onclick="switchMode('progression')">Create Progression</button>
         </div>
@@ -1291,7 +1291,7 @@
         <!-- Progressions Library Mode -->
         <div id="progressions-library-mode" class="mode-section">
             <div class="progressions-library">
-                <h2>Progressions Library</h2>
+                <h2>Progression Library (Raw)</h2>
                 <div class="progression-selector">
                     <label for="progression-type">Progression Type:</label>
                     <select id="progression-type" onchange="loadProgressionType()">
@@ -2932,7 +2932,7 @@ ${details}`;
             reader.readAsText(file);
         }
 
-        // Progressions Library Functions
+        // Progression Library (Raw) Functions
         function loadProgressionsLibraryMode() {
             loadProgressionType();
         }
