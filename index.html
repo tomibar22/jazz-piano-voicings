@@ -4284,6 +4284,25 @@ ${details}`;
             content.innerHTML = html;
         }
 
+        function getNoteSemitone(note) {
+            // Map note names to semitone values (C = 0)
+            const noteMap = {
+                '1': 0, 'C': 0,
+                '♭2': 1, '♭9': 1, 'D♭': 1, 'C♯': 1,
+                '2': 2, '9': 2, 'D': 2,
+                '♯2': 3, '♯9': 3, '♭3': 3, 'E♭': 3, 'D♯': 3,
+                '3': 4, 'E': 4,
+                '4': 5, '11': 5, 'F': 5,
+                '♯4': 6, '♯11': 6, '♭5': 6, 'F♯': 6, 'G♭': 6,
+                '5': 7, 'G': 7,
+                '♯5': 8, '♭6': 8, '♭13': 8, 'A♭': 8, 'G♯': 8,
+                '6': 9, '13': 9, 'A': 9,
+                '♯6': 10, '♭7': 10, 'B♭': 10, 'A♯': 10,
+                '7': 11, '♮7': 11, 'maj7': 11, 'B': 11
+            };
+            return noteMap[note] !== undefined ? noteMap[note] : null;
+        }
+
         function calculateVoiceLeadingFromFile(v7Chord, iChord) {
             // Get voicings from voicing data
             const v7Voicing = voicingData.dominant[v7Chord.scaleName]?.[v7Chord.currentTopNote];
