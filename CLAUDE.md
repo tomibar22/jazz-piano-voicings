@@ -88,9 +88,11 @@ The core algorithm finds closest top notes between chords, maintains voicing qua
 Current direction filters implemented:
 - ♭2-1 progressions: Show only downward movement (♯11 → 1 going down a semitone)
 - ♭2-2 progressions: Show only upward movement (display as ♯1-2 in UI)
-- ♯1-2 progressions: Show only upward movement (keep as ♯1-2 in UI)
+- ♯1-2 progressions: Filtered out entirely (same interval as ♭2-2)
 
 **Display Rule**: ♭2-2 progressions are displayed as ♯1-2 in the user interface for better readability, while maintaining the internal ♭2-2 logic for progression matching and file organization.
+
+**Interval Consolidation**: ♯1-2 and ♭2-2 represent the same musical interval (1 semitone up). Only ♭2-2 progressions are shown (displayed as ♯1-2) to avoid duplicates.
 
 **Future Rule**: Only generate one direction per progression line - always use the closest/shortest voice leading direction. No need for both upward and downward instances of the same interval.
 

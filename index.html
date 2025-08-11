@@ -4887,6 +4887,12 @@ ${details}`;
                         return;
                     }
                     
+                    // Skip ♯1-2 progressions entirely - use ♭2-2 instead (they're the same interval)
+                    // ♭2-2 will be displayed as ♯1-2 in the UI for better readability
+                    if (topNoteLine === '♯1-2') {
+                        return;
+                    }
+                    
                     const directionKey = `${topNoteLine} ${movement.direction}`;
                     
                     if (!progressionsByTopNoteLine[directionKey]) {
