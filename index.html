@@ -1256,6 +1256,11 @@
             transition: all 0.2s ease;
         }
 
+        /* Enhanced tooltip styling for library indicator */
+        .library-indicator[title] {
+            cursor: help;
+        }
+
         .progression-variation {
             position: relative;
         }
@@ -4463,7 +4468,7 @@ ${details}`;
             const progressionId = `v7-${progression.v7.scaleName.replace(/[^a-zA-Z0-9]/g, '')}-${progression.v7.topNote}-i-${progression.i.scaleName.replace(/[^a-zA-Z0-9]/g, '')}-${progression.i.topNote}`;
             
             // Check if this progression is in the library
-            const inLibrary = isProgressionInLibrary(
+            const libraryInfo = isProgressionInLibrary(
                 progression.v7.topNote, 
                 progression.v7.scaleName, 
                 progression.i.topNote, 
@@ -4472,7 +4477,7 @@ ${details}`;
             
             return `
                 <div class="progression-variation">
-                    ${inLibrary ? '<div class="library-indicator">Library</div>' : ''}
+                    ${libraryInfo.inLibrary ? `<div class="library-indicator" title="${libraryInfo.fileName}">Library</div>` : ''}
                     <div class="library-progression-display">
                         <div class="library-chord">
                             <div class="chord-header">
@@ -4620,11 +4625,11 @@ ${details}`;
                         v7Chord.scaleName === v7ScaleName &&
                         iChord.currentTopNote === iTopNote && 
                         iChord.scaleName === iScaleName) {
-                        return true;
+                        return { inLibrary: true, fileName: fileName };
                     }
                 }
             }
-            return false;
+            return { inLibrary: false, fileName: null };
         }
 
         // Global variables for file-based progressions
