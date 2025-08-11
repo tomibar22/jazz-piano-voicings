@@ -4875,6 +4875,11 @@ ${details}`;
                         return;
                     }
                     
+                    // Skip downward movements for ♭2-2 progressions (only show upward)
+                    if (topNoteLine === '♭2-2' && movement.direction === '↙') {
+                        return;
+                    }
+                    
                     const directionKey = `${topNoteLine} ${movement.direction}`;
                     
                     if (!progressionsByTopNoteLine[directionKey]) {
