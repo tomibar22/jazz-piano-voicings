@@ -20,7 +20,11 @@ This is a **Jazz Piano Voicing Application** - a sophisticated music theory tool
 
 **Browse Mode**: Grid-based interface displaying voicings organized by chord type and top note. Cells are interactive and top notes are highlighted in gold for visual emphasis.
 
-**Progression Creator**: Drag-and-drop interface for building chord progressions using Roman numeral chord selection (I, ii, V7, etc.) with real-time voice leading analysis.
+**Progression Creator**: Drag-and-drop interface for building chord progressions using Roman numeral chord selection (I, ii, V7, etc.) with real-time voice leading analysis and movement summary indicators (3S, 2L format).
+
+**Progression Library**: File-based progression browser with embedded JSON data from 65+ curated progressions. Features load buttons for seamless integration with Creator mode, state preservation for returning users, and organized by top-note-lines (2-2, 3-3, 7-7, etc.).
+
+**Progression Library (Raw)**: Algorithmic progression generator that creates all possible V7-I voicing combinations, organized by movement types and semitone analysis.
 
 **Voice Leading Engine**: Sophisticated algorithm that analyzes semitone intervals between chords, categorizes movements (common tones, steps, leaps), and automatically selects optimal voicings for smooth voice leading.
 
@@ -43,11 +47,31 @@ The voice leading engine converts chord degrees to actual pitches considering ch
 - `index.html` - Complete application (all HTML, CSS, JavaScript)
 - `complete-voicing-data.js` - Exported voicing data module
 - `csv/` - Source CSV files for each chord type's voicings
-- `Progressions/` - Sample progression files (JSON format)
+- `Progressions/V7-I (major)/` - 65+ curated V7-I progression files (JSON format)
+
+## Recent Features (Latest Version)
+
+### Progression Library Enhancements
+- **Load in Creator Buttons**: Each progression card includes a "Load in Creator" button that seamlessly transfers the progression to the Create Progression page with full voicing data
+- **Movement Summary Indicators**: Added compact movement analysis indicators (e.g., "3S" for 3 semitones, "2L" for 2 leaps) displayed in both Library and Creator modes
+- **State Preservation**: Library page remembers selected top-note-line and scroll position when navigating between pages
+- **Improved Visual Design**: Enhanced spacing, brighter movement colors, and less prominent load buttons for better user experience
+
+### Navigation Improvements  
+- **Reordered Navigation**: Create Progression moved before Browse Voicings for better workflow
+- **Progression Library** set as default startup page
+- **Consistent Formatting**: Standardized interval display format ("2-2" instead of "2 - 2")
+
+### Technical Improvements
+- **Self-contained Architecture**: All progression data embedded directly in HTML, no external file dependencies
+- **Enhanced Error Handling**: Fixed missing functions and improved load button functionality  
+- **Code Cleanup**: Removed redundant console.log statements and improved code organization
 
 ## State Management
 
 Global JavaScript objects manage progression state and UI state. The application uses event-driven architecture with DOM event handlers. UI is dynamically generated from voicing data structures.
+
+**Library State Preservation**: The `libraryPageState` object tracks selected top-note-line and scroll position, automatically restored when returning to the Progression Library page. Functions `saveLibraryPageState()` and `restoreLibraryPageState()` handle seamless user experience across page transitions.
 
 ## Data Persistence
 
