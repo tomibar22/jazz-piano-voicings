@@ -4888,7 +4888,14 @@ ${details}`;
                         return;
                     }
                     
-                    const directionKey = `${topNoteLine} ${movement.direction}`;
+                    // Normalize enharmonic equivalents to consolidate navigation entries
+                    // Convert ♭2-2 to ♯1-2 internally so they're treated as the same interval
+                    let normalizedTopNoteLine = topNoteLine;
+                    if (topNoteLine === '♭2-2') {
+                        normalizedTopNoteLine = '♯1-2';
+                    }
+                    
+                    const directionKey = `${normalizedTopNoteLine} ${movement.direction}`;
                     
                     if (!progressionsByTopNoteLine[directionKey]) {
                         progressionsByTopNoteLine[directionKey] = [];
