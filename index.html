@@ -3578,7 +3578,32 @@ ${details}`;
                                                (!expectedUp && !actualUp);
                         
                         if (isValidDirection) {
-                            const topNoteLineWithDirection = `${v7TonalNote}-${iTonalNote} ${movement.direction}`;
+                            const topNoteLine = `${v7TonalNote}-${iTonalNote}`;
+                            
+                            // Skip ♯1-2 progressions entirely - use ♭2-2 instead (same interval, different enharmonic spelling)
+                            // ♭2-2 will be displayed as ♯1-2 in the UI for better readability
+                            if (topNoteLine === '♯1-2') {
+                                return;
+                            }
+                            
+                            // Skip upward movements for ♭2-1 progressions (only show downward)
+                            if (topNoteLine === '♭2-1' && movement.direction === '↗') {
+                                return;
+                            }
+                            
+                            // Skip downward movements for ♭2-2 progressions (only show upward)
+                            if (topNoteLine === '♭2-2' && movement.direction === '↙') {
+                                return;
+                            }
+                            
+                            // Normalize enharmonic equivalents to consolidate navigation entries
+                            // Convert ♭2-2 to ♯1-2 internally so they're treated as the same interval
+                            let normalizedTopNoteLine = topNoteLine;
+                            if (topNoteLine === '♭2-2') {
+                                normalizedTopNoteLine = '♯1-2';
+                            }
+                            
+                            const topNoteLineWithDirection = `${normalizedTopNoteLine} ${movement.direction}`;
                             
                             if (!progressionsByTopNoteLine[topNoteLineWithDirection]) {
                                 progressionsByTopNoteLine[topNoteLineWithDirection] = [];
@@ -3649,7 +3674,32 @@ ${details}`;
                                                (!expectedUp && !actualUp);
                         
                         if (isValidDirection) {
-                            const topNoteLineWithDirection = `${v7TonalNote}-${iTonalNote} ${movement.direction}`;
+                            const topNoteLine = `${v7TonalNote}-${iTonalNote}`;
+                            
+                            // Skip ♯1-2 progressions entirely - use ♭2-2 instead (same interval, different enharmonic spelling)
+                            // ♭2-2 will be displayed as ♯1-2 in the UI for better readability
+                            if (topNoteLine === '♯1-2') {
+                                return;
+                            }
+                            
+                            // Skip upward movements for ♭2-1 progressions (only show downward)
+                            if (topNoteLine === '♭2-1' && movement.direction === '↗') {
+                                return;
+                            }
+                            
+                            // Skip downward movements for ♭2-2 progressions (only show upward)
+                            if (topNoteLine === '♭2-2' && movement.direction === '↙') {
+                                return;
+                            }
+                            
+                            // Normalize enharmonic equivalents to consolidate navigation entries
+                            // Convert ♭2-2 to ♯1-2 internally so they're treated as the same interval
+                            let normalizedTopNoteLine = topNoteLine;
+                            if (topNoteLine === '♭2-2') {
+                                normalizedTopNoteLine = '♯1-2';
+                            }
+                            
+                            const topNoteLineWithDirection = `${normalizedTopNoteLine} ${movement.direction}`;
                             
                             if (!progressionsByTopNoteLine[topNoteLineWithDirection]) {
                                 progressionsByTopNoteLine[topNoteLineWithDirection] = [];
