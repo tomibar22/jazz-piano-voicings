@@ -1228,6 +1228,38 @@
             box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
         }
 
+        .library-indicator {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(212, 175, 55, 0.9);
+            color: #1a1a1a;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            z-index: 100;
+        }
+
+        .library-indicator::before {
+            content: '📚';
+            font-size: 0.8em;
+        }
+
+        .library-indicator:hover {
+            background: rgba(212, 175, 55, 1);
+            transform: scale(1.05);
+            transition: all 0.2s ease;
+        }
+
+        .progression-variation {
+            position: relative;
+        }
+
         .progression-actions {
             display: flex;
             justify-content: center;
@@ -1753,6 +1785,13 @@
       9: ["9", "13", "3", "", "7", "♯11"],
       "♯11": ["♯11", "9", "13", "", "3", "7"],
       13: ["13", "3", "7", "", "♯11", "9"]
+    },
+    "Pentatonic \"major 7\"": {
+      5: ["5", "9", "7", "", "3", "1"],
+      9: ["9", "7", "3", "", "1", "5"]
+    },
+    "Pentatonic \"minor 7\" (from 6)": {
+      13: ["13", "3", "7", "", "5", "1"]
     }
   },
 
@@ -1777,11 +1816,6 @@
     "Pentatonic \"major 7\" (from 3)": {
       7: ["7", "11", "9", "", "5", "3"],
       11: ["11", "9", "5", "", "3", "7"]
-    },
-    "Pentatonic \"major 7 1-3-5-6-7\" (from 3)": {
-      1: ["1", "5", "9", "", "7", "3"],
-      5: ["5", "9", "7", "", "3", "1"],
-      9: ["9", "7", "3", "", "1", "5"]
     },
     "Pentatonic \"dorian\"": {
       1: ["1", "13", "3", "", "7", "5"],
@@ -4458,8 +4492,17 @@ ${details}`;
             // Create unique ID for this progression variation
             const progressionId = `v7-${progression.v7.scaleName.replace(/[^a-zA-Z0-9]/g, '')}-${progression.v7.topNote}-i-${progression.i.scaleName.replace(/[^a-zA-Z0-9]/g, '')}-${progression.i.topNote}`;
             
+            // Check if this progression is in the library
+            const inLibrary = isProgressionInLibrary(
+                progression.v7.topNote, 
+                progression.v7.scaleName, 
+                progression.i.topNote, 
+                progression.i.scaleName
+            );
+            
             return `
                 <div class="progression-variation">
+                    ${inLibrary ? '<div class="library-indicator">Library</div>' : ''}
                     <div class="library-progression-display">
                         <div class="library-chord">
                             <div class="chord-header">
@@ -4537,6 +4580,18 @@ ${details}`;
             "5-5 spicy classic": {"version":"1.0","created":"2025-08-10T12:38:18.618Z","progression":[{"symbol":"V7","currentTopNote":"1","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic \"phrygian steps\" ♭4 (from 6):1","scaleName":"Pentatonic \"phrygian steps\" ♭4 (from 6)"},{"symbol":"I","currentTopNote":"5","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic (from 5):5","scaleName":"Pentatonic (from 5)"}]},
             "5-5 spicy decisive classic": {"version":"1.0","created":"2025-08-10T12:39:09.664Z","progression":[{"symbol":"V7","currentTopNote":"1","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic \"phrygian steps\" ♭4 (from 6):1","scaleName":"Pentatonic \"phrygian steps\" ♭4 (from 6)"},{"symbol":"I","currentTopNote":"5","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic:5","scaleName":"Pentatonic"}]},
             "5-5 worries throw away": {"version":"1.0","created":"2025-08-10T09:27:55.063Z","progression":[{"symbol":"V7","currentTopNote":"1","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic \"dominant\" ♭2, ♯5:1","scaleName":"Pentatonic \"dominant\" ♭2, ♯5"},{"symbol":"I","currentTopNote":"5","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic (from 5):5","scaleName":"Pentatonic (from 5)"}]},
+            "5-5 augmented landing": {"version":"1.0","created":"2025-08-11T11:41:25.795Z","progression":[{"symbol":"V7","currentTopNote":"1","currentVoicingIndex":0,"selectedVoicingKey":"WT (from 3):1","scaleName":"WT (from 3)"},{"symbol":"I","currentTopNote":"5","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic \"major 7\":5","scaleName":"Pentatonic \"major 7\""}]},
+            "5-5 classic soft": {"version":"1.0","created":"2025-08-11T11:43:12.396Z","progression":[{"symbol":"V7","currentTopNote":"1","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic \"dominant\":1","scaleName":"Pentatonic \"dominant\""},{"symbol":"I","currentTopNote":"5","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic \"major 7\":5","scaleName":"Pentatonic \"major 7\""}]},
+            "5-5 spicy to soft": {"version":"1.0","created":"2025-08-11T11:44:28.593Z","progression":[{"symbol":"V7","currentTopNote":"1","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic \"dominant\" ♯2, ♭5:1","scaleName":"Pentatonic \"dominant\" ♯2, ♭5"},{"symbol":"I","currentTopNote":"5","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic \"major 7\":5","scaleName":"Pentatonic \"major 7\""}]},
+            "5-5 rich implode": {"version":"1.0","created":"2025-08-11T11:45:43.639Z","progression":[{"symbol":"V7","currentTopNote":"1","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic \"dominant\" ♯2, ♯5:1","scaleName":"Pentatonic \"dominant\" ♯2, ♯5"},{"symbol":"I","currentTopNote":"5","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic \"major 7\":5","scaleName":"Pentatonic \"major 7\""}]},
+            "5-5 narrow soft": {"version":"1.0","created":"2025-08-11T11:47:09.888Z","progression":[{"symbol":"V7","currentTopNote":"1","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic \"dominant\" (from ♭5) ♯2, ♭5:1","scaleName":"Pentatonic \"dominant\" (from ♭5) ♯2, ♭5"},{"symbol":"I","currentTopNote":"5","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic \"major 7\":5","scaleName":"Pentatonic \"major 7\""}]},
+            "5-5 clean and soft": {"version":"1.0","created":"2025-08-11T11:48:07.156Z","progression":[{"symbol":"V7","currentTopNote":"1","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic \"dominant 1-3-5-6-7\":1","scaleName":"Pentatonic \"dominant 1-3-5-6-7\""},{"symbol":"I","currentTopNote":"5","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic \"major 7\":5","scaleName":"Pentatonic \"major 7\""}]},
+            "5-5 augmented implode": {"version":"1.0","created":"2025-08-11T11:50:16.313Z","progression":[{"symbol":"V7","currentTopNote":"1","currentVoicingIndex":0,"selectedVoicingKey":"WT (from ♭6):1","scaleName":"WT (from ♭6)"},{"symbol":"I","currentTopNote":"5","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic \"major 7\":5","scaleName":"Pentatonic \"major 7\""}]},
+            "5-5 inner augmented soft": {"version":"1.0","created":"2025-08-11T11:51:28.987Z","progression":[{"symbol":"V7","currentTopNote":"1","currentVoicingIndex":0,"selectedVoicingKey":"WT (from 7):1","scaleName":"WT (from 7)"},{"symbol":"I","currentTopNote":"5","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic \"major 7\":5","scaleName":"Pentatonic \"major 7\""}]},
+            "5-5 clean double implode": {"version":"1.0","created":"2025-08-11T11:52:33.201Z","progression":[{"symbol":"V7","currentTopNote":"1","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic \"phrygian steps\" (from 6):1","scaleName":"Pentatonic \"phrygian steps\" (from 6)"},{"symbol":"I","currentTopNote":"5","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic \"major 7\":5","scaleName":"Pentatonic \"major 7\""}]},
+            "5-5 inner tritone soft": {"version":"1.0","created":"2025-08-11T11:53:24.651Z","progression":[{"symbol":"V7","currentTopNote":"1","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic \"dominant\" ♭2, ♭5:1","scaleName":"Pentatonic \"dominant\" ♭2, ♭5"},{"symbol":"I","currentTopNote":"5","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic \"major 7\":5","scaleName":"Pentatonic \"major 7\""}]},
+            "5-5 worries soft": {"version":"1.0","created":"2025-08-11T11:54:16.567Z","progression":[{"symbol":"V7","currentTopNote":"1","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic \"dominant\" ♭2, ♯5:1","scaleName":"Pentatonic \"dominant\" ♭2, ♯5"},{"symbol":"I","currentTopNote":"5","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic \"major 7\":5","scaleName":"Pentatonic \"major 7\""}]},
+            "5-5 diminished soft": {"version":"1.0","created":"2025-08-11T11:55:05.838Z","progression":[{"symbol":"V7","currentTopNote":"1","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic \"phrygian steps\" ♭4 (from 6):1","scaleName":"Pentatonic \"phrygian steps\" ♭4 (from 6)"},{"symbol":"I","currentTopNote":"5","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic \"major 7\":5","scaleName":"Pentatonic \"major 7\""}]},
             "6-6 augmented from above": {"version":"1.0","created":"2025-08-10T09:53:23.351Z","progression":[{"symbol":"V7","currentTopNote":"9","currentVoicingIndex":0,"selectedVoicingKey":"WT (from ♭6):9","scaleName":"WT (from ♭6)"},{"symbol":"I","currentTopNote":"13","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic (from 5):13","scaleName":"Pentatonic (from 5)"}]},
             "6-6 augmented from below": {"version":"1.0","created":"2025-08-10T09:54:22.665Z","progression":[{"symbol":"V7","currentTopNote":"9","currentVoicingIndex":0,"selectedVoicingKey":"WT (from 7):9","scaleName":"WT (from 7)"},{"symbol":"I","currentTopNote":"13","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic (from 5):13","scaleName":"Pentatonic (from 5)"}]},
             "6-6 augmented neat": {"version":"1.0","created":"2025-08-10T09:56:10.382Z","progression":[{"symbol":"V7","currentTopNote":"9","currentVoicingIndex":0,"selectedVoicingKey":"WT (from ♭6):9","scaleName":"WT (from ♭6)"},{"symbol":"I","currentTopNote":"13","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic:13","scaleName":"Pentatonic"}]},
@@ -4570,6 +4625,25 @@ ${details}`;
             "♭2-1 whole tone decisive": {"version":"1.0","created":"2025-08-11T08:11:39.169Z","progression":[{"symbol":"V7","currentTopNote":"♯11","currentVoicingIndex":0,"selectedVoicingKey":"WT (from 3):♯11","scaleName":"WT (from 3)"},{"symbol":"I","currentTopNote":"1","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic:1","scaleName":"Pentatonic"}]},
             "♭2-1 whole tone downwards ": {"version":"1.0","created":"2025-08-11T08:13:45.784Z","progression":[{"symbol":"V7","currentTopNote":"♯11","currentVoicingIndex":0,"selectedVoicingKey":"WT (from 2):♯11","scaleName":"WT (from 2)"},{"symbol":"I","currentTopNote":"1","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic:1","scaleName":"Pentatonic"}]}
         };
+
+        // Function to check if a progression exists in the library
+        function isProgressionInLibrary(v7TopNote, v7ScaleName, iTopNote, iScaleName) {
+            // Check if this exact voicing combination exists in embeddedProgressions
+            for (const [fileName, data] of Object.entries(embeddedProgressions)) {
+                if (data.progression && data.progression.length >= 2) {
+                    const v7Chord = data.progression[0];
+                    const iChord = data.progression[1];
+                    
+                    if (v7Chord.currentTopNote === v7TopNote && 
+                        v7Chord.scaleName === v7ScaleName &&
+                        iChord.currentTopNote === iTopNote && 
+                        iChord.scaleName === iScaleName) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
 
         // Global variables for file-based progressions
         let allProgressionsDataFiles = {};
