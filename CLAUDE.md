@@ -80,3 +80,10 @@ Progressions save as JSON files with timestamp-based naming. Format includes voi
 ## Voice Leading Logic
 
 The core algorithm finds closest top notes between chords, maintains voicing quality across progressions, handles secondary dominants and complex harmonies. Movement analysis calculates semitone distances and categorizes as common tones (0 semitones), steps (1-2 semitones), or leaps (3+ semitones).
+
+## Progression Library Rules
+
+**Direction Display Rule**: When adding new progressions to the library, only display the closest/shortest voice leading direction for each top-note-line movement. The system automatically calculates both upward and downward possibilities, but only the most efficient (shortest interval) direction should be shown to avoid duplicate entries. 
+
+Example: For ♭2-1 progressions, only show the downward movement (♯11 → 1 going down a semitone), not the upward octave equivalent. This is implemented with filters in `generateV7IProgressionsFromFiles()` function - add similar filters for any new progression types that create unwanted directional duplicates.
+- when adding progressions to the library, remember that "b", "#" and "n" in the filenames stand for "♭", "♯" and "♮"

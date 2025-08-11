@@ -391,7 +391,23 @@
 
         .progression-controls {
             display: flex;
-            gap: 0.8rem;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .control-group {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .history-actions {
+            display: flex;
+            gap: 0.3rem;
+        }
+
+        .primary-actions {
+            display: flex;
+            gap: 0.5rem;
         }
 
         .save-btn, .load-btn, .clear-btn {
@@ -404,6 +420,41 @@
             transition: all 0.3s ease;
             font-size: 0.9rem;
             font-weight: bold;
+        }
+
+        .undo-btn, .redo-btn {
+            background: rgba(212, 175, 55, 0.1);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            color: #d4af37;
+            padding: 0.6rem;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+            font-weight: bold;
+            width: 3rem;
+            height: 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .undo-btn:hover:not(:disabled), .redo-btn:hover:not(:disabled) {
+            background: rgba(212, 175, 55, 0.2);
+            border-color: #d4af37;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+        }
+
+        .undo-btn:disabled, .redo-btn:disabled {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.3);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
 
         .clear-btn {
@@ -770,6 +821,24 @@
             
             .progression-area {
                 padding: 1rem;
+            }
+            
+            .progression-controls {
+                flex-direction: column;
+                gap: 0.8rem;
+                align-items: stretch;
+            }
+            
+            .control-group {
+                justify-content: center;
+            }
+            
+            .primary-actions {
+                flex: none;
+            }
+            
+            .history-actions {
+                justify-content: center;
             }
             
             .chord-slot {
@@ -1148,6 +1217,12 @@
         }
 
         .progression-variation:hover {
+            border-color: #d4af37;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
+        }
+
+        .progression-variation.touch-active {
             border-color: #d4af37;
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
@@ -1631,9 +1706,15 @@
                     <div class="progression-header">
                         <h2>Your Progression</h2>
                         <div class="progression-controls">
-                            <button class="save-btn" onclick="saveProgression()">💾 Save</button>
-                            <button class="load-btn" onclick="loadProgression()">📁 Load</button>
-                            <button class="clear-btn" onclick="clearProgression()">🗑️ Clear All</button>
+                            <div class="control-group history-actions">
+                                <button class="undo-btn" onclick="undoAction()" disabled>↶</button>
+                                <button class="redo-btn" onclick="redoAction()" disabled>↷</button>
+                            </div>
+                            <div class="control-group primary-actions">
+                                <button class="save-btn" onclick="saveProgression()">💾 Save</button>
+                                <button class="load-btn" onclick="loadProgression()">📁 Load</button>
+                                <button class="clear-btn" onclick="clearProgression()">🗑️ Clear All</button>
+                            </div>
                             <input type="file" id="file-input" accept=".json" style="display: none;" onchange="handleFileLoad(event)">
                         </div>
                     </div>
@@ -2175,6 +2256,113 @@ ${details}`;
         let draggedChord = null;
         let selectedRoot = null;
 
+        // Undo/Redo state management
+        let progressionHistory = [];
+        let historyIndex = -1;
+        const MAX_HISTORY_SIZE = 50;
+        let isRestoringFromHistory = false;
+
+        function saveToHistory() {
+            // Don't save to history if we're restoring from history
+            if (isRestoringFromHistory) {
+                console.log('🔄 saveToHistory: SKIPPED (restoring from history)');
+                return;
+            }
+            
+            // Add current state to history
+            const progressionState = JSON.parse(JSON.stringify(currentProgression));
+            
+            // Remove any future history if we're not at the end
+            progressionHistory = progressionHistory.slice(0, historyIndex + 1);
+            
+            // Push new state and increment index
+            progressionHistory.push(progressionState);
+            historyIndex++;
+            
+            console.log('💾 saveToHistory: SAVED state', {
+                newIndex: historyIndex,
+                chordCount: progressionState.length,
+                chords: progressionState.map(c => `${c.symbol}(${c.currentTopNote})`),
+                historyLength: progressionHistory.length,
+                allHistory: progressionHistory.map((state, i) => 
+                    `${i}: [${state.map(c => c.symbol + '(' + c.currentTopNote + ')').join(', ')}]`
+                )
+            });
+            
+            // Limit history size
+            if (progressionHistory.length > MAX_HISTORY_SIZE) {
+                progressionHistory.shift();
+                historyIndex--;
+            }
+            
+            updateHistoryButtons();
+        }
+
+        function undoAction() {
+            console.log('⏪ undoAction: CALLED', {
+                currentIndex: historyIndex,
+                canUndo: historyIndex > 0,
+                currentState: currentProgression.map(c => `${c.symbol}(${c.currentTopNote})`)
+            });
+            
+            if (historyIndex > 0) {
+                historyIndex--;
+                const restoringState = progressionHistory[historyIndex];
+                console.log('⏪ undoAction: RESTORING to index', historyIndex, {
+                    chordCount: restoringState.length,
+                    chords: restoringState.map(c => `${c.symbol}(${c.currentTopNote})`),
+                    allHistory: progressionHistory.map((state, i) => 
+                        `${i}: [${state.map(c => c.symbol + '(' + c.currentTopNote + ')').join(', ')}]${i === historyIndex ? ' ← NOW' : ''}`
+                    )
+                });
+                
+                isRestoringFromHistory = true;
+                currentProgression = JSON.parse(JSON.stringify(restoringState));
+                renderProgression();
+                isRestoringFromHistory = false;
+                updateHistoryButtons();
+            }
+        }
+
+        function redoAction() {
+            console.log('⏩ redoAction: CALLED', {
+                currentIndex: historyIndex,
+                maxIndex: progressionHistory.length - 1,
+                canRedo: historyIndex < progressionHistory.length - 1,
+                currentState: currentProgression.map(c => `${c.symbol}(${c.currentTopNote})`)
+            });
+            
+            if (historyIndex < progressionHistory.length - 1) {
+                historyIndex++;
+                const restoringState = progressionHistory[historyIndex];
+                console.log('⏩ redoAction: RESTORING to index', historyIndex, {
+                    chordCount: restoringState.length,
+                    chords: restoringState.map(c => `${c.symbol}(${c.currentTopNote})`)
+                });
+                
+                isRestoringFromHistory = true;
+                currentProgression = JSON.parse(JSON.stringify(restoringState));
+                renderProgression();
+                isRestoringFromHistory = false;
+                updateHistoryButtons();
+            }
+        }
+
+        function updateHistoryButtons() {
+            const undoBtn = document.querySelector('.undo-btn');
+            const redoBtn = document.querySelector('.redo-btn');
+            
+            if (undoBtn) {
+                undoBtn.disabled = historyIndex <= 0;
+                undoBtn.title = historyIndex <= 0 ? 'Nothing to undo' : 'Undo last action';
+            }
+            
+            if (redoBtn) {
+                redoBtn.disabled = historyIndex >= progressionHistory.length - 1;
+                redoBtn.title = historyIndex >= progressionHistory.length - 1 ? 'Nothing to redo' : 'Redo last action';
+            }
+        }
+
         function switchMode(mode) {
             const modeButtons = document.querySelectorAll('.mode-btn');
             const browseMode = document.getElementById('browse-mode');
@@ -2212,6 +2400,8 @@ ${details}`;
                 document.querySelector('.mode-btn[onclick="switchMode(\'progression\')"]').classList.add('active');
                 progressionMode.classList.add('active');
                 loadProgressionMode();
+                // Initialize history when switching to progression mode
+                setTimeout(() => ensureHistoryInitialized(), 0);
             }
         }
 
@@ -2420,10 +2610,25 @@ ${details}`;
                     draggedNewChord = null;
                 });
             });
+            
+            // Initialize history for progression mode if not already initialized
+            if (progressionHistory.length === 0) {
+                progressionHistory = [JSON.parse(JSON.stringify(currentProgression))];
+                historyIndex = 0;
+                updateHistoryButtons();
+            }
         }
 
 
         function addChordToProgression(chord) {
+            console.log('➕ addChordToProgression: START', {
+                chord,
+                currentProgression: currentProgression.map(c => `${c.symbol}(${c.currentTopNote})`)
+            });
+            
+            // Ensure history is initialized
+            ensureHistoryInitialized();
+            
             const chordType = getChordType(chord);
             let selectedVoicing = null;
             
@@ -2453,12 +2658,23 @@ ${details}`;
             }
             
             currentProgression.push(chordData);
+            
+            console.log('➕ addChordToProgression: END', {
+                newProgression: currentProgression.map(c => `${c.symbol}(${c.currentTopNote})`)
+            });
+            
             renderProgression();
+            
+            // Save state AFTER making changes
+            saveToHistory();
         }
 
         function removeChordFromProgression(id) {
             currentProgression = currentProgression.filter(chord => chord.id !== id);
             renderProgression();
+            
+            // Save state AFTER making changes
+            saveToHistory();
         }
 
         function renderProgression() {
@@ -2990,6 +3206,16 @@ ${details}`;
             const chord = currentProgression.find(c => c.id === chordId);
             if (!chord) return;
 
+            console.log('🎵 changeTopNoteFromDropdown: START', {
+                chordSymbol: chord.symbol,
+                oldTopNote: chord.currentTopNote,
+                newTopNote,
+                currentProgression: currentProgression.map(c => `${c.symbol}(${c.currentTopNote})`)
+            });
+
+            // Ensure history is initialized
+            ensureHistoryInitialized();
+
             const chordType = getChordType(chord.symbol);
             const voicingsForNewTopNote = getVoicingsForTopNote(chordType, newTopNote, chord.symbol);
             
@@ -2998,9 +3224,18 @@ ${details}`;
                 chord.currentTopNote = newTopNote;
                 chord.currentVoicingIndex = 0;
                 updateChordVoicing(chord, voicingsForNewTopNote[0]);
+                
+                console.log('🎵 changeTopNoteFromDropdown: END', {
+                    chordSymbol: chord.symbol,
+                    finalTopNote: chord.currentTopNote,
+                    finalProgression: currentProgression.map(c => `${c.symbol}(${c.currentTopNote})`)
+                });
+                
+                renderProgression();
+                
+                // Save state AFTER making changes
+                saveToHistory();
             }
-
-            renderProgression();
         }
 
         function changeVoicing(chordId, direction) {
@@ -3012,11 +3247,16 @@ ${details}`;
             const newIndex = chord.currentVoicingIndex + direction;
 
             if (newIndex >= 0 && newIndex < voicingsForCurrentTopNote.length) {
+                // Ensure history is initialized
+                ensureHistoryInitialized();
+                
                 chord.currentVoicingIndex = newIndex;
                 updateChordVoicing(chord, voicingsForCurrentTopNote[newIndex]);
+                renderProgression();
+                
+                // Save state AFTER making changes
+                saveToHistory();
             }
-
-            renderProgression();
         }
 
         function formatVoicingWithPositions(voicing, topNote) {
@@ -3171,6 +3411,9 @@ ${details}`;
             
             currentProgression = [];
             renderProgression();
+            
+            // Save state AFTER making changes
+            saveToHistory();
         }
         
         function handleFileLoad(event) {
@@ -3186,6 +3429,9 @@ ${details}`;
                     if (!data.progression || !Array.isArray(data.progression)) {
                         throw new Error('Invalid progression file format');
                     }
+                    
+                    // Save state before loading new progression
+                    saveToHistory();
                     
                     // Clear current progression
                     currentProgression = [];
@@ -3705,6 +3951,9 @@ ${details}`;
             const filteredData = { [topNoteLine]: allProgressionsData[topNoteLine] };
             const html = generateProgressionsHTML(filteredData, topNoteLine);
             document.getElementById('progression-library-content').innerHTML = html;
+            
+            // Add touch event handlers for mobile highlighting
+            addTouchHighlighting();
         }
 
         function normalizeSearchTerm(term) {
@@ -4312,7 +4561,14 @@ ${details}`;
             "7-7 whole tone upwards bright": {"version":"1.0","created":"2025-08-10T13:10:14.726Z","progression":[{"symbol":"V7","currentTopNote":"3","currentVoicingIndex":0,"selectedVoicingKey":"WT (from 3):3","scaleName":"WT (from 3)"},{"symbol":"I","currentTopNote":"7","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic (from 2):7","scaleName":"Pentatonic (from 2)"}]},
             "7-7 whole tone upwards": {"version":"1.0","created":"2025-08-10T13:13:44.412Z","progression":[{"symbol":"V7","currentTopNote":"3","currentVoicingIndex":0,"selectedVoicingKey":"WT (from 3):3","scaleName":"WT (from 3)"},{"symbol":"I","currentTopNote":"7","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic (from 5):7","scaleName":"Pentatonic (from 5)"}]},
             "7-7 worries throw away": {"version":"1.0","created":"2025-08-10T12:56:13.651Z","progression":[{"symbol":"V7","currentTopNote":"3","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic \"dominant\" ♭2, ♯5:3","scaleName":"Pentatonic \"dominant\" ♭2, ♯5"},{"symbol":"I","currentTopNote":"7","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic (from 5):7","scaleName":"Pentatonic (from 5)"}]},
-            "7-7 worries to bright": {"version":"1.0","created":"2025-08-10T13:06:58.399Z","progression":[{"symbol":"V7","currentTopNote":"3","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic \"dominant\" ♭2, ♯5:3","scaleName":"Pentatonic \"dominant\" ♭2, ♯5"},{"symbol":"I","currentTopNote":"7","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic (from 2):7","scaleName":"Pentatonic (from 2)"}]}
+            "7-7 worries to bright": {"version":"1.0","created":"2025-08-10T13:06:58.399Z","progression":[{"symbol":"V7","currentTopNote":"3","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic \"dominant\" ♭2, ♯5:3","scaleName":"Pentatonic \"dominant\" ♭2, ♯5"},{"symbol":"I","currentTopNote":"7","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic (from 2):7","scaleName":"Pentatonic (from 2)"}]},
+            "♭2-1 downwards ": {"version":"1.0","created":"2025-08-11T08:12:47.190Z","progression":[{"symbol":"V7","currentTopNote":"♯11","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic \"dominant\" (from ♭5):♯11","scaleName":"Pentatonic \"dominant\" (from ♭5)"},{"symbol":"I","currentTopNote":"1","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic:1","scaleName":"Pentatonic"}]},
+            "♭2-1 spicy downwards": {"version":"1.0","created":"2025-08-11T08:14:23.424Z","progression":[{"symbol":"V7","currentTopNote":"♯11","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic \"dominant\" ♭2 (from ♭5):♯11","scaleName":"Pentatonic \"dominant\" ♭2 (from ♭5)"},{"symbol":"I","currentTopNote":"1","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic:1","scaleName":"Pentatonic"}]},
+            "♭2-1 upper major": {"version":"1.0","created":"2025-08-11T08:17:07.325Z","progression":[{"symbol":"V7","currentTopNote":"♯11","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic ♭6 (from 2):♯11","scaleName":"Pentatonic ♭6 (from 2)"},{"symbol":"I","currentTopNote":"1","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic:1","scaleName":"Pentatonic"}]},
+            "♭2-1 upper minor": {"version":"1.0","created":"2025-08-11T08:18:38.133Z","progression":[{"symbol":"V7","currentTopNote":"♯11","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic \"dominant\" ♯2, ♭5:♯11","scaleName":"Pentatonic \"dominant\" ♯2, ♭5"},{"symbol":"I","currentTopNote":"1","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic:1","scaleName":"Pentatonic"}]},
+            "♭2-1 upper tritone": {"version":"1.0","created":"2025-08-11T08:17:30.645Z","progression":[{"symbol":"V7","currentTopNote":"♯11","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic \"dominant\" ♭2, ♭5:♯11","scaleName":"Pentatonic \"dominant\" ♭2, ♭5"},{"symbol":"I","currentTopNote":"1","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic:1","scaleName":"Pentatonic"}]},
+            "♭2-1 whole tone decisive": {"version":"1.0","created":"2025-08-11T08:11:39.169Z","progression":[{"symbol":"V7","currentTopNote":"♯11","currentVoicingIndex":0,"selectedVoicingKey":"WT (from 3):♯11","scaleName":"WT (from 3)"},{"symbol":"I","currentTopNote":"1","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic:1","scaleName":"Pentatonic"}]},
+            "♭2-1 whole tone downwards ": {"version":"1.0","created":"2025-08-11T08:13:45.784Z","progression":[{"symbol":"V7","currentTopNote":"♯11","currentVoicingIndex":0,"selectedVoicingKey":"WT (from 2):♯11","scaleName":"WT (from 2)"},{"symbol":"I","currentTopNote":"1","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic:1","scaleName":"Pentatonic"}]}
         };
 
         // Global variables for file-based progressions
@@ -4527,6 +4783,12 @@ ${details}`;
                 
                 movements.forEach(movement => {
                     const topNoteLine = `${v7TonalNote}-${iTonalNote}`;
+                    
+                    // Skip upward movements for ♭2-1 progressions (only show downward)
+                    if (topNoteLine === '♭2-1' && movement.direction === '↗') {
+                        return;
+                    }
+                    
                     const directionKey = `${topNoteLine} ${movement.direction}`;
                     
                     if (!progressionsByTopNoteLine[directionKey]) {
@@ -4786,6 +5048,39 @@ ${details}`;
             html += '</div>';
             
             contentDiv.innerHTML = html;
+            
+            // Add touch event handlers for mobile highlighting
+            addTouchHighlighting();
+        }
+
+        function addTouchHighlighting() {
+            const progressionCards = document.querySelectorAll('.progression-variation');
+            
+            progressionCards.forEach(card => {
+                // Handle touch start (finger down)
+                card.addEventListener('touchstart', function(e) {
+                    // Remove active class from all other cards
+                    progressionCards.forEach(otherCard => {
+                        if (otherCard !== card) {
+                            otherCard.classList.remove('touch-active');
+                        }
+                    });
+                    // Add active class to touched card
+                    card.classList.add('touch-active');
+                }, { passive: true });
+
+                // Handle touch end (finger up) - remove highlight after delay
+                card.addEventListener('touchend', function(e) {
+                    setTimeout(() => {
+                        card.classList.remove('touch-active');
+                    }, 150);
+                }, { passive: true });
+
+                // Handle touch cancel (touch interrupted)
+                card.addEventListener('touchcancel', function(e) {
+                    card.classList.remove('touch-active');
+                }, { passive: true });
+            });
         }
 
         function loadProgressionFromFileData(fileName, buttonElement) {
@@ -4797,6 +5092,9 @@ ${details}`;
             
             // Switch to Create Progression mode and load the progression
             switchMode('progression');
+            
+            // Save state before loading new progression
+            saveToHistory();
             
             // Clear existing progression
             currentProgression = [];
@@ -4957,6 +5255,9 @@ ${details}`;
             // Switch to Create Progression mode and load the progression
             switchMode('progression');
             
+            // Save state before loading new progression
+            saveToHistory();
+            
             // Clear existing progression
             currentProgression = [];
             
@@ -4996,6 +5297,42 @@ ${details}`;
 
         // Initialize the app
         switchMode('progression-library');
+        
+        // Initialize history with empty progression after mode switch
+        // Use setTimeout to ensure DOM is ready
+        setTimeout(() => {
+            progressionHistory = [JSON.parse(JSON.stringify(currentProgression))];
+            historyIndex = 0;
+            updateHistoryButtons();
+        }, 0);
+        
+        // Ensure history is properly initialized when entering progression mode
+        function ensureHistoryInitialized() {
+            if (progressionHistory.length === 0) {
+                console.log('🏁 ensureHistoryInitialized: INITIALIZING', {
+                    currentProgression: currentProgression.map(c => `${c.symbol}(${c.currentTopNote})`)
+                });
+                progressionHistory = [JSON.parse(JSON.stringify(currentProgression))];
+                historyIndex = 0;
+                updateHistoryButtons();
+            } else {
+                console.log('🏁 ensureHistoryInitialized: ALREADY INITIALIZED', {
+                    historyLength: progressionHistory.length,
+                    historyIndex
+                });
+            }
+        }
+
+        // Add keyboard shortcuts for undo/redo
+        document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !e.shiftKey) {
+                e.preventDefault();
+                undoAction();
+            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'y' || (e.key === 'z' && e.shiftKey))) {
+                e.preventDefault();
+                redoAction();
+            }
+        });
     </script>
 </body>
 </html>

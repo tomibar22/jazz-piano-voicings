@@ -1,0 +1,20 @@
+{
+  "version": "1.0",
+  "created": "2025-08-11T08:11:39.169Z",
+  "progression": [
+    {
+      "symbol": "V7",
+      "currentTopNote": "♯11",
+      "currentVoicingIndex": 0,
+      "selectedVoicingKey": "WT (from 3):♯11",
+      "scaleName": "WT (from 3)"
+    },
+    {
+      "symbol": "I",
+      "currentTopNote": "1",
+      "currentVoicingIndex": 0,
+      "selectedVoicingKey": "Pentatonic:1",
+      "scaleName": "Pentatonic"
+    }
+  ]
+}
