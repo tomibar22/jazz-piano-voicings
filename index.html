@@ -3687,6 +3687,8 @@ ${details}`;
                 start = '♯5'; // ♭6-6 becomes ♯5-6
             } else if (start === '♯6' && end === '6') {
                 start = '♭7'; // ♯6-6 becomes ♭7-6
+            } else if (start === '♯1' && end === '2') {
+                start = '♯2'; // ♯1-2 becomes ♯2-2 for display
             }
             
             // Check if it's a common tone
@@ -4877,6 +4879,11 @@ ${details}`;
                     
                     // Skip downward movements for ♭2-2 progressions (only show upward)
                     if (topNoteLine === '♭2-2' && movement.direction === '↙') {
+                        return;
+                    }
+                    
+                    // Skip downward movements for ♯1-2 progressions (only show upward)
+                    if (topNoteLine === '♯1-2' && movement.direction === '↙') {
                         return;
                     }
                     

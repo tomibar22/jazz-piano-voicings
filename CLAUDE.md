@@ -85,5 +85,13 @@ The core algorithm finds closest top notes between chords, maintains voicing qua
 
 **Direction Display Rule**: When adding new progressions to the library, only display the closest/shortest voice leading direction for each top-note-line movement. The system automatically calculates both upward and downward possibilities, but only the most efficient (shortest interval) direction should be shown to avoid duplicate entries. 
 
-Example: For ♭2-1 progressions, only show the downward movement (♯11 → 1 going down a semitone), not the upward octave equivalent. This is implemented with filters in `generateV7IProgressionsFromFiles()` function - add similar filters for any new progression types that create unwanted directional duplicates.
-- when adding progressions to the library, remember that "b", "#" and "n" in the filenames stand for "♭", "♯" and "♮"
+Current direction filters implemented:
+- ♭2-1 progressions: Show only downward movement (♯11 → 1 going down a semitone)
+- ♭2-2 progressions: Show only upward movement (closest voice leading)
+- ♯1-2 progressions: Show only upward movement (display as ♯2-2 in UI)
+
+**Display Rule**: ♯1-2 progressions are displayed as ♯2-2 in the user interface for better readability, while maintaining the internal ♯1-2 logic for progression matching and file organization.
+
+**Future Rule**: Only generate one direction per progression line - always use the closest/shortest voice leading direction. No need for both upward and downward instances of the same interval.
+
+- When adding progressions to the library, remember that "b", "#" and "n" in the filenames stand for "♭", "♯" and "♮"
