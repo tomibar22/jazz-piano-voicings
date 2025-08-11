@@ -97,3 +97,22 @@ Current direction filters implemented:
 **Future Rule**: Only generate one direction per progression line - always use the closest/shortest voice leading direction. No need for both upward and downward instances of the same interval.
 
 - When adding progressions to the library, remember that "b", "#" and "n" in the filenames stand for "♭", "♯" and "♮"
+
+## Critical Development Notes
+
+### Direction Symbol Bug Warning ⚠️
+**IMPORTANT**: When implementing direction filtering for top-note-line movements, use the correct Unicode arrow symbols:
+- **Upward**: `↗` (U+2197 NORTH EAST ARROW)
+- **Downward**: `↘` (U+2198 SOUTH EAST ARROW)
+
+**DO NOT USE**: `↙` (U+2199 SOUTH WEST ARROW) - this was a critical bug that caused duplicate navigation entries to persist despite filtering logic.
+
+### Duplicate Entry Resolution
+When troubleshooting duplicate top-note-line entries in navigation:
+
+1. **Check both processing functions**: Apply filtering logic to BOTH `generateV7IProgressions()` (dynamic) AND `generateV7IProgressionsFromFiles()` (embedded)
+2. **Verify direction symbols**: Ensure filtering logic uses correct arrow symbols (`↘` not `↙`)  
+3. **Add debug logging**: Use `console.log` to trace progression processing and navigation creation
+4. **Test with browser console**: Open developer tools to verify filtering is working correctly
+
+**Root cause**: The application has dual processing paths (dynamic + embedded progressions) that both contribute to navigation entries. Both must implement identical filtering logic with correct direction symbols.
