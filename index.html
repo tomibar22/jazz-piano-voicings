@@ -3798,94 +3798,12 @@ ${details}`;
                     const bCount = progressionsByTopNoteLine[b].length;
                     return bCount - aCount;
                 } else {
-                    // Sort by interval closeness (current method)
-                // Parse top-note-line with direction (e.g., "7-1 ↘" or "2-3 ↗")
-                const [aMovement, aDirection] = a.split(' ');
-                const [bMovement, bDirection] = b.split(' ');
-                const [aStart, aEnd] = aMovement.split('-');
-                const [bStart, bEnd] = bMovement.split('-');
-                
-                // Calculate interval size using semitones for accurate measurement
-                const semitoneMap = {
-                    '1': 0, '♭2': 1, '2': 2, '♯2': 3, '♭3': 3, '3': 4, '♮3': 4,
-                    '4': 5, '♯4': 6, '♭5': 6, '5': 7, '♯5': 8, '♭6': 8,
-                    '6': 9, '♮6': 9, '♯6': 10, '♭7': 10, '7': 11, '♮7': 11, '♯1': 12
-                };
-                
-                const aStartSemitone = semitoneMap[aStart] ?? 0;
-                const aEndSemitone = semitoneMap[aEnd] ?? 0;
-                const bStartSemitone = semitoneMap[bStart] ?? 0;
-                const bEndSemitone = semitoneMap[bEnd] ?? 0;
-                
-                // Calculate interval distance - common tones get priority score
-                let aInterval, bInterval;
-                
-                // Check if these are true common tones (same note to same note AND → direction)
-                const isACommonTone = aStart === aEnd && aDirection === '→';
-                const isBCommonTone = bStart === bEnd && bDirection === '→';
-                
-                // Assign interval values - common tones get -1 to sort first
-                if (isACommonTone) {
-                    aInterval = -1;
-                } else {
-                    // For upward direction (↗), use the upward distance
-                    if (aDirection === '↗') {
-                        const directInterval = aEndSemitone - aStartSemitone;
-                        aInterval = directInterval >= 0 ? directInterval : directInterval + 12;
-                    } 
-                    // For downward direction (↘), use the downward distance
-                    else if (aDirection === '↘') {
-                        const directInterval = aEndSemitone - aStartSemitone;
-                        aInterval = directInterval <= 0 ? Math.abs(directInterval) : 12 - directInterval;
-                    }
-                    // For common tone (→), interval is 0
-                    else {
-                        aInterval = 0;
-                    }
-                }
-                
-                // Same calculation for b
-                if (isBCommonTone) {
-                    bInterval = -1;
-                } else {
-                    if (bDirection === '↗') {
-                        const directInterval = bEndSemitone - bStartSemitone;
-                        bInterval = directInterval >= 0 ? directInterval : directInterval + 12;
-                    } 
-                    else if (bDirection === '↘') {
-                        const directInterval = bEndSemitone - bStartSemitone;
-                        bInterval = directInterval <= 0 ? Math.abs(directInterval) : 12 - directInterval;
-                    }
-                    else {
-                        bInterval = 0;
-                    }
-                }
-                
-                // First sort by interval size (smaller intervals first)
-                if (aInterval !== bInterval) {
-                    return aInterval - bInterval;
-                }
-                
-                // Then sort alphabetically by the movement part (without direction and accidentals)
-                if (aMovement !== bMovement) {
-                    // Remove accidentals for comparison (♭, ♯, ♮)
-                    const normalizeForSort = (movement) => {
-                        return movement.replace(/[♭♯♮]/g, '');
-                    };
-                    const aNormalized = normalizeForSort(aMovement);
-                    const bNormalized = normalizeForSort(bMovement);
+                    // Sort by interval closeness using consistent comparison function
+                    const [aMovement, aDirection] = a.split(' ');
+                    const [bMovement, bDirection] = b.split(' ');
                     
-                    if (aNormalized !== bNormalized) {
-                        return aNormalized.localeCompare(bNormalized);
-                    }
-                    
-                    // If base movement is same, sort by actual movement (with accidentals)
-                    return aMovement.localeCompare(bMovement);
-                }
-                
-                // Finally sort by direction (↗ before ↘ before →)
-                const directionOrder = { '↗': 1, '→': 2, '↘': 3 };
-                return (directionOrder[aDirection] || 4) - (directionOrder[bDirection] || 4);
+                    // Use the same comparison logic as Library pages
+                    return compareTopNoteLines(aMovement, bMovement);
                 }
             });
             
@@ -4783,28 +4701,40 @@ ${details}`;
                 return baseNotes[note] || 0;
             };
             
-            // Calculate interval sizes (distance between start and end)
+            // Calculate shortest interval distance (considering octave equivalence)
             const aStartSemi = noteToSemitone(aStart);
             const aEndSemi = noteToSemitone(aEnd);
             const bStartSemi = noteToSemitone(bStart);
             const bEndSemi = noteToSemitone(bEnd);
             
-            // Calculate interval size (accounting for octave wrapping)
-            const aInterval = Math.abs(aEndSemi - aStartSemi);
-            const bInterval = Math.abs(bEndSemi - bStartSemi);
+            // Calculate both upward and downward distances, take the minimum
+            const aUpward = (aEndSemi - aStartSemi + 12) % 12;
+            const aDownward = (aStartSemi - aEndSemi + 12) % 12;
+            const aInterval = Math.min(aUpward, aDownward);
             
-            // First sort by interval size (smaller intervals first)
+            const bUpward = (bEndSemi - bStartSemi + 12) % 12;
+            const bDownward = (bStartSemi - bEndSemi + 12) % 12;
+            const bInterval = Math.min(bUpward, bDownward);
+            
+            // First sort by shortest interval distance (smaller intervals first)
             if (aInterval !== bInterval) {
                 return aInterval - bInterval;
             }
             
-            // Then sort by starting note
-            if (aStartSemi !== bStartSemi) {
-                return aStartSemi - bStartSemi;
+            // Then sort alphabetically by interval string, ignoring accidentals for base comparison
+            const normalizeForSorting = (interval) => {
+                return interval.replace(/♯|♭|♮/g, '');
+            };
+            
+            const aNormalized = normalizeForSorting(intervalA);
+            const bNormalized = normalizeForSorting(intervalB);
+            
+            if (aNormalized !== bNormalized) {
+                return aNormalized.localeCompare(bNormalized);
             }
             
-            // Finally sort by ending note
-            return aEndSemi - bEndSemi;
+            // Finally, if base intervals are the same, sort by original (with accidentals)
+            return intervalA.localeCompare(intervalB);
         }
         
         function getMovementType(movement) {
