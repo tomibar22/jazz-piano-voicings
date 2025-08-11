@@ -4935,7 +4935,8 @@ ${details}`;
                     }
                     
                     // Skip downward movements for ♭2-2 progressions (only show upward)
-                    if (topNoteLine === '♭2-2' && movement.direction === '↙') {
+                    if (topNoteLine === '♭2-2' && movement.direction === '↘') {
+                        console.log('DEBUG: Skipping ♭2-2 downward movement:', fileName, topNoteLine, movement.direction);
                         return;
                     }
                     
