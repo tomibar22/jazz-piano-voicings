@@ -1,0 +1,20 @@
+{
+  "version": "1.0",
+  "created": "2025-08-10T07:53:01.027Z",
+  "progression": [
+    {
+      "symbol": "V7",
+      "currentTopNote": "13",
+      "currentVoicingIndex": 0,
+      "selectedVoicingKey": "Pentatonic \"diminished steps\":13",
+      "scaleName": "Pentatonic \"diminished steps\""
+    },
+    {
+      "symbol": "I",
+      "currentTopNote": "3",
+      "currentVoicingIndex": 0,
+      "selectedVoicingKey": "Pentatonic (from 2):3",
+      "scaleName": "Pentatonic (from 2)"
+    }
+  ]
+}

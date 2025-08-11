@@ -1,0 +1,20 @@
+{
+  "version": "1.0",
+  "created": "2025-08-10T12:50:33.542Z",
+  "progression": [
+    {
+      "symbol": "V7",
+      "currentTopNote": "3",
+      "currentVoicingIndex": 0,
+      "selectedVoicingKey": "Pentatonic \"phrygian steps\" (from 6):3",
+      "scaleName": "Pentatonic \"phrygian steps\" (from 6)"
+    },
+    {
+      "symbol": "I",
+      "currentTopNote": "7",
+      "currentVoicingIndex": 0,
+      "selectedVoicingKey": "Pentatonic (from 5):7",
+      "scaleName": "Pentatonic (from 5)"
+    }
+  ]
+}

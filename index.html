@@ -495,6 +495,16 @@
             justify-content: flex-start;
         }
 
+        .voice-leading-connector .movement-summary {
+            margin-top: 1rem;
+        }
+
+        .creator-movement-summary {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: center;
+        }
+
         .voice-movement {
             display: flex;
             align-items: center;
@@ -824,6 +834,107 @@
 
         .nav-controls {
             margin-bottom: 1rem;
+        }
+        
+        .filter-controls {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+        }
+        
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(212, 175, 55, 0.25);
+            color: #B8B3A8;
+            border-radius: 8px;
+            padding: 0.5rem 0.85rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .filter-btn:hover {
+            background: rgba(212, 175, 55, 0.15);
+            border-color: rgba(212, 175, 55, 0.4);
+            color: #d4af37;
+            transform: translateY(-1px);
+        }
+        
+        .filter-btn.active {
+            background: linear-gradient(135deg, #d4af37, #b8941f);
+            border-color: #d4af37;
+            color: #2c3e50;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
+        }
+        
+        .interval-header {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(212, 175, 55, 0.08));
+            border: 1px solid rgba(212, 175, 55, 0.25);
+            border-radius: 10px;
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+        
+        .interval-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #d4af37;
+            margin: 0;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        .interval-summary {
+            background: rgba(212, 175, 55, 0.2);
+            color: #f5f5f5;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+        
+        .progression-title {
+            background: linear-gradient(135deg, rgba(44, 62, 80, 0.9), rgba(52, 73, 94, 0.8));
+            color: #ecf0f1;
+            padding: 0.75rem 1.2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            text-transform: capitalize;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .default-message {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: #B8B3A8;
+        }
+        
+        .default-message h3 {
+            color: #d4af37;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+        
+        .default-message p {
+            color: #A0A0A0;
+            font-size: 1.1rem;
         }
 
         .search-input {
@@ -1236,22 +1347,22 @@
 
         .count.common-tone {
             background: rgba(34, 197, 94, 0.2);
-            color: #22c55e;
+            color: #34d568;
         }
 
         .count.step-motion {
             background: rgba(59, 130, 246, 0.2);
-            color: #3b82f6;
+            color: #5593ff;
         }
 
         .count.total-semitones {
             background: rgba(139, 92, 246, 0.2);
-            color: #8b5cf6;
+            color: #a177ff;
         }
 
         .count.leap-motion {
             background: rgba(245, 158, 11, 0.2);
-            color: #f59e0b;
+            color: #ffb347;
         }
 
         @media (max-width: 768px) {
@@ -1378,20 +1489,21 @@
         }
 
         .load-progression-btn {
-            background: linear-gradient(135deg, #d4af37, #f4d03f);
-            color: #1a1a1a;
-            border: none;
-            padding: 0.6rem 1.5rem;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 0.9rem;
+            background: rgba(212, 175, 55, 0.6);
+            color: #e8e8e8;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            padding: 0.4rem 1rem;
+            border-radius: 6px;
+            font-weight: normal;
+            font-size: 0.8rem;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
         }
 
         .load-progression-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 20px rgba(212, 175, 55, 0.4);
+            background: rgba(212, 175, 55, 0.8);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(212, 175, 55, 0.2);
         }
 
         @media (max-width: 768px) {
@@ -1416,10 +1528,10 @@
         <h1>Jazz Piano Voicings</h1>
         
         <div class="mode-toggle">
-            <button class="mode-btn" onclick="switchMode('progressions-library')">Progression Library (Raw)</button>
             <button class="mode-btn" onclick="switchMode('progression-library')">Progression Library</button>
-            <button class="mode-btn" onclick="switchMode('browse')">Browse Voicings</button>
             <button class="mode-btn" onclick="switchMode('progression')">Create Progression</button>
+            <button class="mode-btn" onclick="switchMode('browse')">Browse Voicings</button>
+            <button class="mode-btn" onclick="switchMode('progressions-library')">Progression Library (Raw)</button>
         </div>
 
         <!-- Browse Mode -->
@@ -1472,18 +1584,38 @@
         </div>
 
         <!-- Progression Library Mode -->
-        <div id="progression-library-mode" class="mode-section">
-            <div class="progression-library">
+        <div id="progression-library-mode" class="mode-section active">
+            <div class="progressions-library">
                 <h2>Progression Library</h2>
-                <div class="progression-files">
-                    <div class="loading-message">Loading progressions from files...</div>
-                    <div id="progression-files-content"></div>
+                <div class="progression-selector">
+                    <label for="progression-type-files">Progression Type:</label>
+                    <select id="progression-type-files" onchange="loadProgressionTypeFiles()">
+                        <option value="V7-I">V7 - I (major)</option>
+                    </select>
+                </div>
+                
+                <div class="library-layout">
+                    <div class="top-note-line-nav">
+                        <h3>Top-Note-Lines</h3>
+                        <div class="nav-controls">
+                            <input type="text" id="search-input-files" class="search-input" placeholder="Search top-note-lines..." oninput="filterTopNoteLinesFiles()">
+                        </div>
+                        <div id="top-note-lines-files" class="top-note-lines-content"></div>
+                    </div>
+                    
+                    <div class="progressions-content">
+                        <div class="default-message">
+                            <h3 id="current-filter-title-files">All Top-Note-Lines</h3>
+                            <p>Select a top-note-line from the left panel to view progressions.</p>
+                        </div>
+                        <div id="progressions-content-files"></div>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- Progression Creator Mode -->
-        <div id="progression-mode" class="mode-section active">
+        <div id="progression-mode" class="mode-section">
             <div class="progression-creator">
                 <div class="controls-panel">
                     <div class="chord-bank">
@@ -2050,6 +2182,11 @@ ${details}`;
             const progressionsLibraryMode = document.getElementById('progressions-library-mode');
             const progressionLibraryMode = document.getElementById('progression-library-mode');
 
+            // Save library state when leaving progression-library mode
+            if (progressionLibraryMode.classList.contains('active') && mode !== 'progression-library') {
+                saveLibraryPageState();
+            }
+
             // Remove active class from all buttons and modes
             modeButtons.forEach(btn => btn.classList.remove('active'));
             browseMode.classList.remove('active');
@@ -2069,6 +2206,8 @@ ${details}`;
                 document.querySelector('.mode-btn[onclick="switchMode(\'progression-library\')"]').classList.add('active');
                 progressionLibraryMode.classList.add('active');
                 loadProgressionLibraryMode();
+                // Restore library state when returning
+                setTimeout(() => restoreLibraryPageState(), 100);
             } else {
                 document.querySelector('.mode-btn[onclick="switchMode(\'progression\')"]').classList.add('active');
                 progressionMode.classList.add('active');
@@ -2423,9 +2562,15 @@ ${details}`;
                             });
                         }
                         
+                        // Generate movement summary like "s3", "l5", etc.
+                        const movementSummary = generateMovementSummary({movements: movements});
+                        
                         html += `
                             <div class="voice-leading-connector" title="${summary}">
                                 ${movementHtml.join('')}
+                                <div class="creator-movement-summary">
+                                    ${movementSummary}
+                                </div>
                             </div>
                         `;
                     }
@@ -2651,6 +2796,10 @@ ${details}`;
             if (symbol.includes('7') || symbol.includes('♭VII')) return 'dominant';
             if (symbol === 'i' || symbol === 'ii' || symbol === 'iii' || symbol === 'vi' || symbol === 'rel. ii') return 'minor';
             return 'major';
+        }
+
+        function getVoicingData(chordType) {
+            return voicingData[chordType] || {};
         }
 
         function sortTopNotes(topNotes) {
@@ -3181,7 +3330,6 @@ ${details}`;
             const v7Voicings = getAllVoicingCombinations('dominant');
             const iVoicings = getAllVoicingCombinations('minor');
             
-            console.log('V7i Generation Started - V7 voicings:', v7Voicings.length, 'Minor voicings:', iVoicings.length);
             
             // Group progressions by top-note-line with direction (relative to tonal center)
             const progressionsByTopNoteLine = {};
@@ -3193,32 +3341,9 @@ ${details}`;
                     const v7TonalNote = getTonicRelativeNote(v7.topNote, 'V7', i.topNote);
                     
                     // Debug logging for specific cases we're tracking
-                    if (v7.topNote === '♭13' && i.topNote === '3') {
-                        console.log('♭3-♭3 DEBUG:', {
-                            v7TopNote: v7.topNote, 
-                            v7TonalNote: v7TonalNote,
-                            iTopNote: i.topNote,
-                            iTonalNote: iTonalNote,
-                            v7Scale: v7.scaleName,
-                            iScale: i.scaleName
-                        });
-                    }
-                    if (v7.topNote === '♯9' && i.topNote === '7') {
-                        console.log('♭7-♭7 DEBUG:', {
-                            v7TopNote: v7.topNote, 
-                            v7TonalNote: v7TonalNote,
-                            iTopNote: i.topNote,
-                            iTonalNote: iTonalNote,
-                            v7Scale: v7.scaleName,
-                            iScale: i.scaleName
-                        });
-                    }
                     
                     // Skip if we can't map the notes
                     if (!v7TonalNote || !iTonalNote) {
-                        if ((v7.topNote === '♭13' && i.topNote === '3') || (v7.topNote === '♯9' && i.topNote === '7')) {
-                            console.log('SKIPPING - null mapping:', {v7TonalNote, iTonalNote});
-                        }
                         return;
                     }
                     
@@ -3237,18 +3362,6 @@ ${details}`;
                         const expectedUp = movement.direction === '↗';
                         const actualUp = actualTopNoteMovement > 0;
                         
-                        // Debug logging for our target progressions
-                        if ((v7TonalNote === '♭3' && iTonalNote === '♭3') || (v7TonalNote === '♭7' && iTonalNote === '♭7')) {
-                            console.log(`${v7TonalNote}-${iTonalNote} MOVEMENT DEBUG:`, {
-                                movement: movement,
-                                actualTopNoteMovement: actualTopNoteMovement,
-                                expectedUp: expectedUp,
-                                actualUp: actualUp,
-                                v7TopNote: v7.topNote,
-                                iTopNote: i.topNote,
-                                isValidDirection: (expectedUp && actualUp) || (!expectedUp && !actualUp)
-                            });
-                        }
                         
                         // Only add this voicing pair if it matches the expected direction
                         // Be more strict about direction matching
@@ -3267,8 +3380,6 @@ ${details}`;
                                 i: i,
                                 movement: movement
                             });
-                        } else if ((v7TonalNote === '♭3' && iTonalNote === '♭3') || (v7TonalNote === '♭7' && iTonalNote === '♭7')) {
-                            console.log(`${v7TonalNote}-${iTonalNote} BLOCKED by direction validation`);
                         }
                     });
                 });
@@ -3277,11 +3388,8 @@ ${details}`;
             // Store data globally for filtering
             allProgressionsData = progressionsByTopNoteLine;
             
-            // Debug summary
+            // Get all generated top-note-lines
             const allTopNoteLines = Object.keys(progressionsByTopNoteLine);
-            console.log('Generated top-note-lines:', allTopNoteLines);
-            console.log('Looking for ♭3-♭3:', allTopNoteLines.filter(line => line.includes('♭3-♭3')));
-            console.log('Looking for ♭7-♭7:', allTopNoteLines.filter(line => line.includes('♭7-♭7')));
             
             // Generate navigation list
             generateTopNoteLineNavigation(progressionsByTopNoteLine);
@@ -3650,8 +3758,10 @@ ${details}`;
 
         function getTonicRelativeNote(topNote, chordFunction, resolvesToNote = null) {
             // Convert chord-relative top note to tonic-relative scale degree
-            // Determine if we're in minor context
-            const progressionType = document.getElementById('progression-type')?.value || 'V7-I';
+            // Determine if we're in minor context - check both possible progression type elements
+            let progressionType = document.getElementById('progression-type')?.value || 
+                                document.getElementById('progression-type-files')?.value || 
+                                'V7-I';
             const isMinorContext = progressionType === 'V7-i';
             
             const chordTonicMapping = {
@@ -4205,25 +4315,524 @@ ${details}`;
             "7-7 worries to bright": {"version":"1.0","created":"2025-08-10T13:06:58.399Z","progression":[{"symbol":"V7","currentTopNote":"3","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic \"dominant\" ♭2, ♯5:3","scaleName":"Pentatonic \"dominant\" ♭2, ♯5"},{"symbol":"I","currentTopNote":"7","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic (from 2):7","scaleName":"Pentatonic (from 2)"}]}
         };
 
-        function loadProgressionLibraryMode() {
-            const content = document.getElementById('progression-files-content');
-            const loadingMessage = document.querySelector('.loading-message');
+        // Global variables for file-based progressions
+        let allProgressionsDataFiles = {};
+        let currentFilterFiles = 'all';
+        
+        // State preservation for library page
+        let libraryPageState = {
+            selectedTopNoteLine: null,
+            scrollPosition: 0
+        };
+
+        function saveLibraryPageState() {
+            // Save currently selected top-note-line
+            const activeNavItem = document.querySelector('#top-note-lines-files .top-note-line-item.active');
+            if (activeNavItem) {
+                const topNoteLineName = activeNavItem.querySelector('.top-note-line-name').textContent;
+                libraryPageState.selectedTopNoteLine = topNoteLineName;
+            }
             
-            loadingMessage.style.display = 'block';
+            // Save scroll position of the content area
+            const contentArea = document.getElementById('progressions-content-files');
+            if (contentArea) {
+                libraryPageState.scrollPosition = contentArea.scrollTop;
+            }
+        }
+
+        function restoreLibraryPageState() {
+            if (libraryPageState.selectedTopNoteLine) {
+                // Find and click the previously selected top-note-line
+                const navItems = document.querySelectorAll('#top-note-lines-files .top-note-line-item');
+                for (const item of navItems) {
+                    const topNoteLineName = item.querySelector('.top-note-line-name').textContent;
+                    if (topNoteLineName === libraryPageState.selectedTopNoteLine) {
+                        item.click();
+                        break;
+                    }
+                }
+                
+                // Restore scroll position after content loads
+                setTimeout(() => {
+                    const contentArea = document.getElementById('progressions-content-files');
+                    if (contentArea && libraryPageState.scrollPosition > 0) {
+                        contentArea.scrollTop = libraryPageState.scrollPosition;
+                    }
+                }, 200);
+            }
+        }
+        
+        function compareTopNoteLines(intervalA, intervalB) {
+            // Compare interval strings like "2-2", "3-3", "♭7-♭7", etc.
+            // Split intervals into start and end notes
+            const [aStart, aEnd] = intervalA.split('-');
+            const [bStart, bEnd] = intervalB.split('-');
+            
+            // Convert notes to semitone values for comparison
+            const noteToSemitone = (note) => {
+                const baseNotes = {
+                    '1': 0, '2': 2, '3': 4, '4': 5, '5': 7, '6': 9, '7': 11
+                };
+                
+                // Handle accidentals
+                if (note.includes('♭')) {
+                    const baseNote = note.replace('♭', '');
+                    return (baseNotes[baseNote] || 0) - 1;
+                } else if (note.includes('♯')) {
+                    const baseNote = note.replace('♯', '');
+                    return (baseNotes[baseNote] || 0) + 1;
+                } else if (note.includes('♮')) {
+                    const baseNote = note.replace('♮', '');
+                    return baseNotes[baseNote] || 0;
+                }
+                
+                return baseNotes[note] || 0;
+            };
+            
+            // Calculate interval sizes (distance between start and end)
+            const aStartSemi = noteToSemitone(aStart);
+            const aEndSemi = noteToSemitone(aEnd);
+            const bStartSemi = noteToSemitone(bStart);
+            const bEndSemi = noteToSemitone(bEnd);
+            
+            // Calculate interval size (accounting for octave wrapping)
+            const aInterval = Math.abs(aEndSemi - aStartSemi);
+            const bInterval = Math.abs(bEndSemi - bStartSemi);
+            
+            // First sort by interval size (smaller intervals first)
+            if (aInterval !== bInterval) {
+                return aInterval - bInterval;
+            }
+            
+            // Then sort by starting note
+            if (aStartSemi !== bStartSemi) {
+                return aStartSemi - bStartSemi;
+            }
+            
+            // Finally sort by ending note
+            return aEndSemi - bEndSemi;
+        }
+        
+        function getMovementType(movement) {
+            // Extract movement type from movement object for filtering
+            if (!movement) return 'unknown';
+            
+            // The movement object should have a type property: 'common', 'step', or 'leap'
+            return movement.type || 'unknown';
+        }
+        
+        function calculateTotalSemitones(movement) {
+            // Calculate total semitones for progression sorting
+            if (!movement) return 0;
+            
+            // Return the semitones or absInterval from the movement object
+            return movement.semitones || movement.absInterval || 0;
+        }
+        
+        function calculateActualVoiceMovement(progression) {
+            // Use the existing voice leading analysis to get accurate semitone calculation
+            if (!progression.v7.voicing || !progression.i.voicing) return 0;
+            
+            const movements = analyzeVoiceLeadingDirect(progression.v7.voicing, progression.i.voicing);
+            if (!movements || movements.length === 0) return 0;
+            
+            // Calculate total semitones using the same logic as the movement summary
+            const totalSemitones = movements.reduce((sum, m) => {
+                return sum + (m.semitones || m.absInterval || 0);
+            }, 0);
+            
+            return totalSemitones;
+        }
+        
+        function countAccidentals(progression) {
+            // Count ♭, ♯, ♮ symbols in the actual voicing notes (chord tones)
+            let count = 0;
+            
+            // Count accidentals in V7 chord voicing
+            if (progression.v7 && progression.v7.voicing) {
+                progression.v7.voicing.forEach(note => {
+                    if (note && typeof note === 'string') {
+                        count += (note.match(/[♭♯♮]/g) || []).length;
+                    }
+                });
+            }
+            
+            // Count accidentals in I chord voicing
+            if (progression.i && progression.i.voicing) {
+                progression.i.voicing.forEach(note => {
+                    if (note && typeof note === 'string') {
+                        count += (note.match(/[♭♯♮]/g) || []).length;
+                    }
+                });
+            }
+            
+            return count;
+        }
+
+        function loadProgressionLibraryMode() {
+            loadProgressionTypeFiles();
+            
+            // Ensure the layout is properly initialized
+            setTimeout(() => {
+                const navContainer = document.getElementById('top-note-lines-files');
+                const contentContainer = document.getElementById('progressions-content-files');
+                
+                if (navContainer && contentContainer) {
+                    if (contentContainer.innerHTML.trim() === '' || contentContainer.innerHTML.includes('Loading progressions...')) {
+                        loadProgressionTypeFiles();
+                    }
+                }
+            }, 100);
+        }
+
+        function loadProgressionTypeFiles() {
+            const progressionType = document.getElementById('progression-type-files').value;
+            const content = document.getElementById('progressions-content-files');
+            const loadingMessage = document.querySelector('#progression-library-mode .default-message');
+            
+            if (!content) return;
+            
+            // Show default message initially
+            if (loadingMessage) {
+                loadingMessage.style.display = 'block';
+            }
             content.innerHTML = '';
             
-            // Convert embedded data to the expected format
-            const progressions = Object.entries(embeddedProgressions).map(([fileName, data]) => ({
-                fileName,
-                data,
-                index: 0
-            }));
+            if (progressionType === 'V7-I') {
+                const htmlContent = generateV7IProgressionsFromFiles();
+                // Content is empty initially - navigation is populated, content shows on selection
+                content.innerHTML = htmlContent;
+            }
+        }
+
+        function generateV7IProgressionsFromFiles() {
             
-            // Show progressions immediately (no async loading needed)
-            setTimeout(() => {
-                displayLoadedProgressions(progressions);
-                loadingMessage.style.display = 'none';
-            }, 100); // Small delay for UI feedback
+            // Process embedded progressions and organize by top-note-lines
+            const progressionsByTopNoteLine = {};
+            
+            Object.entries(embeddedProgressions).forEach(([fileName, data]) => {
+                if (!data.progression || data.progression.length !== 2) return;
+                
+                const v7Chord = data.progression[0];
+                const iChord = data.progression[1];
+                
+                // Calculate top-note-line relative to tonal center
+                const iTonalNote = getTonicRelativeNote(iChord.currentTopNote, 'I');
+                const v7TonalNote = getTonicRelativeNote(v7Chord.currentTopNote, 'V7', iChord.currentTopNote);
+                
+                if (!v7TonalNote || !iTonalNote) return;
+                
+                // Calculate movement between top notes
+                const movements = calculateAllTopNoteMovements(v7TonalNote, iTonalNote);
+                
+                movements.forEach(movement => {
+                    const topNoteLine = `${v7TonalNote}-${iTonalNote}`;
+                    const directionKey = `${topNoteLine} ${movement.direction}`;
+                    
+                    if (!progressionsByTopNoteLine[directionKey]) {
+                        progressionsByTopNoteLine[directionKey] = [];
+                    }
+                    
+                    // Create progression object matching Raw page format
+                    const progression = {
+                        v7: {
+                            topNote: v7Chord.currentTopNote,
+                            scaleName: v7Chord.scaleName,
+                            voicing: voicingData.dominant[v7Chord.scaleName]?.[v7Chord.currentTopNote] || []
+                        },
+                        i: {
+                            topNote: iChord.currentTopNote, 
+                            scaleName: iChord.scaleName,
+                            voicing: voicingData.major[iChord.scaleName]?.[iChord.currentTopNote] || []
+                        },
+                        movement: movement,
+                        fileName: fileName,
+                        originalData: data
+                    };
+                    
+                    progressionsByTopNoteLine[directionKey].push(progression);
+                });
+            });
+            
+            
+            // Store for filtering and later access
+            allProgressionsDataFiles = progressionsByTopNoteLine;
+            
+            // Only update the navigation, don't show content initially
+            updateTopNoteLinesNavFiles(progressionsByTopNoteLine);
+            
+            // Return empty content initially - progressions will be shown when a line is selected
+            return '';
+        }
+
+        function generateProgressionsHTMLFromFiles(progressionsByTopNoteLine, chordType) {
+            // Update top-note-lines navigation
+            updateTopNoteLinesNavFiles(progressionsByTopNoteLine);
+            
+            let html = '';
+            const sortedTopNoteLines = Object.keys(progressionsByTopNoteLine).sort((a, b) => {
+                const aInterval = a.split(' ')[0];
+                const bInterval = b.split(' ')[0];
+                return compareTopNoteLines(aInterval, bInterval);
+            });
+
+            sortedTopNoteLines.forEach(topNoteLine => {
+                const progressions = progressionsByTopNoteLine[topNoteLine];
+                if (progressions.length === 0) return;
+
+                const [interval, direction] = topNoteLine.split(' ');
+                const [v7Note, iNote] = interval.split('-');
+                const movementType = getMovementType(progressions[0].movement);
+                
+                // Format display: use dash for intervals, only add direction if not common tone
+                const headerLabel = movementType === 'common' 
+                    ? `${v7Note} - ${iNote}` 
+                    : `${v7Note} - ${iNote} ${direction}`;
+                
+                html += `
+                    <div class="top-note-line" id="files-${topNoteLine.replace(/[^a-zA-Z0-9]/g, '')}" data-interval="${interval}" data-filter-type="${movementType}">
+                        <div class="interval-header">
+                            <h4 class="interval-title">${headerLabel}</h4>
+                            <div class="interval-summary">${progressions.length} progression${progressions.length !== 1 ? 's' : ''}</div>
+                        </div>
+                        <div class="progression-variations">
+                `;
+
+                // Sort progressions by semitone total (ascending)
+                const sortedProgressions = progressions.sort((a, b) => {
+                    const aSemitones = calculateTotalSemitones(a.movement);
+                    const bSemitones = calculateTotalSemitones(b.movement);
+                    return aSemitones - bSemitones;
+                });
+
+                sortedProgressions.forEach((progression, index) => {
+                    html += generateProgressionVariationHTMLFiles(progression, chordType, index);
+                });
+
+                html += `
+                        </div>
+                    </div>
+                `;
+            });
+
+            return html || '<p>No progressions found matching the current criteria.</p>';
+        }
+
+        function updateTopNoteLinesNavFiles(progressionsByTopNoteLine) {
+            const navContainer = document.getElementById('top-note-lines-files');
+            const sortedTopNoteLines = Object.keys(progressionsByTopNoteLine).sort((a, b) => {
+                const aInterval = a.split(' ')[0];
+                const bInterval = b.split(' ')[0];
+                return compareTopNoteLines(aInterval, bInterval);
+            });
+
+            let navHtml = '';
+            sortedTopNoteLines.forEach(topNoteLine => {
+                const progressions = progressionsByTopNoteLine[topNoteLine];
+                const [interval, direction] = topNoteLine.split(' ');
+                const [v7Note, iNote] = interval.split('-');
+                const movementType = getMovementType(progressions[0].movement);
+                
+                // Format display to match Raw page: just show interval without direction
+                const displayLabel = `${v7Note}-${iNote}`;
+                    
+                navHtml += `
+                    <div class="top-note-line-item" data-filter-type="${movementType}" onclick="scrollToTopNoteLineFiles('${topNoteLine}')">
+                        <span class="top-note-line-name">${displayLabel}</span>
+                        <span class="top-note-line-count">${progressions.length}</span>
+                    </div>
+                `;
+            });
+
+            navContainer.innerHTML = navHtml;
+        }
+
+        function generateProgressionVariationHTMLFiles(progression, chordType, index) {
+            // Format voicings for display (copy from Raw page)
+            const v7VoicingFormatted = formatVoicingForDisplay(progression.v7.voicing);
+            const iVoicingFormatted = formatVoicingForDisplay(progression.i.voicing);
+            
+            // Get voice leading analysis
+            const voiceLeadingAnalysis = analyzeVoiceLeading(progression.v7.voicing, progression.i.voicing);
+            
+            return `
+                <div class="progression-variation">
+                    <div class="progression-title">${progression.fileName}</div>
+                    <div class="library-progression-display">
+                        <div class="library-chord">
+                            <div class="chord-header">
+                                <span class="chord-symbol">V7</span>
+                            </div>
+                            <div class="voicing-display">
+                                <div class="voicing-content">${v7VoicingFormatted}</div>
+                                <div class="scale-indicator">${progression.v7.scaleName}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="voice-leading-connector library">
+                            ${generateLibraryVoiceLeadingConnector(progression.v7, progression.i, progression.movement)}
+                        </div>
+                        
+                        <div class="library-chord">
+                            <div class="chord-header">
+                                <span class="chord-symbol">${chordType === 'major' ? 'I' : 'i'}</span>
+                            </div>
+                            <div class="voicing-display">
+                                <div class="voicing-content">${iVoicingFormatted}</div>
+                                <div class="scale-indicator">${progression.i.scaleName}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="progression-actions">
+                        <button class="load-progression-btn" onclick="loadProgressionFromFile('${progression.fileName}', this)" data-progression='${JSON.stringify(progression.originalData)}'>
+                            Load in Creator
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Search function for file-based progressions
+
+        function filterTopNoteLinesFiles() {
+            applyFiltersFiles();
+        }
+
+        function applyFiltersFiles() {
+            const searchTerm = document.getElementById('search-input-files').value.toLowerCase();
+            const topNoteLines = document.querySelectorAll('#progressions-content-files .top-note-line');
+            const navItems = document.querySelectorAll('#top-note-lines-files .top-note-line-item');
+
+            topNoteLines.forEach((line, index) => {
+                const interval = line.dataset.interval;
+                
+                // Check search match only
+                const matchesSearch = !searchTerm || interval.toLowerCase().includes(searchTerm);
+                
+                line.style.display = matchesSearch ? 'block' : 'none';
+                
+                // Update corresponding nav item
+                if (navItems[index]) {
+                    navItems[index].style.display = matchesSearch ? 'flex' : 'none';
+                }
+            });
+        }
+
+        function scrollToTopNoteLineFiles(topNoteLine) {
+            // Update navigation active state
+            document.querySelectorAll('#top-note-lines-files .top-note-line-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Set active item
+            event.target.closest('.top-note-line-item').classList.add('active');
+            
+            // Show progressions for selected top-note-line
+            showProgressionsForTopNoteLine(topNoteLine);
+        }
+        
+        function showProgressionsForTopNoteLine(topNoteLineKey) {
+            const contentDiv = document.getElementById('progressions-content-files');
+            const defaultMessage = document.querySelector('.default-message');
+            const titleElement = document.getElementById('current-filter-title-files');
+            
+            if (!allProgressionsDataFiles[topNoteLineKey]) {
+                contentDiv.innerHTML = '<p>No progressions found for this top-note-line.</p>';
+                return;
+            }
+            
+            const progressions = allProgressionsDataFiles[topNoteLineKey];
+            const [interval, direction] = topNoteLineKey.split(' ');
+            const [v7Note, iNote] = interval.split('-');
+            const movementType = getMovementType(progressions[0].movement);
+            
+            // Update title
+            const displayLabel = movementType === 'common' 
+                ? `${v7Note} - ${iNote}` 
+                : `${v7Note} - ${iNote} ${direction}`;
+            titleElement.textContent = `Top-Note-Line: ${displayLabel}`;
+            
+            // Hide default message and show progressions
+            if (defaultMessage) defaultMessage.style.display = 'none';
+            
+            // Sort progressions first by accidentals count, then by semitone total (both ascending)
+            const sortedProgressions = progressions.sort((a, b) => {
+                // First priority: fewer accidentals
+                const aAccidentals = countAccidentals(a);
+                const bAccidentals = countAccidentals(b);
+                
+                if (aAccidentals !== bAccidentals) {
+                    return aAccidentals - bAccidentals;
+                }
+                
+                // Second priority: fewer semitones (use actual voice movement calculation)
+                const aSemitones = calculateActualVoiceMovement(a);
+                const bSemitones = calculateActualVoiceMovement(b);
+                
+                if (aSemitones !== bSemitones) {
+                    return aSemitones - bSemitones;
+                }
+                
+                // Third priority: alphabetical by file name for stable sorting
+                return a.fileName.localeCompare(b.fileName);
+            });
+            
+            
+            // Generate HTML for progressions (without interval header)
+            let html = '<div class="progression-variations">';
+            sortedProgressions.forEach((progression, index) => {
+                html += generateProgressionVariationHTMLFiles(progression, 'major', index);
+            });
+            html += '</div>';
+            
+            contentDiv.innerHTML = html;
+        }
+
+        function loadProgressionFromFileData(fileName, buttonElement) {
+            const progressionData = JSON.parse(buttonElement.getAttribute('data-progression'));
+            
+            // Find the original progression data from embedded progressions
+            const originalData = embeddedProgressions[fileName];
+            if (!originalData) return;
+            
+            // Switch to Create Progression mode and load the progression
+            switchMode('progression');
+            
+            // Clear existing progression
+            currentProgression = [];
+            
+            // Add chords from the loaded progression
+            originalData.progression.forEach(chordData => {
+                const chord = {
+                    id: Date.now() + Math.random(),
+                    symbol: chordData.symbol,
+                    currentTopNote: chordData.currentTopNote,
+                    selectedVoicingKey: chordData.selectedVoicingKey,
+                    scaleName: chordData.scaleName,
+                    selectedVoicing: null,
+                    currentVoicingIndex: chordData.currentVoicingIndex || 0,
+                    voicingWithPositions: null
+                };
+                
+                // Create selectedVoicing object to properly set up the voicing
+                if (chordData.scaleName && chordData.currentTopNote) {
+                    const chordType = getChordType(chordData.symbol);
+                    const voicingData = getVoicingData(chordType);
+                    if (voicingData[chordData.scaleName] && voicingData[chordData.scaleName][chordData.currentTopNote]) {
+                        const selectedVoicing = {
+                            scaleName: chordData.scaleName,
+                            topNote: chordData.currentTopNote,
+                            voicing: voicingData[chordData.scaleName][chordData.currentTopNote]
+                        };
+                        updateChordVoicing(chord, selectedVoicing);
+                    }
+                }
+                
+                currentProgression.push(chord);
+            });
+            
+            // Update the display
+            renderProgression();
         }
 
         function displayLoadedProgressions(progressions) {
@@ -4358,18 +4967,35 @@ ${details}`;
                     symbol: chordData.symbol,
                     currentTopNote: chordData.currentTopNote,
                     selectedVoicingKey: chordData.selectedVoicingKey,
-                    scaleName: chordData.scaleName
+                    scaleName: chordData.scaleName,
+                    selectedVoicing: null,
+                    currentVoicingIndex: chordData.currentVoicingIndex || 0,
+                    voicingWithPositions: null
                 };
+                
+                // Create selectedVoicing object to properly set up the voicing
+                if (chordData.scaleName && chordData.currentTopNote) {
+                    const chordType = getChordType(chordData.symbol);
+                    const voicingData = getVoicingData(chordType);
+                    if (voicingData[chordData.scaleName] && voicingData[chordData.scaleName][chordData.currentTopNote]) {
+                        const selectedVoicing = {
+                            scaleName: chordData.scaleName,
+                            topNote: chordData.currentTopNote,
+                            voicing: voicingData[chordData.scaleName][chordData.currentTopNote]
+                        };
+                        updateChordVoicing(chord, selectedVoicing);
+                    }
+                }
+                
                 currentProgression.push(chord);
             });
             
             // Update the display
-            updateProgressionDisplay();
-            updateChordDisplay();
+            renderProgression();
         }
 
         // Initialize the app
-        switchMode('progressions-library');
+        switchMode('progression-library');
     </script>
 </body>
 </html>
