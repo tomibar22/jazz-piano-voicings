@@ -4994,7 +4994,8 @@ ${details}`;
                 const movementType = getMovementType(progressions[0].movement);
                 
                 // Format display to match Raw page: just show interval without direction
-                const displayLabel = `${v7Note}-${iNote}`;
+                // Use the same display conversion as other functions (e.g., ♭2-2 → ♯1-2)
+                const displayLabel = getTopNoteLineDisplayLabel(topNoteLine).split(' ')[0];
                     
                 navHtml += `
                     <div class="top-note-line-item" data-filter-type="${movementType}" onclick="scrollToTopNoteLineFiles('${topNoteLine}')">
