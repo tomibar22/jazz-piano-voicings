@@ -4872,6 +4872,12 @@ ${details}`;
                 movements.forEach(movement => {
                     const topNoteLine = `${v7TonalNote}-${iTonalNote}`;
                     
+                    // Skip ♯1-2 progressions entirely - use ♭2-2 instead (same interval, different enharmonic spelling)  
+                    // ♭2-2 will be displayed as ♯1-2 in the UI for better readability
+                    if (topNoteLine === '♯1-2') {
+                        return;
+                    }
+                    
                     // Skip upward movements for ♭2-1 progressions (only show downward)
                     if (topNoteLine === '♭2-1' && movement.direction === '↗') {
                         return;
@@ -4879,11 +4885,6 @@ ${details}`;
                     
                     // Skip downward movements for ♭2-2 progressions (only show upward)
                     if (topNoteLine === '♭2-2' && movement.direction === '↙') {
-                        return;
-                    }
-                    
-                    // Skip downward movements for ♯1-2 progressions (only show upward - closest interval)
-                    if (topNoteLine === '♯1-2' && movement.direction === '↙') {
                         return;
                     }
                     
