@@ -4925,6 +4925,7 @@ ${details}`;
                     // Skip ♯1-2 progressions entirely - use ♭2-2 instead (same interval, different enharmonic spelling)  
                     // ♭2-2 will be displayed as ♯1-2 in the UI for better readability
                     if (topNoteLine === '♯1-2') {
+                        console.log('DEBUG: Skipping ♯1-2 progression:', fileName, topNoteLine, movement.direction);
                         return;
                     }
                     
@@ -4946,6 +4947,10 @@ ${details}`;
                     }
                     
                     const directionKey = `${normalizedTopNoteLine} ${movement.direction}`;
+                    
+                    if (normalizedTopNoteLine === '♯1-2') {
+                        console.log('DEBUG: Creating ♯1-2 entry:', fileName, 'original:', topNoteLine, 'normalized:', normalizedTopNoteLine, movement.direction);
+                    }
                     
                     if (!progressionsByTopNoteLine[directionKey]) {
                         progressionsByTopNoteLine[directionKey] = [];
@@ -5054,6 +5059,10 @@ ${details}`;
                 // Format display to match Raw page: just show interval without direction
                 // Use the same display conversion as other functions (e.g., ♭2-2 → ♯1-2)
                 const displayLabel = getTopNoteLineDisplayLabel(topNoteLine).split(' ')[0];
+                
+                if (displayLabel === '♯1-2') {
+                    console.log('DEBUG: Adding ♯1-2 to navigation:', topNoteLine, 'display:', displayLabel, 'count:', progressions.length);
+                }
                     
                 navHtml += `
                     <div class="top-note-line-item" data-filter-type="${movementType}" onclick="scrollToTopNoteLineFiles('${topNoteLine}')">
