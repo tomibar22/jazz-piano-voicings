@@ -139,26 +139,57 @@
             font-weight: bold;
         }
 
+        /* Collapsible navigation panel styles */
+        .chord-type-navigation.collapsed {
+            min-width: 40px;
+            max-width: 40px;
+            padding: 0.5rem 0.3rem;
+        }
+
+        .chord-type-navigation.collapsed .nav-title,
+        .chord-type-navigation.collapsed .nav-items {
+            display: none;
+        }
+
+        .nav-toggle {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: rgba(212, 175, 55, 0.9);
+            border: 2px solid #d4af37;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 12px;
+            color: #1a1a2e;
+            font-weight: bold;
+            transition: all 0.2s ease;
+            z-index: 1001;
+        }
+
+        .nav-toggle:hover {
+            background: #d4af37;
+            transform: scale(1.1);
+        }
+
+        .chord-type-navigation.collapsed .nav-toggle {
+            position: static;
+            margin: 0 auto;
+        }
+
         /* Responsive styles for navigation panel */
         @media (max-width: 1024px) {
             .chord-type-navigation {
                 position: fixed;
                 top: 20px;
-                left: 20px;
-                right: auto;
+                right: 20px;
+                left: auto;
                 min-width: 140px;
                 max-width: 180px;
-            }
-
-            /* Add left margin to browse content to make room for navigation panel */
-            #browse-content {
-                margin-left: 280px;
-                padding-left: 1.5rem;
-            }
-
-            /* Ensure container has proper padding on tablets */
-            .container {
-                padding: 20px 20px 20px 20px;
             }
         }
 
@@ -190,14 +221,16 @@
                 transform: none;
             }
 
-            /* Reset margin for mobile since panel is static */
-            #browse-content {
-                margin-left: 0;
-                padding-left: 0;
+            /* Mobile collapsible adjustments */
+            .chord-type-navigation.collapsed {
+                width: 60px;
+                min-width: 60px;
+                margin: 0 auto 1rem auto;
             }
 
-            .container {
-                padding: 20px;
+            .nav-toggle {
+                position: static !important;
+                margin: 0 auto;
             }
         }
 
@@ -1791,6 +1824,7 @@
         <div id="browse-mode" class="mode-section">
             <!-- Chord Type Navigation Panel -->
             <div id="chord-type-nav" class="chord-type-navigation">
+                <div class="nav-toggle" onclick="toggleNavigation()">−</div>
                 <div class="nav-title">Chord Types</div>
                 <div class="nav-items">
                     <a href="#major-chords" class="nav-item" data-chord-type="major">Major</a>
@@ -2768,6 +2802,21 @@ ${details}`;
                 if (activeNavItem) {
                     updateActiveNavItem(activeNavItem);
                 }
+            }
+        }
+
+        function toggleNavigation() {
+            const nav = document.getElementById('chord-type-nav');
+            const toggleBtn = nav.querySelector('.nav-toggle');
+            
+            if (nav.classList.contains('collapsed')) {
+                nav.classList.remove('collapsed');
+                toggleBtn.textContent = '−';
+                toggleBtn.title = 'Collapse navigation';
+            } else {
+                nav.classList.add('collapsed');
+                toggleBtn.textContent = '+';
+                toggleBtn.title = 'Expand navigation';
             }
         }
 
