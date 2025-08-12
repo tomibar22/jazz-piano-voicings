@@ -1261,6 +1261,19 @@
             cursor: help;
         }
 
+        .progression-number {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            background: rgba(128, 128, 128, 0.7);
+            color: #ffffff;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 0.7em;
+            font-weight: 500;
+            z-index: 99;
+        }
+
         .progression-variation {
             position: relative;
         }
@@ -4198,11 +4211,11 @@ ${details}`;
                 return aScaleName.localeCompare(bScaleName);
             });
             
-            sortedProgressions.forEach(progression => {
+            sortedProgressions.forEach((progression, index) => {
                 // Determine chord type based on current progression type
                 const progressionType = document.getElementById('progression-type').value;
                 const chordType = progressionType === 'V7-i' ? 'minor' : 'major';
-                html += generateProgressionVariation(progression, chordType);
+                html += generateProgressionVariation(progression, chordType, index + 1, sortedProgressions.length);
             });
             
             html += `
@@ -4459,7 +4472,7 @@ ${details}`;
             return notes.join('\n');
         }
 
-        function generateProgressionVariation(progression, chordType = 'major') {
+        function generateProgressionVariation(progression, chordType = 'major', progressionNumber = null, totalProgressions = null) {
             // Format voicings for display
             const v7VoicingFormatted = formatVoicingForDisplay(progression.v7.voicing);
             const iVoicingFormatted = formatVoicingForDisplay(progression.i.voicing);
@@ -4481,6 +4494,7 @@ ${details}`;
             return `
                 <div class="progression-variation">
                     ${libraryInfo.inLibrary ? `<div class="library-indicator" title="${libraryInfo.fileName}">Library</div>` : ''}
+                    ${progressionNumber && totalProgressions ? `<div class="progression-number">${progressionNumber}/${totalProgressions}</div>` : ''}
                     <div class="library-progression-display">
                         <div class="library-chord">
                             <div class="chord-header">
