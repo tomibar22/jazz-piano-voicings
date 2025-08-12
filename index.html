@@ -4895,8 +4895,8 @@ ${details}`;
             const v7VoicingFormatted = formatVoicingForDisplay(progression.v7.voicing);
             const iVoicingFormatted = formatVoicingForDisplay(progression.i.voicing);
             
-            // Get voice leading analysis
-            const voiceLeadingAnalysis = analyzeVoiceLeading(progression.v7.voicing, progression.i.voicing);
+            // Get voice leading analysis - use the direct function since we have voicing arrays
+            const voiceLeadingAnalysis = analyzeVoiceLeadingDirect(progression.v7.voicing, progression.i.voicing);
             
             // Create unique ID for this progression variation
             const progressionId = `v7-${progression.v7.scaleName.replace(/[^a-zA-Z0-9]/g, '')}-${progression.v7.topNote}-i-${progression.i.scaleName.replace(/[^a-zA-Z0-9]/g, '')}-${progression.i.topNote}`;
@@ -5480,8 +5480,8 @@ ${details}`;
             const v7VoicingFormatted = formatVoicingForDisplay(progression.v7.voicing);
             const iVoicingFormatted = formatVoicingForDisplay(progression.i.voicing);
             
-            // Get voice leading analysis
-            const voiceLeadingAnalysis = analyzeVoiceLeading(progression.v7.voicing, progression.i.voicing);
+            // Get voice leading analysis - use the direct function since we have voicing arrays
+            const voiceLeadingAnalysis = analyzeVoiceLeadingDirect(progression.v7.voicing, progression.i.voicing);
             
             return `
                 <div class="progression-variation">
