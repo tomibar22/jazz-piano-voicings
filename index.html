@@ -2399,12 +2399,16 @@
                 return { interval: null, direction: 'unknown', type: 'unknown' };
             }
             
-            // Calculate interval (allowing for octave equivalence)
-            let interval = pitch2 - pitch1;
+            // Calculate raw interval
+            let rawInterval = pitch2 - pitch1;
             
-            // Normalize to within one octave for analysis
-            while (interval > 6) interval -= 12;
-            while (interval < -6) interval += 12;
+            // Calculate the shortest path (considering octave equivalence)
+            let interval = rawInterval;
+            if (interval > 6) {
+                interval = interval - 12; // Go down instead of up
+            } else if (interval < -6) {
+                interval = interval + 12; // Go up instead of down
+            }
             
             const direction = interval === 0 ? 'same' : interval > 0 ? 'up' : 'down';
             const absInterval = Math.abs(interval);
