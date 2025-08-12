@@ -3867,6 +3867,11 @@ ${details}`;
                                 return;
                             }
                             
+                            // Skip downward movements for ♯2-3 progressions (only show upward)
+                            if (topNoteLine === '♯2-3' && movement.direction === '↘') {
+                                return;
+                            }
+                            
                             // Skip downward movements for ♭2-2 progressions (only show upward)
                             if (topNoteLine === '♭2-2' && movement.direction === '↙') {
                                 return;
@@ -3960,6 +3965,11 @@ ${details}`;
                             
                             // Skip upward movements for ♭2-1 progressions (only show downward)
                             if (topNoteLine === '♭2-1' && movement.direction === '↗') {
+                                return;
+                            }
+                            
+                            // Skip downward movements for ♯2-3 progressions (only show upward)
+                            if (topNoteLine === '♯2-3' && movement.direction === '↘') {
                                 return;
                             }
                             
@@ -5155,6 +5165,11 @@ ${details}`;
                     
                     // Skip upward movements for ♭2-1 progressions (only show downward)
                     if (topNoteLine === '♭2-1' && movement.direction === '↗') {
+                        return;
+                    }
+                    
+                    // Skip downward movements for ♯2-3 progressions (only show upward)
+                    if (topNoteLine === '♯2-3' && movement.direction === '↘') {
                         return;
                     }
                     
