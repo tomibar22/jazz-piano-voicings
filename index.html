@@ -73,6 +73,72 @@
         }
 
         /* Browse Mode Styles */
+        .chord-type-navigation {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(168, 200, 236, 0.3);
+            border-radius: 15px;
+            padding: 1rem;
+            z-index: 1000;
+            min-width: 160px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        #browse-mode.active .chord-type-navigation {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .chord-type-navigation .nav-title {
+            color: #d4af37;
+            font-size: 1rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid rgba(168, 200, 236, 0.2);
+            padding-bottom: 0.5rem;
+        }
+
+        .chord-type-navigation .nav-items {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .chord-type-navigation .nav-item {
+            color: #a8c8ec;
+            text-decoration: none;
+            padding: 0.5rem 0.8rem;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid transparent;
+        }
+
+        .chord-type-navigation .nav-item:hover {
+            background: rgba(168, 200, 236, 0.15);
+            border-color: rgba(168, 200, 236, 0.3);
+            color: #f4f4f4;
+            transform: translateX(-2px);
+        }
+
+        .chord-type-navigation .nav-item.active {
+            background: rgba(212, 175, 55, 0.2);
+            border-color: #d4af37;
+            color: #d4af37;
+            font-weight: bold;
+        }
+
         .chord-type {
             margin-bottom: 3rem;
             background: rgba(255, 255, 255, 0.05);
@@ -1661,6 +1727,18 @@
 
         <!-- Browse Mode -->
         <div id="browse-mode" class="mode-section">
+            <!-- Chord Type Navigation Panel -->
+            <div id="chord-type-nav" class="chord-type-navigation">
+                <div class="nav-title">Chord Types</div>
+                <div class="nav-items">
+                    <a href="#major-chords" class="nav-item" data-chord-type="major">Major</a>
+                    <a href="#minor-chords" class="nav-item" data-chord-type="minor">Minor</a>
+                    <a href="#dominant-chords" class="nav-item" data-chord-type="dominant">Dominant</a>
+                    <a href="#sus-chords" class="nav-item" data-chord-type="sus">Sus</a>
+                    <a href="#half-diminished-chords" class="nav-item" data-chord-type="half-diminished">Half-Dim</a>
+                    <a href="#diminished-chords" class="nav-item" data-chord-type="diminished">Diminished</a>
+                </div>
+            </div>
             <div id="browse-content">
                 <!-- Content will be dynamically loaded -->
             </div>
@@ -2491,7 +2569,7 @@ ${details}`;
                 const gridCols = `repeat(${usedColumns.length}, 1fr)`;
                 
                 html += `
-                    <div class="chord-type">
+                    <div class="chord-type" id="${chordType}-chords">
                         <h2>${chordTypeTitle}</h2>
                         
                         <div class="note-headers" style="grid-template-columns: ${gridCols};">
@@ -2560,6 +2638,75 @@ ${details}`;
             });
 
             browseContent.innerHTML = html;
+            
+            // Initialize navigation for browse mode
+            initializeChordTypeNavigation();
+        }
+
+        function initializeChordTypeNavigation() {
+            const navItems = document.querySelectorAll('.chord-type-navigation .nav-item');
+            const chordSections = document.querySelectorAll('.chord-type');
+            
+            // Add click handlers for smooth scrolling
+            navItems.forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const chordType = item.getAttribute('data-chord-type');
+                    const targetSection = document.getElementById(`${chordType}-chords`);
+                    
+                    if (targetSection) {
+                        // Smooth scroll to section
+                        targetSection.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start',
+                            inline: 'nearest'
+                        });
+                        
+                        // Update active state
+                        updateActiveNavItem(item);
+                    }
+                });
+            });
+            
+            // Add scroll listener to update active state based on scroll position
+            let scrollTimeout;
+            window.addEventListener('scroll', () => {
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(updateActiveNavOnScroll, 100);
+            });
+            
+            // Initialize active state
+            setTimeout(updateActiveNavOnScroll, 300);
+        }
+
+        function updateActiveNavItem(activeItem) {
+            const navItems = document.querySelectorAll('.chord-type-navigation .nav-item');
+            navItems.forEach(item => item.classList.remove('active'));
+            activeItem.classList.add('active');
+        }
+
+        function updateActiveNavOnScroll() {
+            const navItems = document.querySelectorAll('.chord-type-navigation .nav-item');
+            const chordSections = document.querySelectorAll('.chord-type');
+            const scrollPosition = window.scrollY + window.innerHeight / 3;
+            
+            let activeSection = null;
+            chordSections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.offsetHeight;
+                
+                if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                    activeSection = section;
+                }
+            });
+            
+            if (activeSection) {
+                const chordType = activeSection.id.replace('-chords', '');
+                const activeNavItem = document.querySelector(`[data-chord-type="${chordType}"]`);
+                if (activeNavItem) {
+                    updateActiveNavItem(activeNavItem);
+                }
+            }
         }
 
         function loadProgressionMode() {
