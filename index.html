@@ -2401,13 +2401,13 @@
             
             // Special cases for classic voice leading resolutions (V7 to I context)
             if (chord1Symbol === 'V7' && (chord2Symbol === 'I' || chord2Symbol === 'i')) {
-                // ♯9 (V7) resolves up by semitone to natural 7 (I) - e.g., A♯ in G7 → B in Cmaj7
+                // ♯9 (V7) resolves down by semitone to natural 7 (I) - e.g., A♯ in G7 → B in Cmaj7 going down
                 if (note1 === '♯9' && note2 === '7') {
                     return {
-                        interval: 1,
-                        direction: 'up',
+                        interval: -1,
+                        direction: 'down',
                         type: 'step',
-                        symbol: '↑½',
+                        symbol: '↓½',
                         semitones: 1,
                         absInterval: 1
                     };
@@ -2434,6 +2434,18 @@
                         symbol: '↑½',
                         semitones: 1,
                         absInterval: 1
+                    };
+                }
+                
+                // ♭9 (V7) resolves up to natural 7 (I) - e.g., A♭ in G7 → B in Cmaj7 (up by tone and a half)
+                if (note1 === '♭9' && note2 === '7') {
+                    return {
+                        interval: 3,
+                        direction: 'up',
+                        type: 'step',
+                        symbol: '↑1½',
+                        semitones: 3,
+                        absInterval: 3
                     };
                 }
             }
