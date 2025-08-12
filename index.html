@@ -4699,8 +4699,11 @@ ${details}`;
             }
             
             // V7-I special resolutions (match main calculateVoiceMovement function)
+            console.log(`DEBUG: Checking special cases for ${note1} → ${note2}`);
+            
             // ♯9 (V7) resolves up by semitone to natural 7 (I)
             if (note1 === '♯9' && note2 === '7') {
+                console.log('DEBUG: Matched ♯9 → 7 in WithDirection function');
                 return {
                     interval: 1,
                     direction: 'up',
