@@ -2460,6 +2460,18 @@
                         absInterval: 1
                     };
                 }
+                
+                // 9 (V7) resolves up by whole tone to 1 (I) 
+                if (note1 === '9' && note2 === '1') {
+                    return {
+                        interval: 2,
+                        direction: 'up',
+                        type: 'step',
+                        symbol: '↑1',
+                        semitones: 2,
+                        absInterval: 2
+                    };
+                }
             }
             
             // Calculate raw interval
@@ -4741,6 +4753,18 @@ ${details}`;
                     symbol: '↑½',
                     semitones: 1,
                     absInterval: 1
+                };
+            }
+            
+            // 9 (V7) resolves up by whole tone to 1 (I)
+            if (note1 === '9' && note2 === '1') {
+                return {
+                    interval: 2,
+                    direction: 'up',
+                    type: 'step',
+                    symbol: '↑1',
+                    semitones: 2,
+                    absInterval: 2
                 };
             }
             
