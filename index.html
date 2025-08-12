@@ -2463,6 +2463,7 @@
                 
                 // 9 (V7) resolves up by whole tone to 1 (I) 
                 if (note1 === '9' && note2 === '1') {
+                    console.log('DEBUG: Matched 9 → 1 special case in main function');
                     return {
                         interval: 2,
                         direction: 'up',
@@ -4656,6 +4657,8 @@ ${details}`;
         }
 
         function calculateVoiceMovementWithDirection(note1, note2, expectedMovement) {
+            console.log(`DEBUG WithDirection: ${note1} → ${note2}`);
+            
             // Determine chord type based on current progression type
             const progressionType = document.getElementById('progression-type')?.value || 'V7-I';
             const isMinor = progressionType === 'V7-i';
@@ -4758,6 +4761,7 @@ ${details}`;
             
             // 9 (V7) resolves up by whole tone to 1 (I)
             if (note1 === '9' && note2 === '1') {
+                console.log('DEBUG: Matched 9 → 1 special case in WithDirection function');
                 return {
                     interval: 2,
                     direction: 'up',
