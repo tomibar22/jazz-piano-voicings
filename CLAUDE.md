@@ -83,18 +83,67 @@ The core algorithm finds closest top notes between chords, maintains voicing qua
 
 ## Progression Library Rules
 
-**Direction Display Rule**: When adding new progressions to the library, only display the closest/shortest voice leading direction for each top-note-line movement. The system automatically calculates both upward and downward possibilities, but only the most efficient (shortest interval) direction should be shown to avoid duplicate entries. 
+### **AUTOMATIC DIRECTION FILTERING RULE** 🎯
+**ALWAYS APPLY**: When adding new top-note-line progressions to the library, automatically determine and show ONLY the closest/shortest voice leading direction. For any interval movement, calculate both upward and downward possibilities and keep only the shorter path.
 
-Current direction filters implemented:
-- ♭2-1 progressions: Show only downward movement (♯11 → 1 going down a semitone)
-- ♭2-2 progressions: Show only upward movement (display as ♯1-2 in UI)
-- ♯1-2 progressions: Filtered out entirely (same interval as ♭2-2)
+**Implementation Pattern**: For each new top-note-line X-Y, add direction filtering logic:
+```javascript
+// Skip [longer direction] movements for X-Y progressions (only show [shorter direction])
+if (topNoteLine === 'X-Y' && movement.direction === '[longer_arrow]') {
+    return;
+}
+```
+
+### **Current Direction Filters** (Reference Examples)
+- **♭2-1**: Show only **downward** `↘` (♯11 → 1 = 1 semitone down vs 11 semitones up)
+- **♭2-2**: Show only **upward** `↗` (display as ♯1-2 in UI; 1 semitone up vs 11 semitones down)  
+- **♯2-3**: Show only **upward** `↗` (♭13 → 3 = 2 semitones up vs 10 semitones down)
+- **♯1-2**: Filtered out entirely (same interval as ♭2-2)
+
+### **Automatic Decision Logic** 
+For ANY new interval X-Y:
+1. **Calculate semitone distances** for both directions (considering octave equivalence)
+2. **Choose shorter path**: If upward < downward, filter out `↘`. If downward < upward, filter out `↗`
+3. **Add filtering code** to all three functions: `generateV7IProgressions()`, `generateV7iProgressions()`, `generateV7IProgressionsFromFiles()`
+4. **Test immediately** to ensure single entry in navigation
+
+### **Quick Reference: Common Intervals** 
+| Interval | Upward | Downward | **Keep** | Filter Out |
+|----------|--------|----------|----------|------------|
+| 1 semitone | 1 | 11 | Upward `↗` | Downward `↘` |
+| 2 semitones | 2 | 10 | Upward `↗` | Downward `↘` |
+| 3 semitones | 3 | 9 | Upward `↗` | Downward `↘` |
+| 4 semitones | 4 | 8 | Upward `↗` | Downward `↘` |
+| 5 semitones | 5 | 7 | Upward `↗` | Downward `↘` |
+| 6 semitones | 6 | 6 | Either (same) | Choose consistent |
+| 7 semitones | 7 | 5 | Downward `↘` | Upward `↗` |
 
 **Display Rule**: ♭2-2 progressions are displayed as ♯1-2 in the user interface for better readability, while maintaining the internal ♭2-2 logic for progression matching and file organization.
 
 **Interval Consolidation**: ♯1-2 and ♭2-2 represent the same musical interval (1 semitone up). Only ♭2-2 progressions are shown (displayed as ♯1-2) to avoid duplicates.
 
-**Future Rule**: Only generate one direction per progression line - always use the closest/shortest voice leading direction. No need for both upward and downward instances of the same interval.
+### **Implementation Template** 📋
+When adding any new top-note-line progressions, copy and adapt this code template to all three filtering locations:
+
+```javascript
+// Skip [direction] movements for [X-Y] progressions (only show [opposite_direction])
+if (topNoteLine === '[X-Y]' && movement.direction === '[arrow_to_filter]') {
+    return;
+}
+```
+
+**Example**: For ♯2-3 (2 semitones up is shorter than 10 down):
+```javascript
+// Skip downward movements for ♯2-3 progressions (only show upward)
+if (topNoteLine === '♯2-3' && movement.direction === '↘') {
+    return;
+}
+```
+
+**Locations to update** (search for these function names):
+1. `generateV7IProgressions()` - Dynamic major progressions
+2. `generateV7iProgressions()` - Dynamic minor progressions  
+3. `generateV7IProgressionsFromFiles()` - Embedded file-based progressions
 
 - When adding progressions to the library, remember that "b", "#" and "n" in the filenames stand for "♭", "♯" and "♮"
 
