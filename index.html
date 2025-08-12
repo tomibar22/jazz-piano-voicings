@@ -2395,20 +2395,14 @@
             const pitch1 = getActualPitchInSemitones(note1, chord1Symbol, chord1Type);
             const pitch2 = getActualPitchInSemitones(note2, chord2Symbol, chord2Type);
             
-            // DEBUG: Log what we're actually comparing
-            console.log(`Voice movement: ${note1} (${chord1Symbol}) → ${note2} (${chord2Symbol})`);
-            
             if (pitch1 === null || pitch2 === null) {
                 return { interval: null, direction: 'unknown', type: 'unknown' };
             }
             
             // Special cases for classic voice leading resolutions (V7 to I context)
             if (chord1Symbol === 'V7' && (chord2Symbol === 'I' || chord2Symbol === 'i')) {
-                console.log(`Special case check: ${note1} → ${note2}`);
-                
-                // ♯9 (V7) resolves up by semitone to natural 7 (I) - you were right, it's up!
+                // ♯9 (V7) resolves up by semitone to natural 7 (I)
                 if (note1 === '♯9' && note2 === '7') {
-                    console.log('Matched ♯9 → 7 (↑½)');
                     return {
                         interval: 1,
                         direction: 'up',
@@ -2419,9 +2413,8 @@
                     };
                 }
                 
-                // 3 (V7) as leading tone resolves up by semitone to 1 (I) - e.g., B in G7 → C in Cmaj7
+                // 3 (V7) as leading tone resolves up by semitone to 1 (I)
                 if (note1 === '3' && note2 === '1') {
-                    console.log('Matched 3 → 1 (↑½)');
                     return {
                         interval: 1,
                         direction: 'up',
@@ -2432,9 +2425,8 @@
                     };
                 }
                 
-                // ♯9 (V7) resolves up by semitone to 13 (I) - e.g., A♯ in G7 → A in Cmaj13  
+                // ♯9 (V7) resolves up by semitone to 13 (I)
                 if (note1 === '♯9' && note2 === '13') {
-                    console.log('Matched ♯9 → 13 (↑½)');
                     return {
                         interval: 1,
                         direction: 'up',
@@ -2445,9 +2437,8 @@
                     };
                 }
                 
-                // ♭9 (V7) resolves up by semitone to 13 (I) - e.g., A♭ in G7 → A in Cmaj13
+                // ♭9 (V7) resolves up by semitone to 13 (I)
                 if (note1 === '♭9' && note2 === '13') {
-                    console.log('Matched ♭9 → 13 (↑½)');
                     return {
                         interval: 1,
                         direction: 'up',
@@ -2458,9 +2449,8 @@
                     };
                 }
                 
-                // ♭9 (V7) resolves up by semitone to 7 (I) - e.g., A♭ in G7 → B in Cmaj7
+                // ♭9 (V7) resolves up by semitone to 7 (I)
                 if (note1 === '♭9' && note2 === '7') {
-                    console.log('Matched ♭9 → 7 (↑½)');
                     return {
                         interval: 1,
                         direction: 'up',
