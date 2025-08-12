@@ -2486,6 +2486,19 @@
                         absInterval: 2
                     };
                 }
+                
+                // 9 (V7) resolves down to 7 (I) - should show as ↑1 not ↓½  
+                if (note1 === '9' && note2 === '7') {
+                    console.log('DEBUG: Matched 9 → 7 special case in main function');
+                    return {
+                        interval: 2,
+                        direction: 'up',
+                        type: 'step',
+                        symbol: '↑1',
+                        semitones: 2,
+                        absInterval: 2
+                    };
+                }
             }
             
             // Calculate raw interval
@@ -4791,6 +4804,19 @@ ${details}`;
             // 9 (V7) resolves down to 5 (I) - actually a compound movement that should show as ↑1
             if (note1 === '9' && note2 === '5') {
                 console.log('DEBUG: Matched 9 → 5 special case in WithDirection function');
+                return {
+                    interval: 2,
+                    direction: 'up',
+                    type: 'step',
+                    symbol: '↑1',
+                    semitones: 2,
+                    absInterval: 2
+                };
+            }
+            
+            // 9 (V7) resolves down to 7 (I) - should show as ↑1 not ↓½
+            if (note1 === '9' && note2 === '7') {
+                console.log('DEBUG: Matched 9 → 7 special case in WithDirection function');
                 return {
                     interval: 2,
                     direction: 'up',
