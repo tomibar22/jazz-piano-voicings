@@ -4174,25 +4174,28 @@ ${details}`;
                     <div class="progression-variations">
             `;
             
-            // Sort progressions by total semitone amount (ascending)
+            // Sort progressions first by accidentals count, then by semitone total (both ascending)
             const sortedProgressions = progressions.sort((a, b) => {
-                // Calculate total semitones for progression A
-                const aAnalysis = analyzeVoiceLeadingDirect(a.v7.voicing, a.i.voicing);
-                let aTotalSemitones = 0;
-                aAnalysis.forEach(movement => {
-                    const semitones = movement.semitones || movement.interval || Math.abs(movement.semitoneDistance || 0);
-                    aTotalSemitones += Math.abs(semitones);
-                });
+                // First priority: fewer accidentals
+                const aAccidentals = countAccidentals(a);
+                const bAccidentals = countAccidentals(b);
                 
-                // Calculate total semitones for progression B  
-                const bAnalysis = analyzeVoiceLeadingDirect(b.v7.voicing, b.i.voicing);
-                let bTotalSemitones = 0;
-                bAnalysis.forEach(movement => {
-                    const semitones = movement.semitones || movement.interval || Math.abs(movement.semitoneDistance || 0);
-                    bTotalSemitones += Math.abs(semitones);
-                });
+                if (aAccidentals !== bAccidentals) {
+                    return aAccidentals - bAccidentals;
+                }
                 
-                return aTotalSemitones - bTotalSemitones;
+                // Second priority: fewer semitones (use actual voice movement calculation)
+                const aSemitones = calculateActualVoiceMovement(a);
+                const bSemitones = calculateActualVoiceMovement(b);
+                
+                if (aSemitones !== bSemitones) {
+                    return aSemitones - bSemitones;
+                }
+                
+                // Third priority: alphabetical by scale name for stable sorting
+                const aScaleName = `${a.v7.scaleName}-${a.i.scaleName}`;
+                const bScaleName = `${b.v7.scaleName}-${b.i.scaleName}`;
+                return aScaleName.localeCompare(bScaleName);
             });
             
             sortedProgressions.forEach(progression => {
