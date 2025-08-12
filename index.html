@@ -149,6 +149,17 @@
                 min-width: 140px;
                 max-width: 180px;
             }
+
+            /* Add left margin to browse content to make room for navigation panel */
+            #browse-content {
+                margin-left: 220px;
+                padding-left: 1rem;
+            }
+
+            /* Ensure container has proper padding on tablets */
+            .container {
+                padding: 20px 20px 20px 20px;
+            }
         }
 
         @media (max-width: 768px) {
@@ -177,6 +188,16 @@
             #browse-mode.active .chord-type-navigation {
                 opacity: 1;
                 transform: none;
+            }
+
+            /* Reset margin for mobile since panel is static */
+            #browse-content {
+                margin-left: 0;
+                padding-left: 0;
+            }
+
+            .container {
+                padding: 20px;
             }
         }
 
