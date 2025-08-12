@@ -4658,7 +4658,7 @@ ${details}`;
                 return baseMovement;
             }
             
-            // Special cases for classic voice-leading resolutions
+            // Special cases for classic voice-leading resolutions - match main function
             // Leading tone resolution (V7 7th → I 3rd)
             if (note1 === '7' && note2 === '3') {
                 return {
@@ -4683,13 +4683,62 @@ ${details}`;
                 };
             }
             
-            // ♯9 resolution (V7 ♯9 → I 13)
+            // V7-I special resolutions (match main calculateVoiceMovement function)
+            // ♯9 (V7) resolves up by semitone to natural 7 (I)
+            if (note1 === '♯9' && note2 === '7') {
+                return {
+                    interval: 1,
+                    direction: 'up',
+                    type: 'step',
+                    symbol: '↑½',
+                    semitones: 1,
+                    absInterval: 1
+                };
+            }
+            
+            // 3 (V7) as leading tone resolves up by semitone to 1 (I)
+            if (note1 === '3' && note2 === '1') {
+                return {
+                    interval: 1,
+                    direction: 'up',
+                    type: 'step',
+                    symbol: '↑½',
+                    semitones: 1,
+                    absInterval: 1
+                };
+            }
+            
+            // ♯9 (V7) resolves up by semitone to 13 (I)
             if (note1 === '♯9' && note2 === '13') {
                 return {
-                    interval: -1,
-                    direction: 'down',
+                    interval: 1,
+                    direction: 'up',
                     type: 'step',
-                    symbol: '↓½',
+                    symbol: '↑½',
+                    semitones: 1,
+                    absInterval: 1
+                };
+            }
+            
+            // ♭9 (V7) resolves up by semitone to 13 (I)
+            if (note1 === '♭9' && note2 === '13') {
+                return {
+                    interval: 1,
+                    direction: 'up',
+                    type: 'step',
+                    symbol: '↑½',
+                    semitones: 1,
+                    absInterval: 1
+                };
+            }
+            
+            // ♭9 (V7) resolves up by semitone to 7 (I)
+            if (note1 === '♭9' && note2 === '7') {
+                return {
+                    interval: 1,
+                    direction: 'up',
+                    type: 'step',
+                    symbol: '↑½',
                     semitones: 1,
                     absInterval: 1
                 };
