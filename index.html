@@ -2399,6 +2399,33 @@
                 return { interval: null, direction: 'unknown', type: 'unknown' };
             }
             
+            // Special cases for classic voice leading resolutions (V7 to I context)
+            if (chord1Symbol === 'V7' && (chord2Symbol === 'I' || chord2Symbol === 'i')) {
+                // ♯9 (V7) resolves down by semitone to natural 7 (I)
+                if (note1 === '♯9' && note2 === '7') {
+                    return {
+                        interval: -1,
+                        direction: 'down',
+                        type: 'step',
+                        symbol: '↓½',
+                        semitones: 1,
+                        absInterval: 1
+                    };
+                }
+                
+                // 3 (V7) as leading tone resolves up by semitone to 1 (I)
+                if (note1 === '3' && note2 === '1') {
+                    return {
+                        interval: 1,
+                        direction: 'up',
+                        type: 'step',
+                        symbol: '↑½',
+                        semitones: 1,
+                        absInterval: 1
+                    };
+                }
+            }
+            
             // Calculate raw interval
             let rawInterval = pitch2 - pitch1;
             
