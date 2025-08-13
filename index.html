@@ -3907,7 +3907,9 @@ ${details}`;
         }
 
         function loadProgressionType() {
+            console.log('=== loadProgressionType() START ===');
             const progressionType = document.getElementById('progression-type').value;
+            console.log('Selected progression type:', progressionType);
             const content = document.getElementById('progression-library-content');
             
             if (progressionType === 'V7-I') {
@@ -3915,16 +3917,20 @@ ${details}`;
             } else if (progressionType === 'V7-i') {
                 content.innerHTML = generateV7iProgressions();
             }
+            console.log('=== loadProgressionType() END ===');
         }
 
         // Global variable to store all progressions data
         let allProgressionsData = {};
 
         function generateV7IProgressions() {
+            console.log('=== generateV7IProgressions() START ===');
+            
             // Get all V7 (dominant) and I (major) voicing combinations
             const v7Voicings = getAllVoicingCombinations('dominant');
             const iVoicings = getAllVoicingCombinations('major');
             
+            console.log(`Total voicings: V7=${v7Voicings.length}, I=${iVoicings.length}`);
             
             // Group progressions by top-note-line with direction (relative to tonal center)
             const progressionsByTopNoteLine = {};
@@ -3994,7 +4000,7 @@ ${details}`;
                             }
                             
                             // Skip downward movements for ♭2-2 progressions (only show upward)
-                            if (topNoteLine === '♭2-2' && movement.direction === '↙') {
+                            if (topNoteLine === '♭2-2' && movement.direction === '↘') {
                                 return;
                             }
                             
@@ -4024,9 +4030,17 @@ ${details}`;
             // Store data globally for filtering
             allProgressionsData = progressionsByTopNoteLine;
             
+            // Debug logging for 4-♯4 progressions
+            const sharp4Progressions = Object.keys(progressionsByTopNoteLine).filter(key => key.includes('4-♯4'));
+            console.log(`[generateV7IProgressions] Final 4-♯4 entries:`, sharp4Progressions);
+            sharp4Progressions.forEach(key => {
+                console.log(`  ${key}: ${progressionsByTopNoteLine[key].length} progressions`);
+            });
             
             // Generate navigation list
             generateTopNoteLineNavigation(progressionsByTopNoteLine);
+            
+            console.log('=== generateV7IProgressions() END ===');
             
             // Return empty string - user must filter first
             return '<div class="empty-state">Select a top-note-line from the left panel to view progressions.</div>';
@@ -4110,7 +4124,7 @@ ${details}`;
                             }
                             
                             // Skip downward movements for ♭2-2 progressions (only show upward)
-                            if (topNoteLine === '♭2-2' && movement.direction === '↙') {
+                            if (topNoteLine === '♭2-2' && movement.direction === '↘') {
                                 return;
                             }
                             
@@ -4209,6 +4223,9 @@ ${details}`;
         }
 
         function generateTopNoteLineNavigation(progressionsByTopNoteLine) {
+            console.log('=== generateTopNoteLineNavigation() START ===');
+            console.log('Input data keys:', Object.keys(progressionsByTopNoteLine));
+            
             const navList = document.getElementById('top-note-line-list');
             const sortMethod = getSortMethod();
             
@@ -4234,6 +4251,11 @@ ${details}`;
                 const progressions = progressionsByTopNoteLine[topNoteLineWithDirection];
                 const count = progressions.length;
                 
+                // Debug logging for 4-♯4 progressions
+                if (topNoteLineWithDirection.includes('4-♯4')) {
+                    console.log(`[generateTopNoteLineNavigation] Processing: ${topNoteLineWithDirection} (${count} progressions)`);
+                }
+                
                 // Extract the movement info for display
                 const sampleProgression = progressions[0];
                 const movement = sampleProgression.movement;
@@ -4248,6 +4270,9 @@ ${details}`;
                     </div>
                 `;
             });
+            
+            console.log('Final navigation HTML entries containing 4-♯4:', navHTML.match(/4-♯4/g)?.length || 0);
+            console.log('=== generateTopNoteLineNavigation() END ===');
             
             navList.innerHTML = navHTML;
         }
@@ -5400,6 +5425,7 @@ ${details}`;
         }
 
         function generateV7IProgressionsFromFiles() {
+            console.log('=== generateV7IProgressionsFromFiles() START ===');
             
             // Process embedded progressions and organize by top-note-lines
             const progressionsByTopNoteLine = {};
@@ -5448,6 +5474,12 @@ ${details}`;
                         return;
                     }
                     
+                    // Skip downward movements for 4-♯4 progressions (only show upward)
+                    if (topNoteLine === '4-♯4' && movement.direction === '↘') {
+                        console.log(`[generateV7IProgressionsFromFiles] FILTERED OUT: ${fileName} - ${topNoteLine} ${movement.direction}`);
+                        return;
+                    }
+                    
                     // Skip downward movements for ♭2-2 progressions (only show upward)
                     if (topNoteLine === '♭2-2' && movement.direction === '↘') {
                         return;
@@ -5492,8 +5524,17 @@ ${details}`;
             // Store for filtering and later access
             allProgressionsDataFiles = progressionsByTopNoteLine;
             
+            // Debug logging for 4-♯4 progressions
+            const sharp4Progressions = Object.keys(progressionsByTopNoteLine).filter(key => key.includes('4-♯4'));
+            console.log(`[generateV7IProgressionsFromFiles] Final 4-♯4 entries:`, sharp4Progressions);
+            sharp4Progressions.forEach(key => {
+                console.log(`  ${key}: ${progressionsByTopNoteLine[key].length} progressions`);
+            });
+            
             // Only update the navigation, don't show content initially
             updateTopNoteLinesNavFiles(progressionsByTopNoteLine);
+            
+            console.log('=== generateV7IProgressionsFromFiles() END ===');
             
             // Return empty content initially - progressions will be shown when a line is selected
             return '';
@@ -5553,6 +5594,9 @@ ${details}`;
         }
 
         function updateTopNoteLinesNavFiles(progressionsByTopNoteLine) {
+            console.log('=== updateTopNoteLinesNavFiles() START ===');
+            console.log('Input data keys:', Object.keys(progressionsByTopNoteLine));
+            
             const navContainer = document.getElementById('top-note-lines-files');
             const sortedTopNoteLines = Object.keys(progressionsByTopNoteLine).sort((a, b) => {
                 const aInterval = a.split(' ')[0];
@@ -5567,6 +5611,11 @@ ${details}`;
                 const [v7Note, iNote] = interval.split('-');
                 const movementType = getMovementType(progressions[0].movement);
                 
+                // Debug logging for 4-♯4 progressions
+                if (topNoteLine.includes('4-♯4')) {
+                    console.log(`[updateTopNoteLinesNavFiles] Processing: ${topNoteLine} (${progressions.length} progressions)`);
+                }
+                
                 // Format display to match Raw page: just show interval without direction
                 // Use the same display conversion as other functions (e.g., ♭2-2 → ♯1-2)
                 const displayLabel = getTopNoteLineDisplayLabel(topNoteLine).split(' ')[0];
@@ -5579,6 +5628,9 @@ ${details}`;
                     </div>
                 `;
             });
+
+            console.log('Final navigation HTML entries containing 4-♯4:', navHtml.match(/4-♯4/g)?.length || 0);
+            console.log('=== updateTopNoteLinesNavFiles() END ===');
 
             navContainer.innerHTML = navHtml;
         }

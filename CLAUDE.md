@@ -156,12 +156,38 @@ if (topNoteLine === '♯2-3' && movement.direction === '↘') {
 
 **DO NOT USE**: `↙` (U+2199 SOUTH WEST ARROW) - this was a critical bug that caused duplicate navigation entries to persist despite filtering logic.
 
-### Duplicate Entry Resolution
+### Duplicate Entry Resolution ⚠️ CRITICAL DEBUGGING GUIDE
 When troubleshooting duplicate top-note-line entries in navigation:
 
-1. **Check both processing functions**: Apply filtering logic to BOTH `generateV7IProgressions()` (dynamic) AND `generateV7IProgressionsFromFiles()` (embedded)
-2. **Verify direction symbols**: Ensure filtering logic uses correct arrow symbols (`↘` not `↙`)  
-3. **Add debug logging**: Use `console.log` to trace progression processing and navigation creation
-4. **Test with browser console**: Open developer tools to verify filtering is working correctly
+**STEP 1: IDENTIFY THE CORRECT PAGE** 🎯
+The application has TWO separate library pages with different functions:
+- **"Progression Library"** (main page) → uses `generateV7IProgressionsFromFiles()` + `updateTopNoteLinesNavFiles()`
+- **"Progression Library (Raw)"** → uses `generateV7IProgressions()` + `generateTopNoteLineNavigation()`
 
-**Root cause**: The application has dual processing paths (dynamic + embedded progressions) that both contribute to navigation entries. Both must implement identical filtering logic with correct direction symbols.
+**⚠️ MAKE SURE YOU'RE DEBUGGING THE RIGHT PAGE THAT THE USER IS REPORTING ISSUES ON!**
+
+**STEP 2: Apply filtering to ALL relevant functions**
+1. **Main Library page**: Check `generateV7IProgressionsFromFiles()` (around line 5400+)
+2. **Raw page**: Check `generateV7IProgressions()` (around line 3920+) 
+3. **Minor progressions**: Check `generateV7iProgressions()` (around line 4050+)
+
+**STEP 3: Debug systematically**
+1. **Add debug logging**: Use `console.log` to trace progression processing and navigation creation
+2. **Verify direction symbols**: Ensure filtering logic uses correct arrow symbols (`↘` not `↙`)  
+3. **Test with browser console**: Open developer tools to verify filtering is working correctly
+
+**STEP 4: Template for adding missing direction filters**
+```javascript
+// Skip [upward/downward] movements for X-Y progressions (only show [opposite])
+if (topNoteLine === 'X-Y' && movement.direction === '[↗/↘]') {
+    console.log(`[FUNCTION_NAME] FILTERED OUT: ${topNoteLine} ${movement.direction}`);
+    return;
+}
+```
+
+**Common Root Causes**:
+- Missing direction filtering in one of the generation functions (especially `generateV7IProgressionsFromFiles()`)
+- Wrong Unicode arrow symbols in direction filters (`↙` instead of `↘`)
+- Debugging the wrong page (Raw vs Main Library)
+
+**Remember**: Apply the SAME filtering logic to ALL generation functions to prevent duplicates.
