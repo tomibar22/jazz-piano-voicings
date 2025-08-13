@@ -3988,6 +3988,11 @@ ${details}`;
                                 return;
                             }
                             
+                            // Skip downward movements for 4-♯4 progressions (only show upward)
+                            if (topNoteLine === '4-♯4' && movement.direction === '↘') {
+                                return;
+                            }
+                            
                             // Skip downward movements for ♭2-2 progressions (only show upward)
                             if (topNoteLine === '♭2-2' && movement.direction === '↙') {
                                 return;
@@ -4096,6 +4101,11 @@ ${details}`;
                             
                             // Skip upward movements for 4-3 progressions (only show downward)
                             if (topNoteLine === '4-3' && movement.direction === '↗') {
+                                return;
+                            }
+                            
+                            // Skip downward movements for 4-♯4 progressions (only show upward)
+                            if (topNoteLine === '4-♯4' && movement.direction === '↘') {
                                 return;
                             }
                             
@@ -5161,7 +5171,11 @@ ${details}`;
             "4-3 worries decisive": {"version":"1.0","created":"2025-08-13T07:19:26.356Z","progression":[{"symbol":"V7","currentTopNote":"7","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic \"dominant\" ♭2, ♯5:7","scaleName":"Pentatonic \"dominant\" ♭2, ♯5"},{"symbol":"I","currentTopNote":"3","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic:3","scaleName":"Pentatonic"}]},
             "4-3 whole tone downwards": {"version":"1.0","created":"2025-08-13T07:20:03.927Z","progression":[{"symbol":"V7","currentTopNote":"7","currentVoicingIndex":0,"selectedVoicingKey":"WT (from 3):7","scaleName":"WT (from 3)"},{"symbol":"I","currentTopNote":"3","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic:3","scaleName":"Pentatonic"}]},
             "4-3 upper augmented downwards": {"version":"1.0","created":"2025-08-13T07:21:07.243Z","progression":[{"symbol":"V7","currentTopNote":"7","currentVoicingIndex":0,"selectedVoicingKey":"WT (from 2):7","scaleName":"WT (from 2)"},{"symbol":"I","currentTopNote":"3","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic:3","scaleName":"Pentatonic"}]},
-            "4-3 upper tritone downwards": {"version":"1.0","created":"2025-08-13T07:21:48.323Z","progression":[{"symbol":"V7","currentTopNote":"7","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic \"dominant\" (from ♭5):7","scaleName":"Pentatonic \"dominant\" (from ♭5)"},{"symbol":"I","currentTopNote":"3","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic:3","scaleName":"Pentatonic"}]}
+            "4-3 upper tritone downwards": {"version":"1.0","created":"2025-08-13T07:21:48.323Z","progression":[{"symbol":"V7","currentTopNote":"7","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic \"dominant\" (from ♭5):7","scaleName":"Pentatonic \"dominant\" (from ♭5)"},{"symbol":"I","currentTopNote":"3","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic:3","scaleName":"Pentatonic"}]},
+            "4-♯4 whole tone upwards": {"version":"1.0","created":"2025-08-13T07:26:09.149Z","progression":[{"symbol":"V7","currentTopNote":"7","currentVoicingIndex":0,"selectedVoicingKey":"WT (from ♭6):7","scaleName":"WT (from ♭6)"},{"symbol":"I","currentTopNote":"♯11","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic (from 2):♯11","scaleName":"Pentatonic (from 2)"}]},
+            "4-♯4 upper augmented static": {"version":"1.0","created":"2025-08-13T07:27:21.659Z","progression":[{"symbol":"V7","currentTopNote":"7","currentVoicingIndex":0,"selectedVoicingKey":"WT (from 2):7","scaleName":"WT (from 2)"},{"symbol":"I","currentTopNote":"♯11","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic (from 2):♯11","scaleName":"Pentatonic (from 2)"}]},
+            "4-♯4 lower augmented upwards": {"version":"1.0","created":"2025-08-13T07:28:44.076Z","progression":[{"symbol":"V7","currentTopNote":"7","currentVoicingIndex":0,"selectedVoicingKey":"WT (from 3):7","scaleName":"WT (from 3)"},{"symbol":"I","currentTopNote":"♯11","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic (from 2):♯11","scaleName":"Pentatonic (from 2)"}]},
+            "4-♯4 upper tritone upwards": {"version":"1.0","created":"2025-08-13T07:29:30.108Z","progression":[{"symbol":"V7","currentTopNote":"7","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic \"dominant\" (from ♭5):7","scaleName":"Pentatonic \"dominant\" (from ♭5)"},{"symbol":"I","currentTopNote":"♯11","currentVoicingIndex":0,"selectedVoicingKey":"Pentatonic (from 2):♯11","scaleName":"Pentatonic (from 2)"}]}
         };
 
         // Function to check if a progression exists in the library
