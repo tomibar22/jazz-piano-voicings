@@ -5429,6 +5429,11 @@ ${details}`;
                         return;
                     }
                     
+                    // Skip upward movements for 4-3 progressions (only show downward)
+                    if (topNoteLine === '4-3' && movement.direction === '↗') {
+                        return;
+                    }
+                    
                     // Skip downward movements for ♭2-2 progressions (only show upward)
                     if (topNoteLine === '♭2-2' && movement.direction === '↘') {
                         return;
